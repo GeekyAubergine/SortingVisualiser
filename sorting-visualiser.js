@@ -5,6 +5,7 @@ const PARENT_CONTAINER_ID = 'sorting-visualiser-container';
 const GRAPH_CONTAINER_ID = 'sorting-visualiser-graph-container';
 const GRAPH_ID = 'sorting-visualiser-graph';
 const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
+const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
 
 //Bar class names
 const BAR_NORMAL_CLASS = 'bar-normal';
@@ -25,9 +26,6 @@ const margin = {
   left: 10
 };
 
-var graphContainer;
-var graph;
-var graphGraphicsElement;
 var graphDimensions = {
   width: 0,
   height: 0
@@ -73,15 +71,19 @@ function parentContainerExsists() {
 
 function createGraph() {
   var parentContainer = d3.select("#" + PARENT_CONTAINER_ID);
-  graphContainer = parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID);
-  graph = graphContainer.append('svg').attr('id', GRAPH_ID);
-  graphGraphicsElement = graph.append('g');
+  var graphContainer = parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID);
+  var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
+  graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
 
   axisGraphicsElements.x = graph.append('g').attr('class', 'x axis');
   axisGraphicsElements.y = graph.append('g').attr('class', 'y axis');
 }
 
 function updateGraphDimensions() {
+  //Get graphics objects
+  var graphContainer = d3.select('#' + GRAPH_CONTAINER_ID);
+  var graph = d3.select('#' + GRAPH_ID);
+
   var graphContainerWidth = parseInt(graphContainer.style('width'));
   var graphContainerHeight = graphContainerWidth * GRAPH_HEIGHT_TO_WIDTH_RATIO;
   $("#" + GRAPH_CONTAINER_ID).css("height", graphContainerHeight);
@@ -102,7 +104,8 @@ function updateGraphDimensions() {
   graph.attr('height', graphContainerHeight);
 
   //Translate graph from
-  graphGraphicsElement.attr('transform',
+  //Select graph 'g'
+  d3.select('#' + GRAPH_GRAPHICS_ID).attr('transform',
     'translate(' + margin.left + ', ' + margin.top + ')');
 
   axisGraphicsElements.x
@@ -149,6 +152,7 @@ function render() {
   graphScale.y.domain([0, d3.max(arrayToSort)]);
   graphScale.x.domain([0, arrayToSort.length]);
 
+  var graph = d3.select('#' + GRAPH_ID);
   var bars = graph.selectAll(".bar")
     .data(dataToRender);
 
@@ -216,4 +220,5 @@ $(function() {
 
 window.onresize = function() {
   updateGraphDimensions();
+  render();
 }
