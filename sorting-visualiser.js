@@ -16,6 +16,7 @@ const BAR_BOUND_CLASS = 'sv-bar-bound';
 
 //
 const BUTTON_CLASS = 'sv-button'
+const BUTTON_SELECTED_CLASS = 'sv-selected';
 
 const LOGGING_ACTIVE = true;
 
@@ -54,7 +55,7 @@ var graphScale = {
 };
 
 //Sorting variables
-var numberOfElementsToSort = 100;
+var numberOfElementsToSort = 40;
 var arrayToSort = [];
 var sortingStepDelay = 0.1;
 var sortingStats = {
@@ -79,6 +80,7 @@ function startSortingAlgorithm() {
 
 function stopSortingAlgorithm() {
   sortingAlgorithmCurrentlyRunning = false;
+  d3.selectAll('.' + BUTTON_CLASS).classed(BUTTON_SELECTED_CLASS, false);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -102,8 +104,8 @@ function createGraph() {
   var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
   graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
 
-  axisGraphicsElements.x = graph.append('g').attr('class', 'x axis');
-  axisGraphicsElements.y = graph.append('g').attr('class', 'y axis');
+  axisGraphicsElements.x = graph.append('g').attr('class', 'x sv-axis');
+  axisGraphicsElements.y = graph.append('g').attr('class', 'y sv-axis');
 }
 
 /**
@@ -158,6 +160,7 @@ function createButton(parent, buttonData) {
   button.append('p').text(buttonData.name);
   button.on('click', function() {
     if (!sortingAlgorithmCurrentlyRunning) {
+      button.classed(BUTTON_SELECTED_CLASS, true);
       buttonData.callBack();
       startSortingAlgorithm();
     }
@@ -216,11 +219,11 @@ function render() {
   graphScale.x.domain([0, arrayToSort.length]);
 
   var graph = d3.select('#' + GRAPH_ID);
-  var bars = graph.selectAll(".bar")
+  var bars = graph.selectAll('.'+ BAR_NORMAL_CLASS)
     .data(dataToRender);
 
   bars.enter().append("rect")
-    .attr("class", "bar")
+    .attr("class", BAR_NORMAL_CLASS)
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
@@ -233,7 +236,7 @@ function render() {
     })
     .attr("transform", "translate(" + margin.left + ", 0)");
 
-  bars.attr("class", "bar")
+  bars.attr("class", BAR_NORMAL_CLASS)
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })

@@ -1,6 +1,7 @@
 #sorting-visualiser-container {
   float: left;
   width: 100%;
+  box-sizing: border-box;
 }
 
 #sorting-visualiser-graph-container {
@@ -14,32 +15,32 @@ svg {
   height: 100%;
 }
 
-.bar-normal {
+.sv-bar-normal {
   fill: steelblue;
 }
 
-.bar-active {
+.sv-bar-active {
   fill: red;
 }
 
-.bar-comparison {
+.sv-bar-comparison {
   fill: green;
 }
 
-.bar-bound {
+.sv-bar-bound {
   fill: yellow;
 }
 
-.bar-normal:hover {
+.sv-bar-normal:hover {
   fill: darkblue;
 }
 
-.axis {
+.sv-axis {
   font: 10px sans-serif;
 }
 
-.axis path,
-.axis line {
+.sv-axis path,
+.sv-axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
@@ -47,18 +48,25 @@ svg {
 
 .sv-button {
   float: left;
-  margin: 2.5%;
-  width: 20%;
+  margin: 1%;
+  width: 23%;
   height: 4em;
-  background-color: #ccc;
+  border: 0.1em solid #aaa;
+  border-radius: 0.5em;
 }
 
 .sv-button:hover {
-  background-color: #888;
+  background-color: #ddd;
+}
+
+.sv-selected {
+  background-color: #ddd;
 }
 
 .sv-button p {
   float: left;
   width: 100%;
   text-align: center;
+  line-height: 0%;
+  font-size: 200%;
 }
