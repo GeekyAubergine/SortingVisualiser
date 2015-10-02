@@ -44,3 +44,21 @@ svg {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+
+.sv-button {
+  float: left;
+  margin: 2.5%;
+  width: 20%;
+  height: 4em;
+  background-color: #ccc;
+}
+
+.sv-button:hover {
+  background-color: #888;
+}
+
+.sv-button p {
+  float: left;
+  width: 100%;
+  text-align: center;
+}

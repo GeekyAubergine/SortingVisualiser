@@ -4,14 +4,18 @@
 const PARENT_CONTAINER_ID = 'sorting-visualiser-container';
 const GRAPH_CONTAINER_ID = 'sorting-visualiser-graph-container';
 const GRAPH_ID = 'sorting-visualiser-graph';
+const STATS_CONTAINER_ID = 'sorting-visualiser-stats-container';
 const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
 const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
 
 //Bar class names
-const BAR_NORMAL_CLASS = 'bar-normal';
-const BAR_ACTIVE_CLASS = 'bar-active'; //Current bar indexed
-const BAR_COMPARISON_CLASS = 'bar-comparison';
-const BAR_BOUND_CLASS = 'bar-bound';
+const BAR_NORMAL_CLASS = 'sv-bar-normal';
+const BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
+const BAR_COMPARISON_CLASS = 'sv-bar-comparison';
+const BAR_BOUND_CLASS = 'sv-bar-bound';
+
+//
+const BUTTON_CLASS = 'sv-button'
 
 const LOGGING_ACTIVE = true;
 
@@ -25,6 +29,12 @@ const margin = {
   bottom: 10,
   left: 10
 };
+
+//Buttons
+var buttons = [{
+  name: 'Bubble',
+  callBack: bubbleSort
+}]
 
 var graphDimensions = {
   width: 0,
@@ -129,6 +139,27 @@ function updateGraphDimensions() {
     .call(axis.y);
 }
 
+/* ---- Button Creation ---- */
+function createSortingAlgorithmButtons() {
+
+}
+
+function createButton(parent, buttonData) {
+  var button = parent.append('div').attr('class', BUTTON_CLASS);
+  button.append('p').text(buttonData.name);
+  button.on('click', function() {
+    console.log(buttonData.name);
+    buttonData.callBack();
+  });
+}
+
+function createButtons() {
+  var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', BUTTONS_CONTAINER_ID);
+  for (var i = 0; i < buttons.length; i++) {
+    createButton(buttonsContainer, buttons[i]);
+  }
+}
+
 /**
  * Creates the UI
  */
@@ -136,6 +167,7 @@ function createUI() {
   if (parentContainerExsists()) {
     createGraph();
     updateGraphDimensions();
+    createButtons();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
@@ -255,6 +287,7 @@ function generateWorstCase() {
 function bubbleSort() {
   var sorted = true;
   var i = 0;
+  info('Bubble sort started');
   //Pass variables to inner function
   (function(arrayToSort, sorted, i) {
     var sortingLoop = setInterval(function() {
@@ -274,6 +307,7 @@ function bubbleSort() {
         i = 0;
         if (sorted) {
           clearInterval(sortingLoop);
+          info('Bubble sort ended');
         }
         sorted = true;
       }
@@ -285,10 +319,8 @@ function bubbleSort() {
 /* ------------------------------------------------------------------------- */
 $(function() {
   createUI();
-  setTimeout(function() {
-    generateRandomData();
-    bubbleSort();
-  }, 1000);
+  generateRandomData();
+  updateScreen();
 })
 
 window.onresize = function() {
