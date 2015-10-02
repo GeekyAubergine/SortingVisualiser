@@ -44,8 +44,13 @@ var graphScale = {
 };
 
 //Sorting variables
-var numberOfElementsToSort = 20;
+var numberOfElementsToSort = 100;
 var arrayToSort = [];
+var sortingStepDelay = 0.1;
+var sortingStats = {
+  numberOfComparisons: 0,
+  numberOfSwaps: 0
+}
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -201,9 +206,14 @@ function render() {
   bars.exit().remove();
 }
 
+function updateScreen() {
+  render();
+}
+
 /* ------------------------------------------------------------------------- */
 /* Generation of data
 /* ------------------------------------------------------------------------- */
+
 /**
  * Generates a best case array to sort.
  * Best case defined as ascending order
@@ -238,11 +248,46 @@ function generateWorstCase() {
 }
 
 /* ------------------------------------------------------------------------- */
+/* Sorting algorithms
+/* ------------------------------------------------------------------------- */
+
+/* ---- Bubble Sort ---- */
+function bubbleSort() {
+  var sorted = true;
+  var i = 0;
+  //Pass variables to inner function
+  (function(arrayToSort, sorted, i) {
+    var sortingLoop = setInterval(function() {
+      //Comparison
+      sortingStats.numberOfComparisons++;
+      if (arrayToSort[i] > arrayToSort[i + 1]) {
+        //Swap
+        sortingStats.numberOfSwaps++;
+        var temp = arrayToSort[i];
+        arrayToSort[i] = arrayToSort[i + 1];
+        arrayToSort[i + 1] = temp;
+        sorted = false;
+      }
+      i++;
+      //Return to start of array when done
+      if (i >= arrayToSort.length - 1) {
+        i = 0;
+        if (sorted) {
+          clearInterval(sortingLoop);
+        }
+        sorted = true;
+      }
+      updateScreen();
+    }, sortingStepDelay);
+  })(arrayToSort, sorted, i);
+}
+
+/* ------------------------------------------------------------------------- */
 $(function() {
   createUI();
-  setInterval(function() {
+  setTimeout(function() {
     generateRandomData();
-    render();
+    bubbleSort();
   }, 1000);
 })
 
