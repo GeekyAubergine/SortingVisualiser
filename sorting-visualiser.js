@@ -55,9 +55,13 @@ var graphScale = {
 };
 
 //Sorting variables
-var numberOfElementsToSort = 40;
+var numberOfElementsToSort = 20;
 var arrayToSort = [];
-var sortingStepDelay = 0.1;
+var sortingStepDelay = 100;
+var sortingCurrentIndex;
+var sortingComparisonIndex;
+var sortingLeftBound;
+var sortingRightBound;
 var sortingStats = {
   numberOfComparisons: 0,
   numberOfSwaps: 0
@@ -81,6 +85,11 @@ function startSortingAlgorithm() {
 function stopSortingAlgorithm() {
   sortingAlgorithmCurrentlyRunning = false;
   d3.selectAll('.' + BUTTON_CLASS).classed(BUTTON_SELECTED_CLASS, false);
+  sortingCurrentIndex = -1;
+  sortingComparisonIndex = -1;
+  sortingLeftBound = -1;
+  sortingRightBound = -1;
+  updateScreen();
 }
 
 /* ------------------------------------------------------------------------- */
@@ -192,6 +201,19 @@ function createUI() {
 /* Render
 /* ------------------------------------------------------------------------- */
 
+function getClassForBar(d) {
+  if (d.x == sortingCurrentIndex) {
+    return BAR_ACTIVE_CLASS;
+  }
+  if (d.x == sortingComparisonIndex) {
+    return BAR_COMPARISON_CLASS;
+  }
+  if (d.x == sortingLeftBound || d.x == sortingRightBound) {
+    return BAR_BOUND_CLASS;
+  }
+  return BAR_NORMAL_CLASS;
+}
+
 /**
  * Returns the data to render in a usable format for d3.js
  */
@@ -219,11 +241,17 @@ function render() {
   graphScale.x.domain([0, arrayToSort.length]);
 
   var graph = d3.select('#' + GRAPH_ID);
+
+  //Reset all bars
+  d3.selectAll('.' + BAR_ACTIVE_CLASS).attr('class', BAR_NORMAL_CLASS);
+  d3.selectAll('.' + BAR_COMPARISON_CLASS).attr('class', BAR_NORMAL_CLASS);
+  d3.selectAll('.' + BAR_BOUND_CLASS).attr('class', BAR_NORMAL_CLASS);
+
   var bars = graph.selectAll('.'+ BAR_NORMAL_CLASS)
     .data(dataToRender);
 
   bars.enter().append("rect")
-    .attr("class", BAR_NORMAL_CLASS)
+    .attr("class", function(d) { return getClassForBar(d)})
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
@@ -236,7 +264,7 @@ function render() {
     })
     .attr("transform", "translate(" + margin.left + ", 0)");
 
-  bars.attr("class", BAR_NORMAL_CLASS)
+  bars.attr("class", function(d) { return getClassForBar(d)})
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
@@ -306,6 +334,8 @@ function bubbleSort() {
   //Pass variables to inner function
   (function(arrayToSort, sorted, i) {
     var sortingLoop = setInterval(function() {
+      sortingCurrentIndex = i;
+      sortingCurrentIndex = i + 1;
       //Comparison
       sortingStats.numberOfComparisons++;
       if (arrayToSort[i] > arrayToSort[i + 1]) {
