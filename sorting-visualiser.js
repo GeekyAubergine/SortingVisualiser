@@ -61,6 +61,7 @@ var sortingStats = {
   numberOfComparisons: 0,
   numberOfSwaps: 0
 }
+var sortingAlgorithmCurrentlyRunning = false;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -70,6 +71,14 @@ function info(stringToLog) {
   if (LOGGING_ACTIVE) {
     console.log(stringToLog);
   }
+}
+
+function startSortingAlgorithm() {
+  sortingAlgorithmCurrentlyRunning = true;
+}
+
+function stopSortingAlgorithm() {
+  sortingAlgorithmCurrentlyRunning = false;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -148,8 +157,10 @@ function createButton(parent, buttonData) {
   var button = parent.append('div').attr('class', BUTTON_CLASS);
   button.append('p').text(buttonData.name);
   button.on('click', function() {
-    console.log(buttonData.name);
-    buttonData.callBack();
+    if (!sortingAlgorithmCurrentlyRunning) {
+      buttonData.callBack();
+      startSortingAlgorithm();
+    }
   });
 }
 
@@ -285,6 +296,7 @@ function generateWorstCase() {
 
 /* ---- Bubble Sort ---- */
 function bubbleSort() {
+  startSortingAlgorithm();
   var sorted = true;
   var i = 0;
   info('Bubble sort started');
@@ -308,6 +320,7 @@ function bubbleSort() {
         if (sorted) {
           clearInterval(sortingLoop);
           info('Bubble sort ended');
+          stopSortingAlgorithm();
         }
         sorted = true;
       }
