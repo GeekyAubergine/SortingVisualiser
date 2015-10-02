@@ -69,6 +69,9 @@ function parentContainerExsists() {
   return $('#' + PARENT_CONTAINER_ID).length > 0;
 }
 
+/**
+ * Creates graph and associated DOM elements
+ */
 function createGraph() {
   var parentContainer = d3.select("#" + PARENT_CONTAINER_ID);
   var graphContainer = parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID);
@@ -79,6 +82,9 @@ function createGraph() {
   axisGraphicsElements.y = graph.append('g').attr('class', 'y axis');
 }
 
+/**
+ * Updates the dimensions of the graph and updates graphics
+ */
 function updateGraphDimensions() {
   //Get graphics objects
   var graphContainer = d3.select('#' + GRAPH_CONTAINER_ID);
@@ -118,6 +124,9 @@ function updateGraphDimensions() {
     .call(axis.y);
 }
 
+/**
+ * Creates the UI
+ */
 function createUI() {
   if (parentContainerExsists()) {
     createGraph();
@@ -132,6 +141,9 @@ function createUI() {
 /* Render
 /* ------------------------------------------------------------------------- */
 
+/**
+ * Returns the data to render in a usable format for d3.js
+ */
 function getRenderData() {
   var out = [];
   var data = arrayToSort.slice();
@@ -144,6 +156,9 @@ function getRenderData() {
   return out;
 }
 
+/**
+ * Renders the graph to screen
+ */
 function render() {
   var dataToRender = getRenderData();
   if (dataToRender == undefined || dataToRender == null) {
@@ -189,6 +204,10 @@ function render() {
 /* ------------------------------------------------------------------------- */
 /* Generation of data
 /* ------------------------------------------------------------------------- */
+/**
+ * Generates a best case array to sort.
+ * Best case defined as ascending order
+ */
 function generateBestCase() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
@@ -196,6 +215,10 @@ function generateBestCase() {
   }
 }
 
+/**
+ * Generates a random case array to sort.
+ * Best case defined as random order
+ */
 function generateRandomData() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
@@ -203,6 +226,10 @@ function generateRandomData() {
   }
 }
 
+/**
+ * Generates a worst case array to sort.
+ * Best case defined as descending order
+ */
 function generateWorstCase() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
@@ -210,6 +237,7 @@ function generateWorstCase() {
   }
 }
 
+/* ------------------------------------------------------------------------- */
 $(function() {
   createUI();
   setInterval(function() {
