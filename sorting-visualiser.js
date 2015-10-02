@@ -14,6 +14,7 @@ const BAR_BOUND_CLASS = 'bar-bound';
 
 const LOGGING_ACTIVE = true;
 
+const MAX_VALUE = 100;
 const GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
 
 //Graph margins
@@ -27,6 +28,10 @@ const margin = {
 var graphContainer;
 var graph;
 var graphGraphicsElement;
+var graphDimensions = {
+  width: 0,
+  height: 0
+}
 var axis = {
   x: null,
   y: null
@@ -39,6 +44,10 @@ var graphScale = {
   x: null,
   y: null
 };
+
+//Sorting variables
+var numberOfElementsToSort = 20;
+var arrayToSort = [];
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -77,12 +86,12 @@ function updateGraphDimensions() {
   var graphContainerHeight = graphContainerWidth * GRAPH_HEIGHT_TO_WIDTH_RATIO;
   $("#" + GRAPH_CONTAINER_ID).css("height", graphContainerHeight);
 
-  var width = graphContainerWidth - margin.left - margin.right;
-  var height = graphContainerHeight - margin.top - margin.bottom;
+  var width = graphDimensions.width = graphContainerWidth - margin.left - margin.right;
+  var height = graphDimensions.height = graphContainerHeight - margin.top - margin.bottom;
 
   //Set scales
-  graphScale.x = d3.scale.linear().range([0, width]);
-  graphScale.y = d3.scale.linear().range([height - margin.top, 0]);
+  graphScale.x = d3.scale.linear().range([0, graphDimensions.width]);
+  graphScale.y = d3.scale.linear().range([graphDimensions.height - margin.top, 0]);
 
   //Set axis
   axis.x = d3.svg.axis().scale(graphScale.x).orient('bottom').ticks('none');
@@ -97,11 +106,11 @@ function updateGraphDimensions() {
     'translate(' + margin.left + ', ' + margin.top + ')');
 
   axisGraphicsElements.x
-    .attr("width", width)
+    .attr("width", graphDimensions.width)
     .attr("transform", "translate(" + margin.left + "," + height + ")")
     .call(axis.x);
   axisGraphicsElements.y
-    .attr("height", height)
+    .attr("height", graphDimensions.height)
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .call(axis.y);
 }
@@ -116,7 +125,10 @@ function createUI() {
   }
 }
 
-/* Render */
+/* ------------------------------------------------------------------------- */
+/* Render
+/* ------------------------------------------------------------------------- */
+
 function getRenderData() {
   var out = [];
   var data = arrayToSort.slice();
@@ -129,8 +141,77 @@ function getRenderData() {
   return out;
 }
 
+function render() {
+  var dataToRender = getRenderData();
+  if (dataToRender == undefined || dataToRender == null) {
+    return;
+  }
+  graphScale.y.domain([0, d3.max(arrayToSort)]);
+  graphScale.x.domain([0, arrayToSort.length]);
+
+  var bars = graph.selectAll(".bar")
+    .data(dataToRender);
+
+  bars.enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", function(d) {
+      return graphScale.x(d.x);
+    })
+    .attr("width", graphDimensions.width / dataToRender.length)
+    .attr("y", function(d) {
+      return graphScale.y(d.y);
+    })
+    .attr("height", function(d) {
+      return graphDimensions.height - graphScale.y(d.y);
+    })
+    .attr("transform", "translate(" + margin.left + ", 0)");
+
+  bars.attr("class", "bar")
+    .attr("x", function(d) {
+      return graphScale.x(d.x);
+    })
+    .attr("width", graphDimensions.width / dataToRender.length)
+    .attr("y", function(d) {
+      return graphScale.y(d.y);
+    })
+    .attr("height", function(d) {
+      return graphDimensions.height - graphScale.y(d.y);
+    })
+    .attr("transform", "translate(" + margin.left + ", 0)");
+
+  bars.exit().remove();
+}
+
+/* ------------------------------------------------------------------------- */
+/* Generation of data
+/* ------------------------------------------------------------------------- */
+function generateBestCase() {
+  arrayToSort = [];
+  for (var i = 0; i < numberOfElementsToSort; i++) {
+    arrayToSort.push(i);
+  }
+}
+
+function generateRandomData() {
+  arrayToSort = [];
+  for (var i = 0; i < numberOfElementsToSort; i++) {
+    arrayToSort.push(Math.random() * MAX_VALUE);
+  }
+}
+
+function generateWorstCase() {
+  arrayToSort = [];
+  for (var i = 0; i < numberOfElementsToSort; i++) {
+    arrayToSort.push(numberOfElementsToSort - i);
+  }
+}
+
 $(function() {
   createUI();
+  setInterval(function() {
+    generateRandomData();
+    render();
+  }, 1000);
 })
 
 window.onresize = function() {
