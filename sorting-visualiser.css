@@ -91,7 +91,10 @@ svg {
 #sorting-visualiser-stats-container {
   width: 50%;
 }
-
+/* Stop button */
+#sv-stop-button {
+  width: 98%;
+}
 .sv-button {
   float: left;
   margin: 1%;

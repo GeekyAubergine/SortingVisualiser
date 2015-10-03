@@ -17,6 +17,8 @@ const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
 const STATS_COMPARISONS_ID = 'sorting-visualiser-comparisons-stat';
 const STATS_SWAPS_ID = 'sorting-visualiser-swaps-stat';
 
+const STOP_BUTTON_ID = 'sv-stop-button';
+
 //Bar class names
 const BAR_NORMAL_CLASS = 'sv-bar-normal';
 const BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
@@ -273,10 +275,22 @@ function createControls() {
   });
 }
 
-/* ---- Algorithm Button Creation ---- */
+/* ---- Button Creation ---- */
+function createButtonContainer() {
+  d3.select('#' + PARENT_CONTAINER_ID).append('div')
+  .attr('id', BUTTONS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
+function createStopButton() {
+  var button = d3.select('#' + BUTTONS_CONTAINER_ID).append('div').attr('id', STOP_BUTTON_ID).attr('class', BUTTON_CLASS);
+  button.append('p').text('Stop');
+  button.on('click', function() {
+    stopSortingAlgorithm();
+  });
+}
+
 function createSortingAlgorithmButtons() {
-  var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div')
-    .attr('id', BUTTONS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+  var buttonsContainer = d3.select('#' + BUTTONS_CONTAINER_ID);
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
     createButton(buttonsContainer, sortingAlgorithmButtons[i]);
   }
@@ -294,6 +308,12 @@ function createButton(parent, buttonData) {
   });
 }
 
+function createButtons() {
+  createButtonContainer();
+  createStopButton();
+  createSortingAlgorithmButtons();
+}
+
 /**
  * Creates the UI
  */
@@ -305,7 +325,7 @@ function createUI() {
     createStats();
     updateStats();
     createControls();
-    createSortingAlgorithmButtons();
+    createButtons();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
