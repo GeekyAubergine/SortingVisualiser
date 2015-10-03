@@ -114,13 +114,10 @@ svg {
   line-height: 0%;
   font-size: 200%;
 }
+/* Controls */
 .sv-control {
   float: left;
-  margin: 1%;
-  width: 48%;
-  height: 4em;
-  border: 0.1em solid #aaa;
-  box-sizing: border-box;
+  height: 4.5em;
   overflow: hidden;
 }
 .sv-control-button {
@@ -145,7 +142,7 @@ svg {
   float: left;
   margin: 0;
   width: 50%;
-  height: 2em;
+  height: 97%;
   border: none;
   font-size: 200%;
   text-align: center;

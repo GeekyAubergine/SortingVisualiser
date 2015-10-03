@@ -214,9 +214,6 @@ function createLegend() {
   item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
   item.append('p').text('= Bound');
-  // var list = legendContainer.append('ul');
-  // list.append('li').append('p').attr('id', STATS_COMPARISONS_ID);
-  // list.append('li').attr('class', STAT_CLASS).append('p').attr('id', STATS_SWAPS_ID);
 }
 
 /* ---- Stats Creation ---- */
@@ -238,8 +235,12 @@ function updateStats() {
 /* ---- Control Creation ---- */
 function createControls() {
   var controlsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div')
-    .attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-  var arraySizeControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
+    .attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS + ' ' + LIST_CLASS);
+
+  controlsContainer.append('h2').text('Settings');
+  var list = controlsContainer.append('ul');
+
+  var arraySizeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(CONTROL_ARRAY_SIZE_LABEL);
   var arraySizeControl = arraySizeControlContainer.append('input')
@@ -258,7 +259,7 @@ function createControls() {
     }
   });
 
-  var timeStepControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
+  var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(CONTROL_LOOP_TIME_LABEL);
   var timeSetControl = timeStepControlContainer.append('input')
@@ -269,13 +270,6 @@ function createControls() {
 
   timeSetControl.on('input', function() {
     sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
-  });
-
-  var stopButton = controlsContainer.append('div').attr('class', CONTROL_STOP_BUTTON_CLASS)
-    .append('p').text('Stop');
-
-  stopButton.on('click', function() {
-    stopSortingAlgorithm();
   });
 }
 
