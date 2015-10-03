@@ -28,7 +28,9 @@ const CONTROL_LABEL_CLASS = 'sv-control-label';
 //Controls
 const CONTROL_ARRAY_SIZE_LABEL = "Array Size";
 const CONTROL_ARRAY_SIZE_STEP = 5;
-const CONTROL_LOOP_TIME_LABEL = "Time per comparison";
+const CONTROL_LOOP_TIME_LABEL = "Time Step";
+const CONTROL_LOOP_TIME_MIN = 0;
+const CONTROL_LOOP_TIME_STEP = 0.1;
 
 const LOGGING_ACTIVE = true;
 
@@ -196,11 +198,28 @@ function createControls() {
     .attr('step', CONTROL_ARRAY_SIZE_STEP)
     .attr('value', numberOfElementsToSort);
 
-    arraySizeControl.on('input', function() {
+  arraySizeControl.on('input', function() {
+    if (!sortingAlgorithmCurrentlyRunning) {
       numberOfElementsToSort = this.value;
       generateRandomData();
       updateScreen();
-    });
+    } else {
+      this.value = numberOfElementsToSort;
+    }
+  });
+
+  var timeStepControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
+  timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+    .append('p').text(CONTROL_LOOP_TIME_LABEL);
+  var timeSetControl = timeStepControlContainer.append('input')
+    .attr('type', 'number')
+    .attr('min', CONTROL_LOOP_TIME_MIN)
+    .attr('step', CONTROL_LOOP_TIME_STEP)
+    .attr('value', sortingStepDelay / 1000);
+
+  timeSetControl.on('input', function() {
+    sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+  });
 }
 
 /* ---- Button Creation ---- */
