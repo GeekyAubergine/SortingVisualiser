@@ -5,6 +5,7 @@ const PARENT_CONTAINER_ID = 'sorting-visualiser-container';
 const GRAPH_CONTAINER_ID = 'sorting-visualiser-graph-container';
 const GRAPH_ID = 'sorting-visualiser-graph';
 const STATS_CONTAINER_ID = 'sorting-visualiser-stats-container';
+const CONTROLS_CONTAINER_ID = 'sorting-visualiser-controls-container';
 const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
 const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
 const STATS_COMPARISONS_ID = 'sorting-visualiser-comparisons-stat';
@@ -21,9 +22,20 @@ const BUTTON_CLASS = 'sv-button'
 const BUTTON_SELECTED_CLASS = 'sv-selected';
 
 const STAT_CLASS = 'sv-stat';
+const CONTROL_CONTAINER_CLASS = 'sv-control';
+const CONTROL_LABEL_CLASS = 'sv-control-label';
+
+//Controls
+const CONTROL_ARRAY_SIZE_LABEL = "Array Size";
+const CONTROL_ARRAY_SIZE_STEP = 5;
+const CONTROL_LOOP_TIME_LABEL = "Time Step (s)";
+const CONTROL_LOOP_TIME_MIN = 0;
+const CONTROL_LOOP_TIME_STEP = 0.1;
+const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 const LOGGING_ACTIVE = true;
 
+const ARRAY_MIN_SIZE = 5;
 const MAX_VALUE = 100;
 const GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
 
@@ -71,6 +83,7 @@ var sortingStats = {
   numberOfSwaps: 0
 }
 var sortingAlgorithmCurrentlyRunning = false;
+var sortingAlgorithmLoop;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -87,7 +100,17 @@ function startSortingAlgorithm() {
 }
 
 function stopSortingAlgorithm() {
+  info('Sorting algorithm stopped');
   sortingAlgorithmCurrentlyRunning = false;
+  //Loops as it sometimes fails
+  for (var i = 0; i < 10; i++) {
+    setTimeout(function() {
+      clearTimeout(sortingAlgorithmLoop);
+    }, 0);
+    setTimeout(function() {
+      clearInterval(sortingAlgorithmLoop);
+    }, 0);
+  }
   d3.selectAll('.' + BUTTON_CLASS).classed(BUTTON_SELECTED_CLASS, false);
   sortingCurrentIndex = -1;
   sortingComparisonIndex = -1;
@@ -171,12 +194,54 @@ function createStats() {
 }
 
 function updateStats() {
-  console.log(sortingStats);
   d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
   d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
 }
 
-/* ---- Button Creation ---- */
+/* ---- Control Creation ---- */
+function createControls() {
+  var controlsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', CONTROLS_CONTAINER_ID);
+  var arraySizeControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
+  arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+    .append('p').text(CONTROL_ARRAY_SIZE_LABEL);
+  var arraySizeControl = arraySizeControlContainer.append('input')
+    .attr('type', 'number')
+    .attr('min', ARRAY_MIN_SIZE)
+    .attr('step', CONTROL_ARRAY_SIZE_STEP)
+    .attr('value', numberOfElementsToSort);
+
+  arraySizeControl.on('input', function() {
+    if (!sortingAlgorithmCurrentlyRunning) {
+      numberOfElementsToSort = this.value;
+      generateRandomData();
+      updateScreen();
+    } else {
+      this.value = numberOfElementsToSort;
+    }
+  });
+
+  var timeStepControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
+  timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+    .append('p').text(CONTROL_LOOP_TIME_LABEL);
+  var timeSetControl = timeStepControlContainer.append('input')
+    .attr('type', 'number')
+    .attr('min', CONTROL_LOOP_TIME_MIN)
+    .attr('step', CONTROL_LOOP_TIME_STEP)
+    .attr('value', sortingStepDelay / 1000);
+
+  timeSetControl.on('input', function() {
+    sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+  });
+
+  var stopButton = controlsContainer.append('div').attr('class', CONTROL_STOP_BUTTON_CLASS)
+    .append('p').text('Stop');
+
+  stopButton.on('click', function() {
+    stopSortingAlgorithm();
+  });
+}
+
+/* ---- Algorithm Button Creation ---- */
 function createSortingAlgorithmButtons() {
   var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', BUTTONS_CONTAINER_ID);
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
@@ -196,10 +261,6 @@ function createButton(parent, buttonData) {
   });
 }
 
-function createButtons() {
-  createSortingAlgorithmButtons();
-}
-
 /**
  * Creates the UI
  */
@@ -209,7 +270,8 @@ function createUI() {
     updateGraphDimensions();
     createStats();
     updateStats();
-    createButtons();
+    createControls();
+    createSortingAlgorithmButtons();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
@@ -266,11 +328,13 @@ function render() {
   d3.selectAll('.' + BAR_COMPARISON_CLASS).attr('class', BAR_NORMAL_CLASS);
   d3.selectAll('.' + BAR_BOUND_CLASS).attr('class', BAR_NORMAL_CLASS);
 
-  var bars = graph.selectAll('.'+ BAR_NORMAL_CLASS)
+  var bars = graph.selectAll('.' + BAR_NORMAL_CLASS)
     .data(dataToRender);
 
   bars.enter().append("rect")
-    .attr("class", function(d) { return getClassForBar(d)})
+    .attr("class", function(d) {
+      return getClassForBar(d)
+    })
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
@@ -283,7 +347,9 @@ function render() {
     })
     .attr("transform", "translate(" + margin.left + ", 0)");
 
-  bars.attr("class", function(d) { return getClassForBar(d)})
+  bars.attr("class", function(d) {
+      return getClassForBar(d)
+    })
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
@@ -356,7 +422,7 @@ function bubbleSort() {
   info('Bubble sort started');
   //Pass variables to inner function
   (function(arrayToSort, sorted, i) {
-    var sortingLoop = setInterval(function() {
+    sortingAlgorithmLoop = setInterval(function() {
       sortingCurrentIndex = i;
       sortingCurrentIndex = i + 1;
       //Comparison
@@ -373,8 +439,7 @@ function bubbleSort() {
       //Return to start of array when done
       if (i >= arrayToSort.length - 1) {
         i = 0;
-        if (sorted) {
-          clearInterval(sortingLoop);
+        if (sorted || !sortingAlgorithmCurrentlyRunning) {
           info('Bubble sort ended');
           stopSortingAlgorithm();
         }
