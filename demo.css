@@ -3,3 +3,6 @@
   width: 90vw;
   height: 90vh;
 }
+body {
+  margin: 1em;
+}

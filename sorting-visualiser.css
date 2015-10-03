@@ -1,39 +1,27 @@
-#sorting-visualiser-container {
-  float: left;
-  width: 100%;
-}
-#sorting-visualiser-graph-container {
-  float: left;
-  width: 100%;
-}
-#sorting-visualiser-stats-container {
-  float: left;
-  width: 100%;
-}
-#sorting-visualiser-controls-container {
-  float: left;
-  width: 100%;
-}
-#sorting-visualiser-buttons-container {
-  float: left;
-  width: 100%;
-}
 svg {
   float: left;
   width: 100%;
   height: 100%;
 }
+.sv-container {
+  float: left;
+  width: 100%;
+}
 .sv-bar-normal {
   fill: steelblue;
+  background: steelblue;
 }
 .sv-bar-active {
-  fill: orange;
+  fill: darkorange;
+  background: darkorange;
 }
 .sv-bar-comparison {
-  fill: green;
+  fill: tomato;
+  background: tomato;
 }
 .sv-bar-bound {
   fill: yellow;
+  background: yellow;
 }
 .sv-bar-normal:hover {
   fill: darkblue;
@@ -46,6 +34,64 @@ svg {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+.sv-list {
+  float: left;
+  width: 98%;
+  margin: 1%;
+  background-color: #F5F5F5;
+  border: 1px solid #D0D0D0;
+}
+.sv-list h2 {
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 200%;
+  line-height: 0%;
+}
+.sv-list ul {
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sv-list li {
+  float: left;
+  margin: 0;
+  width: 100%;
+  height: 4em;
+  box-sizing: border-box;
+  border-top: 0.2em solid #ddd;
+  background-color: #FFFFFF;
+}
+.sv-list p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  line-height: 0%;
+  font-size: 200%;
+}
+/* Legend */
+#sorting-visualiser-legend-container {
+  width: 50%;
+}
+#sorting-visualiser-legend-container li p{
+  width: auto;
+  margin-right: 1em;
+}
+.sv-legend-item {
+  display: block;
+  float: left;
+  margin: 1em;
+  width: 2em;
+  height: 2em;
+}
+/* Stats */
+#sorting-visualiser-stats-container {
+  width: 50%;
+}
+
 .sv-button {
   float: left;
   margin: 1%;
@@ -62,21 +108,6 @@ svg {
   background-color: #ddd;
 }
 .sv-button p {
-  float: left;
-  width: 100%;
-  text-align: center;
-  line-height: 0%;
-  font-size: 200%;
-}
-.sv-stat {
-  float: left;
-  margin: 1%;
-  width: 48%;
-  height: 4em;
-  border: 0.1em solid #aaa;
-  box-sizing: border-box;
-}
-.sv-stat p {
   float: left;
   width: 100%;
   text-align: center;

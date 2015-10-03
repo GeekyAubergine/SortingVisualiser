@@ -1,9 +1,15 @@
 'use strict';
 
+//Class names
+const CONTAINER_CLASS = 'sv-container';
+const LIST_CLASS = 'sv-list';
+const LEGEND_ITEM_CLASS = 'sv-legend-item';
+
 //Element ID's
 const PARENT_CONTAINER_ID = 'sorting-visualiser-container';
 const GRAPH_CONTAINER_ID = 'sorting-visualiser-graph-container';
 const GRAPH_ID = 'sorting-visualiser-graph';
+const LEGEND_CONTAINER_ID = 'sorting-visualiser-legend-container';
 const STATS_CONTAINER_ID = 'sorting-visualiser-stats-container';
 const CONTROLS_CONTAINER_ID = 'sorting-visualiser-controls-container';
 const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
@@ -21,7 +27,6 @@ const BAR_BOUND_CLASS = 'sv-bar-bound';
 const BUTTON_CLASS = 'sv-button'
 const BUTTON_SELECTED_CLASS = 'sv-selected';
 
-const STAT_CLASS = 'sv-stat';
 const CONTROL_CONTAINER_CLASS = 'sv-control';
 const CONTROL_LABEL_CLASS = 'sv-control-label';
 
@@ -136,6 +141,7 @@ function parentContainerExsists() {
  */
 function createGraph() {
   var parentContainer = d3.select("#" + PARENT_CONTAINER_ID);
+  parentContainer.attr('class', CONTAINER_CLASS);
   var graphContainer = parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID);
   var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
   graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
@@ -150,6 +156,7 @@ function createGraph() {
 function updateGraphDimensions() {
   //Get graphics objects
   var graphContainer = d3.select('#' + GRAPH_CONTAINER_ID);
+  graphContainer.attr('class', CONTAINER_CLASS);
   var graph = d3.select('#' + GRAPH_ID);
 
   var graphContainerWidth = parseInt(graphContainer.style('width'));
@@ -187,10 +194,40 @@ function updateGraphDimensions() {
 }
 
 /* ---- Stats Creation ---- */
+
+function createLegend() {
+  var legendContainer = d3.select('#' + PARENT_CONTAINER_ID)
+    .append('div').attr('id', LEGEND_CONTAINER_ID).attr('class', CONTAINER_CLASS)
+    .append('div').attr('class', LIST_CLASS);
+  legendContainer.append('h2').text('Legend');
+
+  var list = legendContainer.append('ul');
+
+  var item = list.append('li');
+  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_ACTIVE_CLASS);
+  item.append('p').text('= Current Index');
+
+  item = list.append('li');
+  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_COMPARISON_CLASS);
+  item.append('p').text('= Comparison Index');
+
+  item = list.append('li');
+  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
+  item.append('p').text('= Bound');
+  // var list = legendContainer.append('ul');
+  // list.append('li').append('p').attr('id', STATS_COMPARISONS_ID);
+  // list.append('li').attr('class', STAT_CLASS).append('p').attr('id', STATS_SWAPS_ID);
+}
+
+/* ---- Stats Creation ---- */
 function createStats() {
-  var statsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', STATS_CONTAINER_ID);
-  statsContainer.append('div').attr('class', STAT_CLASS).append('p').attr('id', STATS_COMPARISONS_ID);
-  statsContainer.append('div').attr('class', STAT_CLASS).append('p').attr('id', STATS_SWAPS_ID);
+  var statsContainer = d3.select('#' + PARENT_CONTAINER_ID)
+    .append('div').attr('id', STATS_CONTAINER_ID).attr('class', CONTAINER_CLASS)
+    .append('div').attr('class', LIST_CLASS);
+  statsContainer.append('h2').text('Stats');
+  var list = statsContainer.append('ul');
+  list.append('li').append('p').attr('id', STATS_COMPARISONS_ID);
+  list.append('li').append('p').attr('id', STATS_SWAPS_ID);
 }
 
 function updateStats() {
@@ -200,7 +237,8 @@ function updateStats() {
 
 /* ---- Control Creation ---- */
 function createControls() {
-  var controlsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', CONTROLS_CONTAINER_ID);
+  var controlsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div')
+    .attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
   var arraySizeControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
   arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(CONTROL_ARRAY_SIZE_LABEL);
@@ -243,7 +281,8 @@ function createControls() {
 
 /* ---- Algorithm Button Creation ---- */
 function createSortingAlgorithmButtons() {
-  var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', BUTTONS_CONTAINER_ID);
+  var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div')
+    .attr('id', BUTTONS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
     createButton(buttonsContainer, sortingAlgorithmButtons[i]);
   }
@@ -268,6 +307,7 @@ function createUI() {
   if (parentContainerExsists()) {
     createGraph();
     updateGraphDimensions();
+    createLegend();
     createStats();
     updateStats();
     createControls();
@@ -323,10 +363,10 @@ function render() {
 
   var graph = d3.select('#' + GRAPH_ID);
 
-  //Reset all bars
-  d3.selectAll('.' + BAR_ACTIVE_CLASS).attr('class', BAR_NORMAL_CLASS);
-  d3.selectAll('.' + BAR_COMPARISON_CLASS).attr('class', BAR_NORMAL_CLASS);
-  d3.selectAll('.' + BAR_BOUND_CLASS).attr('class', BAR_NORMAL_CLASS);
+  //Reset all bars (not used to not interact with legend)
+  d3.selectAll('.' + BAR_ACTIVE_CLASS + ':not(.' + LEGEND_ITEM_CLASS + ')').attr('class', BAR_NORMAL_CLASS);
+  d3.selectAll('.' + BAR_COMPARISON_CLASS + ':not(.' + LEGEND_ITEM_CLASS + ')').attr('class', BAR_NORMAL_CLASS);
+  d3.selectAll('.' + BAR_BOUND_CLASS + ':not(.' + LEGEND_ITEM_CLASS + ')').attr('class', BAR_NORMAL_CLASS);
 
   var bars = graph.selectAll('.' + BAR_NORMAL_CLASS)
     .data(dataToRender);
