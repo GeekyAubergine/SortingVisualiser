@@ -424,7 +424,7 @@ function bubbleSort() {
   (function(arrayToSort, sorted, i) {
     sortingAlgorithmLoop = setInterval(function() {
       sortingCurrentIndex = i;
-      sortingCurrentIndex = i + 1;
+      sortingComparisonIndex = i + 1;
       //Comparison
       sortingStats.numberOfComparisons++;
       if (arrayToSort[i] > arrayToSort[i + 1]) {
