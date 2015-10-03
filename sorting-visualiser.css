@@ -1,51 +1,47 @@
 #sorting-visualiser-container {
   float: left;
   width: 100%;
-  box-sizing: border-box;
 }
-
 #sorting-visualiser-graph-container {
   float: left;
   width: 100%;
 }
-
+#sorting-visualiser-stats-container {
+  float: left;
+  width: 100%;
+}
+#sorting-visualiser-buttons-container {
+  float: left;
+  width: 100%;
+}
 svg {
   float: left;
   width: 100%;
   height: 100%;
 }
-
 .sv-bar-normal {
   fill: steelblue;
 }
-
 .sv-bar-active {
   fill: orange;
 }
-
 .sv-bar-comparison {
   fill: green;
 }
-
 .sv-bar-bound {
   fill: yellow;
 }
-
 .sv-bar-normal:hover {
   fill: darkblue;
 }
-
 .sv-axis {
   font: 10px sans-serif;
 }
-
-.sv-axis path,
-.sv-axis line {
+.sv-axis path, .sv-axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
-
 .sv-button {
   float: left;
   margin: 1%;
@@ -53,17 +49,30 @@ svg {
   height: 4em;
   border: 0.1em solid #aaa;
   border-radius: 0.5em;
+  box-sizing: border-box;
 }
-
 .sv-button:hover {
   background-color: #ddd;
 }
-
 .sv-selected {
   background-color: #ddd;
 }
-
 .sv-button p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  line-height: 0%;
+  font-size: 200%;
+}
+.sv-stat {
+  float: left;
+  margin: 1%;
+  width: 48%;
+  height: 4em;
+  border: 0.1em solid #aaa;
+  box-sizing: border-box;
+}
+.sv-stat p {
   float: left;
   width: 100%;
   text-align: center;
