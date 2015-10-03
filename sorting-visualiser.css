@@ -10,6 +10,10 @@
   float: left;
   width: 100%;
 }
+#sorting-visualiser-controls-container {
+  float: left;
+  width: 100%;
+}
 #sorting-visualiser-buttons-container {
   float: left;
   width: 100%;
@@ -78,4 +82,38 @@ svg {
   text-align: center;
   line-height: 0%;
   font-size: 200%;
+}
+.sv-control {
+  float: left;
+  margin: 1%;
+  margin-right: 0;
+  width: 48%;
+  height: 4em;
+  border: 0.1em solid #aaa;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.sv-control-label {
+  float: left;
+  margin: 0;
+  width: 50%;
+  height: 4em;
+  box-sizing: border-box;
+  border-right: 0.1em solid #aaa;
+}
+.sv-control-label p {
+  float: left;
+  width: 100%;
+  text-align: center;
+  line-height: 0%;
+  font-size: 200%;
+}
+.sv-control input {
+  float: left;
+  margin: 0;
+  width: 50%;
+  height: 2em;
+  border: none;
+  font-size: 200%;
+  text-align: center;
 }

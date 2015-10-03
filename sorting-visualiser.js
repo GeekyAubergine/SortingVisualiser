@@ -5,6 +5,7 @@ const PARENT_CONTAINER_ID = 'sorting-visualiser-container';
 const GRAPH_CONTAINER_ID = 'sorting-visualiser-graph-container';
 const GRAPH_ID = 'sorting-visualiser-graph';
 const STATS_CONTAINER_ID = 'sorting-visualiser-stats-container';
+const CONTROLS_CONTAINER_ID = 'sorting-visualiser-controls-container';
 const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
 const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
 const STATS_COMPARISONS_ID = 'sorting-visualiser-comparisons-stat';
@@ -21,9 +22,17 @@ const BUTTON_CLASS = 'sv-button'
 const BUTTON_SELECTED_CLASS = 'sv-selected';
 
 const STAT_CLASS = 'sv-stat';
+const CONTROL_CONTAINER_CLASS = 'sv-control';
+const CONTROL_LABEL_CLASS = 'sv-control-label';
+
+//Controls
+const CONTROL_ARRAY_SIZE_LABEL = "Array Size";
+const CONTROL_ARRAY_SIZE_STEP = 5;
+const CONTROL_LOOP_TIME_LABEL = "Time per comparison";
 
 const LOGGING_ACTIVE = true;
 
+const ARRAY_MIN_SIZE = 5;
 const MAX_VALUE = 100;
 const GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
 
@@ -61,7 +70,7 @@ var graphScale = {
 //Sorting variables
 var numberOfElementsToSort = 20;
 var arrayToSort = [];
-var sortingStepDelay = 100;
+var sortingStepDelay = 1;
 var sortingCurrentIndex;
 var sortingComparisonIndex;
 var sortingLeftBound;
@@ -171,9 +180,27 @@ function createStats() {
 }
 
 function updateStats() {
-  console.log(sortingStats);
   d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
   d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
+}
+
+/* ---- Control Creation ---- */
+function createControls() {
+  var controlsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', CONTROLS_CONTAINER_ID);
+  var arraySizeControlContainer = controlsContainer.append('div').attr('class', CONTROL_CONTAINER_CLASS);
+  arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+    .append('p').text(CONTROL_ARRAY_SIZE_LABEL);
+  var arraySizeControl = arraySizeControlContainer.append('input')
+    .attr('type', 'number')
+    .attr('min', ARRAY_MIN_SIZE)
+    .attr('step', CONTROL_ARRAY_SIZE_STEP)
+    .attr('value', numberOfElementsToSort);
+
+    arraySizeControl.on('input', function() {
+      numberOfElementsToSort = this.value;
+      generateRandomData();
+      updateScreen();
+    });
 }
 
 /* ---- Button Creation ---- */
@@ -209,6 +236,7 @@ function createUI() {
     updateGraphDimensions();
     createStats();
     updateStats();
+    createControls();
     createButtons();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
@@ -266,11 +294,13 @@ function render() {
   d3.selectAll('.' + BAR_COMPARISON_CLASS).attr('class', BAR_NORMAL_CLASS);
   d3.selectAll('.' + BAR_BOUND_CLASS).attr('class', BAR_NORMAL_CLASS);
 
-  var bars = graph.selectAll('.'+ BAR_NORMAL_CLASS)
+  var bars = graph.selectAll('.' + BAR_NORMAL_CLASS)
     .data(dataToRender);
 
   bars.enter().append("rect")
-    .attr("class", function(d) { return getClassForBar(d)})
+    .attr("class", function(d) {
+      return getClassForBar(d)
+    })
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
@@ -283,7 +313,9 @@ function render() {
     })
     .attr("transform", "translate(" + margin.left + ", 0)");
 
-  bars.attr("class", function(d) { return getClassForBar(d)})
+  bars.attr("class", function(d) {
+      return getClassForBar(d)
+    })
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
