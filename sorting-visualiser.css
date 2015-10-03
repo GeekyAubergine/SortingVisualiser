@@ -92,6 +92,9 @@ svg {
   box-sizing: border-box;
   overflow: hidden;
 }
+.sv-control-button {
+  width: 98%;
+}
 .sv-control-label {
   float: left;
   margin: 0;

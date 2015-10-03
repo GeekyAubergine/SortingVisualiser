@@ -28,9 +28,10 @@ const CONTROL_LABEL_CLASS = 'sv-control-label';
 //Controls
 const CONTROL_ARRAY_SIZE_LABEL = "Array Size";
 const CONTROL_ARRAY_SIZE_STEP = 5;
-const CONTROL_LOOP_TIME_LABEL = "Time Step";
+const CONTROL_LOOP_TIME_LABEL = "Time Step (s)";
 const CONTROL_LOOP_TIME_MIN = 0;
 const CONTROL_LOOP_TIME_STEP = 0.1;
+const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 const LOGGING_ACTIVE = true;
 
@@ -72,7 +73,7 @@ var graphScale = {
 //Sorting variables
 var numberOfElementsToSort = 20;
 var arrayToSort = [];
-var sortingStepDelay = 1;
+var sortingStepDelay = 100;
 var sortingCurrentIndex;
 var sortingComparisonIndex;
 var sortingLeftBound;
@@ -82,6 +83,7 @@ var sortingStats = {
   numberOfSwaps: 0
 }
 var sortingAlgorithmCurrentlyRunning = false;
+var sortingAlgorithmLoop;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -98,7 +100,17 @@ function startSortingAlgorithm() {
 }
 
 function stopSortingAlgorithm() {
+  info('Sorting algorithm stopped');
   sortingAlgorithmCurrentlyRunning = false;
+  //Loops as it sometimes fails
+  for (var i = 0; i < 10; i++) {
+    setTimeout(function() {
+      clearTimeout(sortingAlgorithmLoop);
+    }, 0);
+    setTimeout(function() {
+      clearInterval(sortingAlgorithmLoop);
+    }, 0);
+  }
   d3.selectAll('.' + BUTTON_CLASS).classed(BUTTON_SELECTED_CLASS, false);
   sortingCurrentIndex = -1;
   sortingComparisonIndex = -1;
@@ -220,9 +232,16 @@ function createControls() {
   timeSetControl.on('input', function() {
     sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
   });
+
+  var stopButton = controlsContainer.append('div').attr('class', CONTROL_STOP_BUTTON_CLASS)
+    .append('p').text('Stop');
+
+  stopButton.on('click', function() {
+    stopSortingAlgorithm();
+  });
 }
 
-/* ---- Button Creation ---- */
+/* ---- Algorithm Button Creation ---- */
 function createSortingAlgorithmButtons() {
   var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', BUTTONS_CONTAINER_ID);
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
@@ -242,10 +261,6 @@ function createButton(parent, buttonData) {
   });
 }
 
-function createButtons() {
-  createSortingAlgorithmButtons();
-}
-
 /**
  * Creates the UI
  */
@@ -256,7 +271,7 @@ function createUI() {
     createStats();
     updateStats();
     createControls();
-    createButtons();
+    createSortingAlgorithmButtons();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
@@ -407,7 +422,7 @@ function bubbleSort() {
   info('Bubble sort started');
   //Pass variables to inner function
   (function(arrayToSort, sorted, i) {
-    var sortingLoop = setInterval(function() {
+    sortingAlgorithmLoop = setInterval(function() {
       sortingCurrentIndex = i;
       sortingCurrentIndex = i + 1;
       //Comparison
@@ -424,8 +439,7 @@ function bubbleSort() {
       //Return to start of array when done
       if (i >= arrayToSort.length - 1) {
         i = 0;
-        if (sorted) {
-          clearInterval(sortingLoop);
+        if (sorted || !sortingAlgorithmCurrentlyRunning) {
           info('Bubble sort ended');
           stopSortingAlgorithm();
         }
