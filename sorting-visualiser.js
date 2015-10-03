@@ -7,6 +7,8 @@ const GRAPH_ID = 'sorting-visualiser-graph';
 const STATS_CONTAINER_ID = 'sorting-visualiser-stats-container';
 const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
 const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
+const STATS_COMPARISONS_ID = 'sorting-visualiser-comparisons-stat';
+const STATS_SWAPS_ID = 'sorting-visualiser-swaps-stat';
 
 //Bar class names
 const BAR_NORMAL_CLASS = 'sv-bar-normal';
@@ -17,6 +19,8 @@ const BAR_BOUND_CLASS = 'sv-bar-bound';
 //
 const BUTTON_CLASS = 'sv-button'
 const BUTTON_SELECTED_CLASS = 'sv-selected';
+
+const STAT_CLASS = 'sv-stat';
 
 const LOGGING_ACTIVE = true;
 
@@ -32,7 +36,7 @@ const margin = {
 };
 
 //Buttons
-var buttons = [{
+var sortingAlgorithmButtons = [{
   name: 'Bubble',
   callBack: bubbleSort
 }]
@@ -159,9 +163,25 @@ function updateGraphDimensions() {
     .call(axis.y);
 }
 
+/* ---- Stats Creation ---- */
+function createStats() {
+  var statsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', STATS_CONTAINER_ID);
+  statsContainer.append('div').attr('class', STAT_CLASS).append('p').attr('id', STATS_COMPARISONS_ID);
+  statsContainer.append('div').attr('class', STAT_CLASS).append('p').attr('id', STATS_SWAPS_ID);
+}
+
+function updateStats() {
+  console.log(sortingStats);
+  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
+  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
+}
+
 /* ---- Button Creation ---- */
 function createSortingAlgorithmButtons() {
-
+  var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', BUTTONS_CONTAINER_ID);
+  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
+    createButton(buttonsContainer, sortingAlgorithmButtons[i]);
+  }
 }
 
 function createButton(parent, buttonData) {
@@ -177,10 +197,7 @@ function createButton(parent, buttonData) {
 }
 
 function createButtons() {
-  var buttonsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div').attr('id', BUTTONS_CONTAINER_ID);
-  for (var i = 0; i < buttons.length; i++) {
-    createButton(buttonsContainer, buttons[i]);
-  }
+  createSortingAlgorithmButtons();
 }
 
 /**
@@ -190,6 +207,8 @@ function createUI() {
   if (parentContainerExsists()) {
     createGraph();
     updateGraphDimensions();
+    createStats();
+    updateStats();
     createButtons();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
@@ -281,7 +300,11 @@ function render() {
 }
 
 function updateScreen() {
-  render();
+  //Yeild
+  setTimeout(function() {
+    render();
+    updateStats();
+  }, 0);
 }
 
 /* ------------------------------------------------------------------------- */
