@@ -7,6 +7,7 @@ const LEGEND_ITEM_CLASS = 'sv-legend-item';
 
 //Container ID's
 const MAIN_CONTAINER_ID = 'sorting-visualiser-container';
+const GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
 const GRAPH_CONTAINER_ID = 'sv-graph-container';
 const CONTROLS_CONTAINER_ID = 'sv-controls-container';
 const INFOMATION_CONTAINER_ID = 'sv-infomation-container';
@@ -40,9 +41,9 @@ const CONTROL_LABEL_CLASS = 'sv-control-label';
 //Controls
 const CONTROL_ARRAY_SIZE_LABEL = "Array Size";
 const CONTROL_ARRAY_SIZE_STEP = 5;
-const CONTROL_LOOP_TIME_LABEL = "Time Step (s)";
-const CONTROL_LOOP_TIME_MIN = 0;
-const CONTROL_LOOP_TIME_STEP = 0.1;
+const CONTROL_LOOP_TIME_LABEL = "Time Step";
+const CONTROL_LOOP_TIME_MIN = 0.01;
+const CONTROL_LOOP_TIME_STEP = 0.01;
 const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 const LOGGING_ACTIVE = true;
@@ -109,6 +110,8 @@ function info(stringToLog) {
 
 function startSortingAlgorithm() {
   sortingAlgorithmCurrentlyRunning = true;
+  sortingStats.numberOfComparisons = 0;
+  sortingStats.numberOfSwaps = 0;
 }
 
 function stopSortingAlgorithm() {
@@ -143,8 +146,12 @@ function mainContainerExsists() {
   return $('#' + MAIN_CONTAINER_ID).length > 0;
 }
 
+function createGraphAndInformationContainer() {
+  getMainContainer().append('div').attr('id', GRAPH_AND_INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
 function createGraphContainer() {
-  getMainContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+  getGraphAndInformationContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
 function createControlsContainer() {
@@ -152,10 +159,11 @@ function createControlsContainer() {
 }
 
 function createInfomationContainer() {
-  getMainContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+  getGraphAndInformationContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
 function createContainers() {
+  createGraphAndInformationContainer();
   createGraphContainer();
   createControlsContainer();
   createInfomationContainer();
@@ -163,6 +171,10 @@ function createContainers() {
 
 function getMainContainer() {
   return d3.select('#' + MAIN_CONTAINER_ID);
+}
+
+function getGraphAndInformationContainer() {
+  return d3.select('#' + GRAPH_AND_INFOMATION_CONTAINER_ID);
 }
 
 function getGraphContainer() {
@@ -375,8 +387,8 @@ function createUI() {
     createContainers();
     createGraph();
     updateGraphDimensions();
-    createControls();
     createInformation();
+    createControls();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
