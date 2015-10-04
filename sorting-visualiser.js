@@ -546,6 +546,15 @@ function updateLayout() {
     setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
     setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
   }
+
+  //When screen compresses to single column adjusts the stats and legend tab
+  if (width < 30) {
+    setPercentageWidthOfElement('#' + STATS_ID, 98);
+    setPercentageWidthOfElement('#' + LEGEND_ID, 98);
+  } else {
+    setPercentageWidthOfElement('#' + STATS_ID, 48);
+    setPercentageWidthOfElement('#' + LEGEND_ID, 48);
+  }
 }
 
 /* ------------------------------------------------------------------------- */
