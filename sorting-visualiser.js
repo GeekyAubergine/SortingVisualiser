@@ -28,6 +28,13 @@ const LEGEND_ID = 'sv-legend';
 const STATS_COMPARISONS_ID = 'sv-comparisons-stat';
 const STATS_SWAPS_ID = 'sv-swaps-stat';
 const STAT_CLASS = 'sv-stat';
+const INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
+const INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
+const ALGORITHM_INFORMATION_ID = 'sv-algorithm-information-container';
+const INFORMATION_NAME_ID = 'sv-algorithm-name';
+const INFORMATION_COMPLEXITY_ID = 'sv-algorithm-complexity';
+const INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
+const INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
 
 //Bar class names
 const BAR_NORMAL_CLASS = 'sv-bar-normal';
@@ -67,7 +74,10 @@ const margin = {
 //Buttons
 var sortingAlgorithmButtons = [{
   name: 'Bubble',
-  callBack: bubbleSort
+  callBack: bubbleSort,
+  complexity: 'O(n^2)',
+  memory: 'O(n)',
+  description: 'This is an example of a description for the bubble sort algorithm'
 }]
 
 var graphDimensions = {
@@ -112,10 +122,11 @@ function info(stringToLog) {
   }
 }
 
-function startSortingAlgorithm() {
+function startSortingAlgorithm(algorithm) {
   sortingAlgorithmCurrentlyRunning = true;
   sortingStats.numberOfComparisons = 0;
   sortingStats.numberOfSwaps = 0;
+  updateAlgorithmInformation(algorithm);
 }
 
 function stopSortingAlgorithm() {
@@ -166,11 +177,22 @@ function createInfomationContainer() {
   getGraphAndInformationContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
+function createInformationLeftContainer() {
+  getInformationContainer().append('div').attr('id', INFORMATION_LEFT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
+function createInformationRightContainer() {
+  getInformationContainer().append('div').attr('id', INFORMATION_RIGHT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
+
 function createContainers() {
   createGraphAndInformationContainer();
   createGraphContainer();
   createControlsContainer();
   createInfomationContainer();
+  createInformationLeftContainer();
+  createInformationRightContainer();
 }
 
 function getMainContainer() {
@@ -191,6 +213,14 @@ function getContolsContainer() {
 
 function getInformationContainer() {
   return d3.select('#' + INFOMATION_CONTAINER_ID);
+}
+
+function getInformationLeftContainer() {
+  return d3.select('#' + INFORMATION_LEFT_CONTAINER_ID);
+}
+
+function getInformationRightContainer() {
+  return d3.select('#' + INFORMATION_RIGHT_CONTAINER_ID);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -268,8 +298,8 @@ function createAlgorithmButton(parent, buttonData) {
   button.on('click', function() {
     if (!sortingAlgorithmCurrentlyRunning) {
       button.classed(BUTTON_SELECTED_CLASS, true);
+      startSortingAlgorithm(buttonData);
       buttonData.callBack();
-      startSortingAlgorithm();
     }
   });
 }
@@ -359,7 +389,6 @@ function createLegend(container) {
   item.append('p').text('= Bound');
 }
 
-/* ---- Stats Creation ---- */
 function createStats(container) {
   var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
   statsContainer.append('h2').text('Stats');
@@ -368,15 +397,35 @@ function createStats(container) {
   list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
 }
 
+function createAlgorithmInformation(container) {
+  var informationContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ID).attr('class', LIST_CLASS);
+  informationContainer.append('h2').text('Infomation');
+  var list = informationContainer.append('ul');
+  list.append('li').attr('id', INFORMATION_NAME_ID).attr('class', STAT_CLASS).text('Name: ');
+  list.append('li').attr('id', INFORMATION_COMPLEXITY_ID).attr('class', STAT_CLASS).text('Complexity: ');
+  list.append('li').attr('id', INFORMATION_MEMORY_ID).attr('class', STAT_CLASS).text('Memory Usage: ');
+  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID).attr('class', STAT_CLASS).text("Description: ");
+}
+
 function createInformation() {
-  var container = getInformationContainer();
+  var container = getInformationRightContainer();
   createStats(container);
   createLegend(container);
+  createAlgorithmInformation(getInformationLeftContainer());
 }
 
 function updateStats() {
   d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
   d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
+}
+
+function updateAlgorithmInformation(algorithm) {
+  if (algorithm != undefined) {
+    d3.select('#' + INFORMATION_NAME_ID).text("Name: " + algorithm.name);
+    d3.select('#' + INFORMATION_COMPLEXITY_ID).text("Complexity: " + algorithm.complexity);
+    d3.select('#' + INFORMATION_MEMORY_ID).text("Memory Usage: " + algorithm.memory);
+    d3.select('#' + INFORMATION_DESCRIPTION_ID).text("Description: " + algorithm.description);
+  }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -518,7 +567,7 @@ function setMainContainersPercentageWidths(graphAndInformationWidth, controlsWid
 
 function updateLayout() {
   var width = getWidthOfContainerInEm();
-  console.log(width);
+  info('Container width: ' + width + 'em');
 
   //Main container positioning
   if (width < 50) {
@@ -539,12 +588,21 @@ function updateLayout() {
   }
 
   //When screen compresses to single column adjusts the controls and settings tab
-  if (width < 50) {
+  if (width < 50 && width > 30) {
     setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
     setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
   } else {
     setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
     setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
+  }
+
+  //When screen compresses to single column adjusts the stats and legend tab
+  if (width < 30) {
+    //   setPercentageWidthOfElement('#' + STATS_ID, 98);
+    //   setPercentageWidthOfElement('#' + LEGEND_ID, 98);
+    // } else {
+    //   setPercentageWidthOfElement('#' + STATS_ID, 48);
+    //   setPercentageWidthOfElement('#' + LEGEND_ID, 48);
   }
 }
 

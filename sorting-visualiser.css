@@ -30,6 +30,12 @@ svg {
 #sv-infomation-container {
   width: 100%;
 }
+#sv-information-left-container {
+  width: 50%;
+}
+#sv-information-right-container {
+  width: 50%;
+}
 
 /* Bars */
 
@@ -163,10 +169,6 @@ svg {
 }
 
 /* Information */
-
-#sv-legend {
-  width: 48%;
-}
 #sv-legend li p {
   width: auto;
   margin: 0;
@@ -180,9 +182,10 @@ svg {
   width: 1em;
   height: 1em;
 }
-#sv-stats {
-  width: 48%;
-}
 #sv-stats li {
   width: 50%;
+}
+#sv-algorithm-information-container li {
+  text-align: left;
+  padding-left: 1em;
 }
