@@ -5,19 +5,24 @@ const CONTAINER_CLASS = 'sv-container';
 const LIST_CLASS = 'sv-list';
 const LEGEND_ITEM_CLASS = 'sv-legend-item';
 
-//Element ID's
-const PARENT_CONTAINER_ID = 'sorting-visualiser-container';
-const GRAPH_CONTAINER_ID = 'sorting-visualiser-graph-container';
-const GRAPH_ID = 'sorting-visualiser-graph';
-const LEGEND_CONTAINER_ID = 'sorting-visualiser-legend-container';
-const STATS_CONTAINER_ID = 'sorting-visualiser-stats-container';
-const CONTROLS_CONTAINER_ID = 'sorting-visualiser-controls-container';
-const BUTTONS_CONTAINER_ID = 'sorting-visualiser-buttons-container';
-const GRAPH_GRAPHICS_ID = 'sorting-visualiser-graph-graphics-element';
-const STATS_COMPARISONS_ID = 'sorting-visualiser-comparisons-stat';
-const STATS_SWAPS_ID = 'sorting-visualiser-swaps-stat';
+//Container ID's
+const MAIN_CONTAINER_ID = 'sorting-visualiser-container';
+const GRAPH_CONTAINER_ID = 'sv-graph-container';
+const CONTROLS_CONTAINER_ID = 'sv-controls-container';
+const INFOMATION_CONTAINER_ID = 'sv-infomation-container';
 
+//Graph Element ID's
+const GRAPH_ID = 'sv-graph';
+const GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
+
+//Controls Element ID's
 const STOP_BUTTON_ID = 'sv-stop-button';
+
+//Information Element ID's
+const STATS_ID = 'sv-stats';
+const LEGEND_ID = 'sv-legend';
+const STATS_COMPARISONS_ID = 'sv-comparisons-stat';
+const STATS_SWAPS_ID = 'sv-swaps-stat';
 
 //Bar class names
 const BAR_NORMAL_CLASS = 'sv-bar-normal';
@@ -127,24 +132,60 @@ function stopSortingAlgorithm() {
 }
 
 /* ------------------------------------------------------------------------- */
-/* UI Creation and control
+/* Main containers
 /* ------------------------------------------------------------------------- */
 
 /**
  * Returns whether or not the parent container exsists
  * @return {boolean} Whether the parent container exsists
  */
-function parentContainerExsists() {
-  return $('#' + PARENT_CONTAINER_ID).length > 0;
+function mainContainerExsists() {
+  return $('#' + MAIN_CONTAINER_ID).length > 0;
 }
+
+function createGraphContainer() {
+  getMainContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
+function createControlsContainer() {
+  getMainContainer().append('div').attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
+function createInfomationContainer() {
+  getMainContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+}
+
+function createContainers() {
+  createGraphContainer();
+  createControlsContainer();
+  createInfomationContainer();
+}
+
+function getMainContainer() {
+  return d3.select('#' + MAIN_CONTAINER_ID);
+}
+
+function getGraphContainer() {
+  return d3.select('#' + GRAPH_CONTAINER_ID);
+}
+
+function getContolsContainer() {
+  return d3.select('#' + CONTROLS_CONTAINER_ID);
+}
+
+function getInformationContainer() {
+  return d3.select('#' + INFOMATION_CONTAINER_ID);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Graph Creation and Control
+/* ------------------------------------------------------------------------- */
 
 /**
  * Creates graph and associated DOM elements
  */
 function createGraph() {
-  var parentContainer = d3.select("#" + PARENT_CONTAINER_ID);
-  parentContainer.attr('class', CONTAINER_CLASS);
-  var graphContainer = parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID);
+  var graphContainer = getGraphContainer();
   var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
   graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
 
@@ -157,8 +198,7 @@ function createGraph() {
  */
 function updateGraphDimensions() {
   //Get graphics objects
-  var graphContainer = d3.select('#' + GRAPH_CONTAINER_ID);
-  graphContainer.attr('class', CONTAINER_CLASS);
+  var graphContainer = getGraphContainer();
   var graph = d3.select('#' + GRAPH_ID);
 
   var graphContainerWidth = parseInt(graphContainer.style('width'));
@@ -195,49 +235,37 @@ function updateGraphDimensions() {
     .call(axis.y);
 }
 
-/* ---- Stats Creation ---- */
-
-function createLegend() {
-  var legendContainer = d3.select('#' + PARENT_CONTAINER_ID)
-    .append('div').attr('id', LEGEND_CONTAINER_ID).attr('class', CONTAINER_CLASS)
-    .append('div').attr('class', LIST_CLASS);
-  legendContainer.append('h2').text('Legend');
-
-  var list = legendContainer.append('ul');
-
-  var item = list.append('li');
-  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_ACTIVE_CLASS);
-  item.append('p').text('= Current Index');
-
-  item = list.append('li');
-  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_COMPARISON_CLASS);
-  item.append('p').text('= Comparison Index');
-
-  item = list.append('li');
-  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
-  item.append('p').text('= Bound');
+/* ------------------------------------------------------------------------- */
+/* Controls Creation and Control
+/* ------------------------------------------------------------------------- */
+function createButton(parent, buttonData) {
+  var button = parent.append('div').attr('class', BUTTON_CLASS);
+  button.append('p').text(buttonData.name);
+  button.on('click', function() {
+    if (!sortingAlgorithmCurrentlyRunning) {
+      button.classed(BUTTON_SELECTED_CLASS, true);
+      buttonData.callBack();
+      startSortingAlgorithm();
+    }
+  });
 }
 
-/* ---- Stats Creation ---- */
-function createStats() {
-  var statsContainer = d3.select('#' + PARENT_CONTAINER_ID)
-    .append('div').attr('id', STATS_CONTAINER_ID).attr('class', CONTAINER_CLASS)
-    .append('div').attr('class', LIST_CLASS);
-  statsContainer.append('h2').text('Stats');
-  var list = statsContainer.append('ul');
-  list.append('li').append('p').attr('id', STATS_COMPARISONS_ID);
-  list.append('li').append('p').attr('id', STATS_SWAPS_ID);
+function createSortingAlgorithmButtons(container) {
+  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
+    createButton(container, sortingAlgorithmButtons[i]);
+  }
 }
 
-function updateStats() {
-  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
-  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
+function createStopButton(container) {
+  var button = container.append('div').attr('id', STOP_BUTTON_ID).attr('class', BUTTON_CLASS);
+  button.append('p').text('Stop');
+  button.on('click', function() {
+    stopSortingAlgorithm();
+  });
 }
 
-/* ---- Control Creation ---- */
-function createControls() {
-  var controlsContainer = d3.select('#' + PARENT_CONTAINER_ID).append('div')
-    .attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS + ' ' + LIST_CLASS);
+function createAlgorithmControls(container) {
+  var controlsContainer = container.append('div').attr('class', LIST_CLASS);
 
   controlsContainer.append('h2').text('Settings');
   var list = controlsContainer.append('ul');
@@ -275,57 +303,71 @@ function createControls() {
   });
 }
 
-/* ---- Button Creation ---- */
-function createButtonContainer() {
-  d3.select('#' + PARENT_CONTAINER_ID).append('div')
-  .attr('id', BUTTONS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createControls() {
+  var container = getContolsContainer();
+  createStopButton(container);
+  createAlgorithmControls(container);
+  createSortingAlgorithmButtons(container);
 }
 
-function createStopButton() {
-  var button = d3.select('#' + BUTTONS_CONTAINER_ID).append('div').attr('id', STOP_BUTTON_ID).attr('class', BUTTON_CLASS);
-  button.append('p').text('Stop');
-  button.on('click', function() {
-    stopSortingAlgorithm();
-  });
+/* ------------------------------------------------------------------------- */
+/* Infomation Creating and Control
+/* ------------------------------------------------------------------------- */
+
+function createLegend(container) {
+  var legendContainer = container
+    .append('div').attr('id', LEGEND_ID).attr('class', LIST_CLASS);
+  legendContainer.append('h2').text('Legend');
+
+  var list = legendContainer.append('ul');
+
+  var item = list.append('li');
+  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_ACTIVE_CLASS);
+  item.append('p').text('= Current Index');
+
+  item = list.append('li');
+  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_COMPARISON_CLASS);
+  item.append('p').text('= Comparison Index');
+
+  item = list.append('li');
+  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
+  item.append('p').text('= Bound');
 }
 
-function createSortingAlgorithmButtons() {
-  var buttonsContainer = d3.select('#' + BUTTONS_CONTAINER_ID);
-  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
-    createButton(buttonsContainer, sortingAlgorithmButtons[i]);
-  }
+/* ---- Stats Creation ---- */
+function createStats(container) {
+  var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
+  statsContainer.append('h2').text('Stats');
+  var list = statsContainer.append('ul');
+  list.append('li').append('p').attr('id', STATS_COMPARISONS_ID);
+  list.append('li').append('p').attr('id', STATS_SWAPS_ID);
 }
 
-function createButton(parent, buttonData) {
-  var button = parent.append('div').attr('class', BUTTON_CLASS);
-  button.append('p').text(buttonData.name);
-  button.on('click', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      button.classed(BUTTON_SELECTED_CLASS, true);
-      buttonData.callBack();
-      startSortingAlgorithm();
-    }
-  });
+function createInformation() {
+  var container = getInformationContainer();
+  createStats(container);
+  createLegend(container);
 }
 
-function createButtons() {
-  createButtonContainer();
-  createStopButton();
-  createSortingAlgorithmButtons();
+function updateStats() {
+  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
+  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
 }
+
+/* ------------------------------------------------------------------------- */
+/* UI Creation
+/* ------------------------------------------------------------------------- */
 
 /**
  * Creates the UI
  */
 function createUI() {
-  if (parentContainerExsists()) {
+  if (mainContainerExsists()) {
+    createContainers();
     createGraph();
     updateGraphDimensions();
-    createLegend();
-    createStats();
-    updateStats();
     createControls();
-    createButtons();
+    createInformation();
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
