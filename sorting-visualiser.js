@@ -238,6 +238,14 @@ function updateGraphDimensions() {
 /* ------------------------------------------------------------------------- */
 /* Controls Creation and Control
 /* ------------------------------------------------------------------------- */
+function createButton(parent, text, callBack) {
+  var button = parent.append('li').attr('class', BUTTON_CLASS);
+  button.text(text);
+  button.on('click', function() {
+    callBack()
+  });
+}
+
 function createAlgorithmButton(parent, buttonData) {
   var button = parent.append('li').attr('class', BUTTON_CLASS);
   button.text(buttonData.name);
@@ -251,17 +259,18 @@ function createAlgorithmButton(parent, buttonData) {
 }
 
 function createSortingAlgorithmButtons(container) {
+  var container = container.append('div').attr('class', LIST_CLASS);
+  container.append('h2').text('Algorithms');
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
     createAlgorithmButton(container, sortingAlgorithmButtons[i]);
   }
 }
 
-function createStopButton(container) {
-  var button = container.append('li').attr('class', BUTTON_CLASS);
-  button.text('Stop');
-  button.on('click', function() {
-    stopSortingAlgorithm();
-  });
+function createControlButtons(container) {
+  var container = container.append('div').attr('class', LIST_CLASS);
+  container.append('h2').text('Controls');
+  createButton(container, 'Stop', stopSortingAlgorithm);
+  createButton(container, 'New Array', generateData);
 }
 
 function createAlgorithmControls(container) {
@@ -305,10 +314,8 @@ function createAlgorithmControls(container) {
 
 function createControls() {
   var container = getContolsContainer();
+  createControlButtons(container);
   createAlgorithmControls(container);
-  var container = container.append('div').attr('class', LIST_CLASS);
-  container.append('h2').text('Algorithms');
-  createStopButton(container);
   createSortingAlgorithmButtons(container);
 }
 
@@ -505,6 +512,13 @@ function generateWorstCase() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
     arrayToSort.push(numberOfElementsToSort - i);
+  }
+}
+
+function generateData() {
+  if (!sortingAlgorithmCurrentlyRunning) {
+    generateRandomData();
+    updateScreen();
   }
 }
 
