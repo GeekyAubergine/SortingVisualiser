@@ -238,9 +238,9 @@ function updateGraphDimensions() {
 /* ------------------------------------------------------------------------- */
 /* Controls Creation and Control
 /* ------------------------------------------------------------------------- */
-function createButton(parent, buttonData) {
-  var button = parent.append('div').attr('class', BUTTON_CLASS);
-  button.append('p').text(buttonData.name);
+function createAlgorithmButton(parent, buttonData) {
+  var button = parent.append('li').attr('class', BUTTON_CLASS);
+  button.text(buttonData.name);
   button.on('click', function() {
     if (!sortingAlgorithmCurrentlyRunning) {
       button.classed(BUTTON_SELECTED_CLASS, true);
@@ -252,13 +252,13 @@ function createButton(parent, buttonData) {
 
 function createSortingAlgorithmButtons(container) {
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
-    createButton(container, sortingAlgorithmButtons[i]);
+    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
   }
 }
 
 function createStopButton(container) {
-  var button = container.append('div').attr('id', STOP_BUTTON_ID).attr('class', BUTTON_CLASS);
-  button.append('p').text('Stop');
+  var button = container.append('li').attr('class', BUTTON_CLASS);
+  button.text('Stop');
   button.on('click', function() {
     stopSortingAlgorithm();
   });
@@ -305,8 +305,10 @@ function createAlgorithmControls(container) {
 
 function createControls() {
   var container = getContolsContainer();
-  createStopButton(container);
   createAlgorithmControls(container);
+  var container = container.append('div').attr('class', LIST_CLASS);
+  container.append('h2').text('Algorithms');
+  createStopButton(container);
   createSortingAlgorithmButtons(container);
 }
 
@@ -339,8 +341,8 @@ function createStats(container) {
   var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
   statsContainer.append('h2').text('Stats');
   var list = statsContainer.append('ul');
-  list.append('li').append('p').attr('id', STATS_COMPARISONS_ID);
-  list.append('li').append('p').attr('id', STATS_SWAPS_ID);
+  list.append('li').attr('id', STATS_COMPARISONS_ID);
+  list.append('li').attr('id', STATS_SWAPS_ID);
 }
 
 function createInformation() {
