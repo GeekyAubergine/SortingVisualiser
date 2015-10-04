@@ -15,18 +15,16 @@ svg {
   width: 80%;
 }
 #sv-graph-container {
-  width: 100%;
+  width: 98%;
+  margin: 1%;
 }
 #sv-controls-container {
-  width: 19.5%;
+  width: 20%;
   margin: 0;
-  margin-left: 0.5%;
-  padding-left: 0.5%;
-  border-left: 1px solid #A0A0A0;
-  box-sizing: border-box;
+/*  border-left: 1px solid #A0A0A0;
+  box-sizing: border-box;*/
 }
 #sv-controls-container .sv-list {
-  margin: 0;
   margin-bottom: 1em;
 }
 #sv-infomation-container {
@@ -98,7 +96,7 @@ svg {
   background-color: #FFFFFF;
   text-align: center;
   line-height: 175%;
-  font-size: 200%;
+  font-size: 150%;
   list-style-type: none;
   overflow: visible;
 }
@@ -127,7 +125,7 @@ svg {
   width: 100%;
   text-align: center;
   line-height: 0%;
-  font-size: 200%;
+  font-size: 150%;
 }
 
 /* Control */
@@ -184,4 +182,7 @@ svg {
 }
 #sv-stats {
   width: 48%;
+}
+#sv-stats li {
+  width: 50%;
 }

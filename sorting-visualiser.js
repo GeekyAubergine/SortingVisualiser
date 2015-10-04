@@ -18,12 +18,16 @@ const GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
 
 //Controls Element ID's
 const STOP_BUTTON_ID = 'sv-stop-button';
+const ALGORITHMS_CONTROLS_CONTAINER_ID = 'sv-controls';
+const ALGORITHMS_SETTINGS_CONTAINER_ID = 'sv-settings';
+const ALGORITHMS_CONTAINER_ID = 'sv-algorithms';
 
 //Information Element ID's
 const STATS_ID = 'sv-stats';
 const LEGEND_ID = 'sv-legend';
 const STATS_COMPARISONS_ID = 'sv-comparisons-stat';
 const STATS_SWAPS_ID = 'sv-swaps-stat';
+const STAT_CLASS = 'sv-stat';
 
 //Bar class names
 const BAR_NORMAL_CLASS = 'sv-bar-normal';
@@ -271,7 +275,7 @@ function createAlgorithmButton(parent, buttonData) {
 }
 
 function createSortingAlgorithmButtons(container) {
-  var container = container.append('div').attr('class', LIST_CLASS);
+  var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
   container.append('h2').text('Algorithms');
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
     createAlgorithmButton(container, sortingAlgorithmButtons[i]);
@@ -279,14 +283,14 @@ function createSortingAlgorithmButtons(container) {
 }
 
 function createControlButtons(container) {
-  var container = container.append('div').attr('class', LIST_CLASS);
+  var container = container.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
   container.append('h2').text('Controls');
   createButton(container, 'Stop', stopSortingAlgorithm);
   createButton(container, 'New Array', generateData);
 }
 
 function createAlgorithmControls(container) {
-  var controlsContainer = container.append('div').attr('class', LIST_CLASS);
+  var controlsContainer = container.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
 
   controlsContainer.append('h2').text('Settings');
   var list = controlsContainer.append('ul');
@@ -344,11 +348,11 @@ function createLegend(container) {
 
   var item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_ACTIVE_CLASS);
-  item.append('p').text('= Current Index');
+  item.append('p').text('= Current');
 
   item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_COMPARISON_CLASS);
-  item.append('p').text('= Comparison Index');
+  item.append('p').text('= Comparison');
 
   item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
@@ -360,8 +364,8 @@ function createStats(container) {
   var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
   statsContainer.append('h2').text('Stats');
   var list = statsContainer.append('ul');
-  list.append('li').attr('id', STATS_COMPARISONS_ID);
-  list.append('li').attr('id', STATS_SWAPS_ID);
+  list.append('li').attr('id', STATS_COMPARISONS_ID).attr('class', STAT_CLASS);
+  list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
 }
 
 function createInformation() {
@@ -491,6 +495,60 @@ function updateScreen() {
 }
 
 /* ------------------------------------------------------------------------- */
+/* Screen Arrangement
+/* ------------------------------------------------------------------------- */
+
+function getWidthInEm(element) {
+  return element.width() / parseFloat($('body').css('font-size'));
+}
+
+function getWidthOfContainerInEm() {
+  return getWidthInEm($('#' + MAIN_CONTAINER_ID));
+}
+
+function setPercentageWidthOfElement(id, width) {
+  info('Setting ' + id + ' to width: ' + width.toString() + '%');
+  $(id).outerWidth(width + "%");
+}
+
+function setMainContainersPercentageWidths(graphAndInformationWidth, controlsWidth) {
+  setPercentageWidthOfElement('#' + GRAPH_AND_INFOMATION_CONTAINER_ID, graphAndInformationWidth);
+  setPercentageWidthOfElement('#' + CONTROLS_CONTAINER_ID, controlsWidth);
+}
+
+function updateLayout() {
+  var width = getWidthOfContainerInEm();
+  console.log(width);
+
+  //Main container positioning
+  if (width < 50) {
+    setMainContainersPercentageWidths(100, 100);
+  } else if (width < 60) {
+    setMainContainersPercentageWidths(70, 30);
+  } else if (width < 75) {
+    setMainContainersPercentageWidths(75, 25);
+  } else {
+    setMainContainersPercentageWidths(80, 20);
+  }
+
+  //Adjust stat width to prevent overflow
+  if (width < 70) {
+    setPercentageWidthOfElement('.' + STAT_CLASS, 100);
+  } else {
+    setPercentageWidthOfElement('.' + STAT_CLASS, 50);
+  }
+
+  //When screen compresses to single column adjusts the controls and settings tab
+  if (width < 50) {
+    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
+    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
+  } else {
+    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
+    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
+  }
+}
+
+/* ------------------------------------------------------------------------- */
 /* Generation of data
 /* ------------------------------------------------------------------------- */
 
@@ -579,9 +637,11 @@ $(function() {
   createUI();
   generateRandomData();
   updateScreen();
+  updateLayout();
 })
 
 window.onresize = function() {
+  updateLayout();
   updateGraphDimensions();
-  render();
+  updateScreen();
 }
