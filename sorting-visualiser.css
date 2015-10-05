@@ -167,7 +167,17 @@ svg {
   border-left: 0.1em solid #aaa;
   box-sizing: border-box;
 }
-
+.sv-control select {
+  float: left;
+  margin: 0;
+  width: 50%;
+  height: 2em;
+  border: none;
+  font-size: 100%;
+  text-align: center;
+  border-left: 0.1em solid #aaa;
+  box-sizing: border-box;
+}
 /* Information */
 #sv-legend li p {
   width: auto;

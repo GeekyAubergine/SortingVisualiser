@@ -112,6 +112,7 @@ var sortingStats = {
 }
 var sortingAlgorithmCurrentlyRunning = false;
 var sortingAlgorithmLoop;
+var arrayGenerationAlgorithm = generateRandomData;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -338,7 +339,7 @@ function createAlgorithmControls(container) {
   arraySizeControl.on('input', function() {
     if (!sortingAlgorithmCurrentlyRunning) {
       numberOfElementsToSort = this.value;
-      generateRandomData();
+      generateData();
       updateScreen();
     } else {
       this.value = numberOfElementsToSort;
@@ -363,21 +364,21 @@ function createAlgorithmControls(container) {
     .append('p').text(CONTROL_ARRAY_TYPE_LABEL);
   var select = arrayTypeControlContainer.append('select');
   select.append('option').attr('value', 'best').text('Best');
-  select.append('option').attr('value', 'random').text('Random');
+  select.append('option').attr('value', 'random').attr('selected', 'selected').text('Random');
   select.append('option').attr('value', 'worst').text('Worst');
 
   select.on('change', function() {
-      info(this.value);
+      info('Array type selected: ' + this.value);
+      if (this.value == 'best') {
+        arrayGenerationAlgorithm = generateBestCase;
+      }
+      else if (this.value == 'worst') {
+        arrayGenerationAlgorithm = generateWorstCase;
+      } else {
+        arrayGenerationAlgorithm = generateRandomData;
+      }
+      generateData();
   });
-  // var timeSetControl = timeStepControlContainer.append('input')
-  //   .attr('type', 'number')
-  //   .attr('min', CONTROL_LOOP_TIME_MIN)
-  //   .attr('step', CONTROL_LOOP_TIME_STEP)
-  //   .attr('value', sortingStepDelay / 1000);
-  //
-  // timeSetControl.on('input', function() {
-  //   sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
-  // });
 }
 
 function createControls() {
@@ -667,7 +668,7 @@ function generateWorstCase() {
 
 function generateData() {
   if (!sortingAlgorithmCurrentlyRunning) {
-    generateRandomData();
+    arrayGenerationAlgorithm();
     updateScreen();
   }
 }
