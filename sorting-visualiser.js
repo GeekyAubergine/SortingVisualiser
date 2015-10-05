@@ -42,10 +42,11 @@ const BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
 const BAR_COMPARISON_CLASS = 'sv-bar-comparison';
 const BAR_BOUND_CLASS = 'sv-bar-bound';
 
-//
+//Button class names
 const BUTTON_CLASS = 'sv-button'
 const BUTTON_SELECTED_CLASS = 'sv-selected';
 
+//Control class names
 const CONTROL_CONTAINER_CLASS = 'sv-control';
 const CONTROL_LABEL_CLASS = 'sv-control-label';
 
@@ -58,6 +59,7 @@ const CONTROL_LOOP_TIME_STEP = 0.01;
 const CONTROL_ARRAY_TYPE_LABEL = 'Array Type';
 const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
+//Logging should be turned on if verbose output is wanted
 const LOGGING_ACTIVE = true;
 
 const ARRAY_MIN_SIZE = 5;
@@ -118,22 +120,40 @@ var arrayGenerationAlgorithm = generateRandomData;
 /* Utility Methods
 /* ------------------------------------------------------------------------- */
 
+/**
+ * Prints given string to console.log if LOGGING_ACTIVE is true
+ */
 function info(stringToLog) {
+  if (stringToLog == undefined || stringToLog == null) {
+    return;
+  }
   if (LOGGING_ACTIVE) {
     console.log(stringToLog);
   }
 }
 
+/**
+ * Sets information for algorithm and start algorithm
+ * @param {Object} algorithm object
+ */
 function startSortingAlgorithm(algorithm) {
+  if (algorith == undefined || algorithm == null) {
+    return;
+  }
   sortingAlgorithmCurrentlyRunning = true;
   sortingStats.numberOfComparisons = 0;
   sortingStats.numberOfSwaps = 0;
   updateAlgorithmInformation(algorithm);
+  algorithm.callBack();
 }
 
+/**
+ * Stops the current sorting algorithm
+ */
 function stopSortingAlgorithm() {
   info('Sorting algorithm stopped');
   sortingAlgorithmCurrentlyRunning = false;
+
   //Loops as it sometimes fails
   for (var i = 0; i < 10; i++) {
     setTimeout(function() {
@@ -143,7 +163,11 @@ function stopSortingAlgorithm() {
       clearInterval(sortingAlgorithmLoop);
     }, 0);
   }
+
+  //Removes selected class from all buttons
   d3.selectAll('.' + BUTTON_CLASS).classed(BUTTON_SELECTED_CLASS, false);
+
+  //Resets the sorting algorithm index markers to -1
   sortingCurrentIndex = -1;
   sortingComparisonIndex = -1;
   sortingLeftBound = -1;
@@ -163,31 +187,51 @@ function mainContainerExsists() {
   return $('#' + MAIN_CONTAINER_ID).length > 0;
 }
 
+/**
+ * Creates the graph and information container. This is the main left container
+ */
 function createGraphAndInformationContainer() {
   getMainContainer().append('div').attr('id', GRAPH_AND_INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
+/**
+ * Creates the graph container
+ */
 function createGraphContainer() {
   getGraphAndInformationContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
+/**
+ * Creates the controls container. This is the main right container
+ */
 function createControlsContainer() {
   getMainContainer().append('div').attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
+/**
+ * Creates the information container
+ */
 function createInfomationContainer() {
   getGraphAndInformationContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
+/**
+ * Creates the information left container
+ */
 function createInformationLeftContainer() {
   getInformationContainer().append('div').attr('id', INFORMATION_LEFT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
+/**
+ * Creates the information right container
+ */
 function createInformationRightContainer() {
   getInformationContainer().append('div').attr('id', INFORMATION_RIGHT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
-
+/**
+ * Creates all containers used in Sorter-Visualiser
+ */
 function createContainers() {
   createGraphAndInformationContainer();
   createGraphContainer();
@@ -197,30 +241,58 @@ function createContainers() {
   createInformationRightContainer();
 }
 
+/**
+ * Returns the main container for the whole program
+ * @return {d3.element} Main container
+ */
 function getMainContainer() {
   return d3.select('#' + MAIN_CONTAINER_ID);
 }
 
+/**
+ * Returns the main container for the whole program
+ * @return {d3.element} Main container
+ */
 function getGraphAndInformationContainer() {
   return d3.select('#' + GRAPH_AND_INFOMATION_CONTAINER_ID);
 }
 
+/**
+ * Returns the graph container for the whole program
+ * @return {d3.element} Graph container
+ */
 function getGraphContainer() {
   return d3.select('#' + GRAPH_CONTAINER_ID);
 }
 
+/**
+ * Returns the controls container for the whole program
+ * @return {d3.element} Controls container
+ */
 function getContolsContainer() {
   return d3.select('#' + CONTROLS_CONTAINER_ID);
 }
 
+/**
+ * Returns the information container for the whole program
+ * @return {d3.element} Information container
+ */
 function getInformationContainer() {
   return d3.select('#' + INFOMATION_CONTAINER_ID);
 }
 
+/**
+ * Returns the information left container for the whole program
+ * @return {d3.element} Informatio left container
+ */
 function getInformationLeftContainer() {
   return d3.select('#' + INFORMATION_LEFT_CONTAINER_ID);
 }
 
+/**
+ * Returns the information right container for the whole program
+ * @return {d3.element} Information right container
+ */
 function getInformationRightContainer() {
   return d3.select('#' + INFORMATION_RIGHT_CONTAINER_ID);
 }
@@ -301,7 +373,6 @@ function createAlgorithmButton(parent, buttonData) {
     if (!sortingAlgorithmCurrentlyRunning) {
       button.classed(BUTTON_SELECTED_CLASS, true);
       startSortingAlgorithm(buttonData);
-      buttonData.callBack();
     }
   });
 }
