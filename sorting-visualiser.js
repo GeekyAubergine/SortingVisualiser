@@ -55,6 +55,7 @@ const CONTROL_ARRAY_SIZE_STEP = 5;
 const CONTROL_LOOP_TIME_LABEL = "Time Step";
 const CONTROL_LOOP_TIME_MIN = 0.01;
 const CONTROL_LOOP_TIME_STEP = 0.01;
+const CONTROL_ARRAY_TYPE_LABEL = 'Array Type';
 const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 const LOGGING_ACTIVE = true;
@@ -356,6 +357,27 @@ function createAlgorithmControls(container) {
   timeSetControl.on('input', function() {
     sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
   });
+
+  var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
+  arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+    .append('p').text(CONTROL_ARRAY_TYPE_LABEL);
+  var select = arrayTypeControlContainer.append('select');
+  select.append('option').attr('value', 'best').text('Best');
+  select.append('option').attr('value', 'random').text('Random');
+  select.append('option').attr('value', 'worst').text('Worst');
+
+  select.on('change', function() {
+      info(this.value);
+  });
+  // var timeSetControl = timeStepControlContainer.append('input')
+  //   .attr('type', 'number')
+  //   .attr('min', CONTROL_LOOP_TIME_MIN)
+  //   .attr('step', CONTROL_LOOP_TIME_STEP)
+  //   .attr('value', sortingStepDelay / 1000);
+  //
+  // timeSetControl.on('input', function() {
+  //   sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+  // });
 }
 
 function createControls() {
