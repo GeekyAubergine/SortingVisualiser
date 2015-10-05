@@ -401,10 +401,10 @@ function createAlgorithmInformation(container) {
   var informationContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ID).attr('class', LIST_CLASS);
   informationContainer.append('h2').text('Infomation');
   var list = informationContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_NAME_ID).attr('class', STAT_CLASS).text('Name: ');
-  list.append('li').attr('id', INFORMATION_COMPLEXITY_ID).attr('class', STAT_CLASS).text('Complexity: ');
-  list.append('li').attr('id', INFORMATION_MEMORY_ID).attr('class', STAT_CLASS).text('Memory Usage: ');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID).attr('class', STAT_CLASS).text("Description: ");
+  list.append('li').attr('id', INFORMATION_NAME_ID).text('Name: ');
+  list.append('li').attr('id', INFORMATION_COMPLEXITY_ID).text('Complexity: ');
+  list.append('li').attr('id', INFORMATION_MEMORY_ID).text('Memory Usage: ');
+  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID).text("Description: ");
 }
 
 function createInformation() {
@@ -598,11 +598,11 @@ function updateLayout() {
 
   //When screen compresses to single column adjusts the stats and legend tab
   if (width < 30) {
-    //   setPercentageWidthOfElement('#' + STATS_ID, 98);
-    //   setPercentageWidthOfElement('#' + LEGEND_ID, 98);
-    // } else {
-    //   setPercentageWidthOfElement('#' + STATS_ID, 48);
-    //   setPercentageWidthOfElement('#' + LEGEND_ID, 48);
+      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 98);
+      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 98);
+    } else {
+      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 48);
+      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 48);
   }
 }
 
