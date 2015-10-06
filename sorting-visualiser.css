@@ -12,15 +12,15 @@ svg {
   height: 100%;
 }
 #sv-grap-and-information-container {
-  width: 80%;
+  width: 78%;
+  margin: 1%;
 }
 #sv-graph-container {
-  width: 98%;
-  margin: 1%;
+  width: 100%;
 }
 #sv-controls-container {
   width: 20%;
-  margin: 0;
+  margin-top: 1%;
 /*  border-left: 1px solid #A0A0A0;
   box-sizing: border-box;*/
 }
@@ -31,10 +31,12 @@ svg {
   width: 100%;
 }
 #sv-information-left-container {
-  width: 50%;
+  width: 49.5%;
+  margin-right: 0.5%;
 }
 #sv-information-right-container {
-  width: 50%;
+  width: 49.5%;
+  margin-left: 0.5%;
 }
 
 /* Bars */
@@ -71,8 +73,9 @@ svg {
 
 .sv-list {
   float: left;
-  width: 98%;
-  margin: 1%;
+  width: 100%;
+  margin: 0;
+  margin-bottom: 1em;
   background-color: #F0F0F0;
   border: 1px solid #A0A0A0;
   box-sizing: border-box;

@@ -68,10 +68,10 @@ const GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
 
 //Graph margins
 const margin = {
-  top: 10,
-  right: 10,
+  top: 0,
+  right: 14,
   bottom: 10,
-  left: 10
+  left: 6
 };
 
 //Buttons
@@ -103,7 +103,7 @@ var graphScale = {
 //Sorting variables
 var numberOfElementsToSort = 20;
 var arrayToSort = [];
-var sortingStepDelay = 100;
+var sortingStepDelay = 50;
 var sortingCurrentIndex;
 var sortingComparisonIndex;
 var sortingLeftBound;
@@ -137,7 +137,7 @@ function info(stringToLog) {
  * @param {Object} algorithm object
  */
 function startSortingAlgorithm(algorithm) {
-  if (algorith == undefined || algorithm == null) {
+  if (algorithm == undefined || algorithm == null) {
     return;
   }
   sortingAlgorithmCurrentlyRunning = true;
@@ -329,8 +329,8 @@ function updateGraphDimensions() {
   var height = graphDimensions.height = graphContainerHeight - margin.top - margin.bottom;
 
   //Set scales
-  graphScale.x = d3.scale.linear().range([0, graphDimensions.width]);
-  graphScale.y = d3.scale.linear().range([graphDimensions.height - margin.top, 0]);
+  graphScale.x = d3.scale.linear().range([0, width]);
+  graphScale.y = d3.scale.linear().range([height - margin.top, 0]);
 
   //Set axis
   axis.x = d3.svg.axis().scale(graphScale.x).orient('bottom').ticks('none');
@@ -607,9 +607,9 @@ function render() {
       return graphScale.y(d.y);
     })
     .attr("height", function(d) {
-      return graphDimensions.height - graphScale.y(d.y);
+      return graphDimensions.height - margin.top- graphScale.y(d.y);
     })
-    .attr("transform", "translate(" + margin.left + ", 0)");
+    .attr("transform", "translate(" + margin.left + ", " + margin.top + "0)");
 
   bars.attr("class", function(d) {
       return getClassForBar(d)
@@ -622,9 +622,9 @@ function render() {
       return graphScale.y(d.y);
     })
     .attr("height", function(d) {
-      return graphDimensions.height - graphScale.y(d.y);
+      return graphDimensions.height - margin.top - graphScale.y(d.y);
     })
-    .attr("transform", "translate(" + margin.left + ", 0)");
+    .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
   bars.exit().remove();
 }
@@ -665,13 +665,13 @@ function updateLayout() {
 
   //Main container positioning
   if (width < 50) {
-    setMainContainersPercentageWidths(100, 100);
+    setMainContainersPercentageWidths(98, 100);
   } else if (width < 60) {
-    setMainContainersPercentageWidths(70, 30);
+    setMainContainersPercentageWidths(68, 30);
   } else if (width < 75) {
-    setMainContainersPercentageWidths(75, 25);
+    setMainContainersPercentageWidths(73, 25);
   } else {
-    setMainContainersPercentageWidths(80, 20);
+    setMainContainersPercentageWidths(78, 20);
   }
 
   //Adjust stat width to prevent overflow
@@ -692,11 +692,11 @@ function updateLayout() {
 
   //When screen compresses to single column adjusts the stats and legend tab
   if (width < 30) {
-      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 98);
-      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 98);
+      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
+      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
     } else {
-      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 48);
-      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 48);
+      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
+      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
   }
 }
 
