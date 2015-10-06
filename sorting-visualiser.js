@@ -57,6 +57,7 @@ const CONTROL_LOOP_TIME_LABEL = "Time Step";
 const CONTROL_LOOP_TIME_MIN = 0.01;
 const CONTROL_LOOP_TIME_STEP = 0.01;
 const CONTROL_ARRAY_TYPE_LABEL = 'Array Type';
+const CONTROL_SOUND_TOGGLE_LABEL = 'Sound';
 const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 //Logging should be turned on if verbose output is wanted
@@ -117,6 +118,7 @@ var sortingAlgorithmLoop;
 var arrayGenerationAlgorithm = generateRandomData;
 var audioContext;
 var audioOscillator;
+var soundOn = true;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -455,6 +457,28 @@ function createAlgorithmControls(container) {
       }
       generateData();
   });
+
+  var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
+  soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+    .append('p').text(CONTROL_ARRAY_TYPE_LABEL);
+  var select = soundControlContainer.append('select');
+  select.append('option').attr('value', 'on').attr('selected', 'selected').text('On');
+  select.append('option').attr('value', 'off').text('Off');
+
+  select.on('change', function() {
+      info('Array type selected: ' + this.value);
+      if (this.value == 'off') {
+        info('Sound turned off');
+        stopSound();
+        soundOn = false;
+      }
+      else {
+        info('Sound turned on');
+        soundOn = true;
+        startSound();
+      }
+      generateData();
+  });
 }
 
 function createControls() {
@@ -652,6 +676,9 @@ function initAudio() {
 }
 
 function startSound() {
+  if (!soundOn) {
+    return;
+  }
   info('Starting sound');
   if (audioContext != undefined) {
     audioOscillator = audioContext.createOscillator();
@@ -661,6 +688,9 @@ function startSound() {
 }
 
 function stopSound() {
+  if (!soundOn) {
+    return;
+  }
   if (audioOscillator != undefined) {
       info('Stoping sound');
     audioOscillator.stop(0);
@@ -668,6 +698,9 @@ function stopSound() {
 }
 
 function playFrequency(fequency) {
+  if (!soundOn) {
+    return;
+  }
   if (audioOscillator != undefined) {
     audioOscillator.frequency.value = fequency;
   }
