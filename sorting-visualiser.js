@@ -115,6 +115,8 @@ var sortingStats = {
 var sortingAlgorithmCurrentlyRunning = false;
 var sortingAlgorithmLoop;
 var arrayGenerationAlgorithm = generateRandomData;
+var audioContext;
+var audioOscillator;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -145,6 +147,7 @@ function startSortingAlgorithm(algorithm) {
   sortingStats.numberOfSwaps = 0;
   updateAlgorithmInformation(algorithm);
   algorithm.callBack();
+  startSound();
 }
 
 /**
@@ -173,6 +176,8 @@ function stopSortingAlgorithm() {
   sortingLeftBound = -1;
   sortingRightBound = -1;
   updateScreen();
+
+  setTimeout(stopSound, 250);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -638,6 +643,41 @@ function updateScreen() {
 }
 
 /* ------------------------------------------------------------------------- */
+/* Audio
+/* ------------------------------------------------------------------------- */
+
+function initAudio() {
+  audioContext = new AudioContext();
+  info(audioContext);
+}
+
+function startSound() {
+  info('Starting sound');
+  if (audioContext != undefined) {
+    audioOscillator = audioContext.createOscillator();
+    audioOscillator.connect(audioContext.destination);
+    audioOscillator.start(0);
+  }
+}
+
+function stopSound() {
+  if (audioOscillator != undefined) {
+      info('Stoping sound');
+    audioOscillator.stop(0);
+  }
+}
+
+function playFrequency(fequency) {
+  if (audioOscillator != undefined) {
+    audioOscillator.frequency.value = fequency;
+  }
+}
+
+function playSoundForValue(value) {
+  playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
+}
+
+/* ------------------------------------------------------------------------- */
 /* Screen Arrangement
 /* ------------------------------------------------------------------------- */
 
@@ -759,6 +799,7 @@ function bubbleSort() {
     sortingAlgorithmLoop = setInterval(function() {
       sortingCurrentIndex = i;
       sortingComparisonIndex = i + 1;
+      playSoundForValue(arrayToSort[i + 1]);
       //Comparison
       sortingStats.numberOfComparisons++;
       if (arrayToSort[i] > arrayToSort[i + 1]) {
@@ -787,6 +828,7 @@ function bubbleSort() {
 /* ------------------------------------------------------------------------- */
 $(function() {
   createUI();
+  initAudio();
   generateRandomData();
   updateScreen();
   updateLayout();
