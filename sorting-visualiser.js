@@ -460,7 +460,7 @@ function createAlgorithmControls(container) {
 
   var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
-    .append('p').text(CONTROL_ARRAY_TYPE_LABEL);
+    .append('p').text(CONTROL_SOUND_TOGGLE_LABEL);
   var select = soundControlContainer.append('select');
   select.append('option').attr('value', 'on').attr('selected', 'selected').text('On');
   select.append('option').attr('value', 'off').text('Off');
@@ -603,6 +603,14 @@ function getRenderData() {
   return out;
 }
 
+function getWidthOfBar(numberOfElements) {
+  return graphDimensions.width / numberOfElements - 1;
+}
+
+function getHeightOfBar(d) {
+  return graphDimensions.height - margin.top- graphScale.y(d.y);
+}
+
 /**
  * Renders the graph to screen
  */
@@ -631,12 +639,12 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", graphDimensions.width / dataToRender.length)
+    .attr("width", getWidthOfBar(dataToRender.length))
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
     .attr("height", function(d) {
-      return graphDimensions.height - margin.top- graphScale.y(d.y);
+      return getHeightOfBar(d);
     })
     .attr("transform", "translate(" + margin.left + ", " + margin.top + "0)");
 
@@ -646,12 +654,12 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", graphDimensions.width / dataToRender.length)
+    .attr("width", getWidthOfBar(dataToRender.length))
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
     .attr("height", function(d) {
-      return graphDimensions.height - margin.top - graphScale.y(d.y);
+      return getHeightOfBar(d);
     })
     .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
