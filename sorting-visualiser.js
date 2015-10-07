@@ -30,10 +30,17 @@ const STATS_SWAPS_ID = 'sv-swaps-stat';
 const STAT_CLASS = 'sv-stat';
 const INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
 const INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
-const ALGORITHM_INFORMATION_ID = 'sv-algorithm-information-container';
+const ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
+const ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
+const ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
 const INFORMATION_NAME_ID = 'sv-algorithm-name';
-const INFORMATION_COMPLEXITY_ID = 'sv-algorithm-complexity';
+const INFORMATION_BEST_CASE_COMPLEXITY_ID = 'sv-algorithm-best-complexity';
+const INFORMATION_AVERAGE_CASE_COMPLEXITY_ID = 'sv-algorithm-average-complexity';
+const INFORMATION_WORST_CASE_COMPLEXITY_ID = 'sv-algorithm-worst-complexity';
 const INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
+const INFORMATION_STABLE_ID = 'sv-algorithm-stable';
+const INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
+const INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
 const INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
 
 //Bar class names
@@ -79,9 +86,14 @@ const margin = {
 var sortingAlgorithmButtons = [{
   name: 'Bubble',
   callBack: bubbleSort,
-  complexity: 'O(n^2)',
-  memory: 'O(n)',
-  description: 'This is an example of a description for the bubble sort algorithm'
+  bestCase: 'O(n)',
+  averageCase: 'O(n^2)',
+  worstCase: 'O(n^2)',
+  memory: 'O(1)',
+  stable: true,
+  technique: 'Exchanging',
+  algorithm: 'ToDo',
+  description: 'ToDo'
 }]
 
 var graphDimensions = {
@@ -520,21 +532,41 @@ function createStats(container) {
   list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
 }
 
-function createAlgorithmInformation(container) {
-  var informationContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ID).attr('class', LIST_CLASS);
-  informationContainer.append('h2').text('Infomation');
-  var list = informationContainer.append('ul');
+function createAlgorithmProperties(container) {
+  var propertiesContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_PROPERTIES_ID).attr('class', LIST_CLASS);
+  propertiesContainer.append('h2').text('Properties');
+  var list = propertiesContainer.append('ul');
   list.append('li').attr('id', INFORMATION_NAME_ID).text('Name: ');
-  list.append('li').attr('id', INFORMATION_COMPLEXITY_ID).text('Complexity: ');
+  list.append('li').attr('id', INFORMATION_BEST_CASE_COMPLEXITY_ID).text('Best case: ');
+  list.append('li').attr('id', INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text('Average case: ');
+  list.append('li').attr('id', INFORMATION_WORST_CASE_COMPLEXITY_ID).text('Worst case: ');
   list.append('li').attr('id', INFORMATION_MEMORY_ID).text('Memory Usage: ');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID).text("Description: ");
+  list.append('li').attr('id', INFORMATION_STABLE_ID).text('Stable: ');
+  list.append('li').attr('id', INFORMATION_TECHNIQUE_ID).text('Technique: ');
+}
+
+function createAlgorithmInformation(container) {
+  var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
+  algorithmContainer.append('h2').text('Algorithm');
+  var list = algorithmContainer.append('ul');
+  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
+}
+
+function createAlgorithmDescription(container) {
+  var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
+  descriptionContainer.append('h2').text('Description');
+  var list = descriptionContainer.append('ul');
+  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
 }
 
 function createInformation() {
   var container = getInformationRightContainer();
   createStats(container);
   createLegend(container);
-  createAlgorithmInformation(getInformationLeftContainer());
+  createAlgorithmDescription(container);
+  var container = getInformationLeftContainer();
+  createAlgorithmProperties(container);
+  createAlgorithmInformation(container);
 }
 
 function updateStats() {
@@ -544,10 +576,33 @@ function updateStats() {
 
 function updateAlgorithmInformation(algorithm) {
   if (algorithm != undefined) {
-    d3.select('#' + INFORMATION_NAME_ID).text("Name: " + algorithm.name);
-    d3.select('#' + INFORMATION_COMPLEXITY_ID).text("Complexity: " + algorithm.complexity);
-    d3.select('#' + INFORMATION_MEMORY_ID).text("Memory Usage: " + algorithm.memory);
-    d3.select('#' + INFORMATION_DESCRIPTION_ID).text("Description: " + algorithm.description);
+    if (algorithm.name != undefined) {
+      d3.select('#' + INFORMATION_NAME_ID).text("Name: " + algorithm.name);
+    }
+    if (algorithm.bestCase != undefined) {
+      d3.select('#' + INFORMATION_BEST_CASE_COMPLEXITY_ID).text("Best case: " + algorithm.bestCase);
+    }
+    if (algorithm.averageCase != undefined) {
+      d3.select('#' + INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text("Average case: " + algorithm.averageCase);
+    }
+    if (algorithm.worstCase != undefined) {
+      d3.select('#' + INFORMATION_WORST_CASE_COMPLEXITY_ID).text("Worst case: " + algorithm.worstCase);
+    }
+    if (algorithm.memory != undefined) {
+      d3.select('#' + INFORMATION_MEMORY_ID).text("Memory: " + algorithm.memory);
+    }
+    if (algorithm.stable != undefined) {
+      d3.select('#' + INFORMATION_STABLE_ID).text("Stable: " + algorithm.stable);
+    }
+    if (algorithm.technique != undefined) {
+      d3.select('#' + INFORMATION_TECHNIQUE_ID).text("Technique: " + algorithm.technique);
+    }
+    if (algorithm.algorithm != undefined) {
+      d3.select('#' + INFORMATION_ALGORITHM_ID).text(algorithm.algorithm);
+    }
+    if (algorithm.technique != undefined) {
+      d3.select('#' + INFORMATION_DESCRIPTION_ID).text(algorithm.description);
+    }
   }
 }
 
