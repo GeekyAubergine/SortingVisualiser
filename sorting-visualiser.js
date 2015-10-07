@@ -1,4 +1,8 @@
 'use strict';
+//Labels
+const LABEL_CONTROLS_HEADING = 'Controls';
+const LABEL_CONTROLS_STOP = 'Stop';
+const LABEL_CONTROLS_NEW_ARRAY = 'New Array';
 
 //Class names
 const CONTAINER_CLASS = 'sv-container';
@@ -406,9 +410,9 @@ function createSortingAlgorithmButtons(container) {
 
 function createControlButtons(container) {
   var container = container.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text('Controls');
-  createButton(container, 'Stop', stopSortingAlgorithm);
-  createButton(container, 'New Array', generateData);
+  container.append('h2').text(LABEL_CONTROLS_HEADING);
+  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
+  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
 }
 
 function createAlgorithmControls(container) {
