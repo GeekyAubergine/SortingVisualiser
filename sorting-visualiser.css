@@ -82,7 +82,7 @@ svg {
 .sv-list h2 {
   width: 100%;
   text-align: center;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-size: 200%;
   line-height: 0%;
 }
@@ -197,8 +197,8 @@ svg {
 #sv-stats li {
   width: 50%;
 }
-#sv-algorithm-information-container li {
+#sv-algorithm-information-properties-container li {
   text-align: left;
-  padding-left: 1em;
+  padding-left: 0.5em;
   width: 100%;
 }
