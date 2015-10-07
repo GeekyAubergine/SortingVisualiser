@@ -179,7 +179,7 @@ function stopSortingAlgorithm() {
   sortingRightBound = -1;
   updateScreen();
 
-  setTimeout(stopSound, 250);
+  setTimeout(stopSound, sortingStepDelay * 2);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -791,8 +791,9 @@ function updateLayout() {
  */
 function generateBestCase() {
   arrayToSort = [];
+  var delta = (MAX_VALUE - 1) / numberOfElementsToSort;
   for (var i = 0; i < numberOfElementsToSort; i++) {
-    arrayToSort.push(i);
+    arrayToSort.push(i * delta + 1);
   }
 }
 
@@ -803,7 +804,7 @@ function generateBestCase() {
 function generateRandomData() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
-    arrayToSort.push(Math.random() * MAX_VALUE);
+    arrayToSort.push(Math.random() * (MAX_VALUE - 1)) + 1;
   }
 }
 
@@ -814,7 +815,8 @@ function generateRandomData() {
 function generateWorstCase() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
-    arrayToSort.push(numberOfElementsToSort - i);
+  var delta = (MAX_VALUE) / numberOfElementsToSort;
+    arrayToSort.push(MAX_VALUE - i * delta);
   }
 }
 
