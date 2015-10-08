@@ -1,89 +1,110 @@
+'use strict'
+
 //Labels
-LABEL_CONTROLS_HEADING = 'Controls';
-LABEL_CONTROLS_STOP = 'Stop';
-LABEL_CONTROLS_NEW_ARRAY = 'New Array';
-LABEL_SETTINGS_HEADING = 'Settings';
-LABEL_SETTINGS_ARRAY_SIZE = 'Array Size';
-LABEL_SETTINGS_TIME_STEP = 'Time Step';
-LABEL_SETTINGS_ARRAY_TYPE = 'Array Type';
-LABEL_SETTINGS_SOUND = 'Sound';
+var LABEL_CONTROLS_HEADING = 'Controls';
+var LABEL_CONTROLS_STOP = 'Stop';
+var LABEL_CONTROLS_NEW_ARRAY = 'New Array';
+var LABEL_SETTINGS_HEADING = 'Settings';
+var LABEL_SETTINGS_ARRAY_SIZE = 'Array Size';
+var LABEL_SETTINGS_TIME_STEP = 'Time Step';
+var LABEL_SETTINGS_ARRAY_TYPE = 'Array Type';
+var LABEL_SETTINGS_SOUND = 'Sound';
+var LABEL_SETTINGS_ARRAY_TYPE_BEST = 'Best';
+var LABEL_SETTINGS_ARRAY_TYPE_AVERAGE = 'Average';
+var LABEL_SETTINGS_ARRAY_TYPE_WORST = 'Worst';
+var LABEL_SETTINGS_SOUND_ON = 'On';
+var LABEL_SETTINGS_SOUND_OFF = 'Off';
+var LABEL_ALGORITHMS_HEADING = 'Algorithms';
+var LABEL_STATS_HEADING = 'Stats';
+var LABEL_STATS_COMPARISONS = 'Comparisons: ';
+var LABEL_STATS_SWAPS = 'Swaps: ';
+var LABEL_LEGEND_HEADING = 'Legend';
+var LABEL_LEGEND_CURRENT = 'Current';
+var LABEL_LEGEND_COMPARISON = 'Comparison';
+var LABEL_LEGEND_BOUND = 'Bound';
+var LABEL_DESCRIPTION_HEADING = 'Desciption';
+var LABEL_ALGORITHM_HEADING = 'Algorithm';
+var LABEL_PROPERTIES_HEADING = 'Properties';
+var LABEL_PROPERTIES_NAME = 'Name';
+var LABEL_PROPERTIES_BEST_CASE = 'Best case';
+var LABEL_PROPERTIES_AVERAGE_CASE = 'Average case';
+var LABEL_PROPERTIES_WORST_CASE = 'Worst case';
+var LABEL_PROPERTIES_MEMORY_USAGE = 'Memory usage';
+var LABEL_PROPERTIES_STABLE = 'Stable';
+var LABEL_PROPERTIES_TECHNIQUE = 'Technique';
 
 //Class names
-CONTAINER_CLASS = 'sv-container';
-LIST_CLASS = 'sv-list';
-LEGEND_ITEM_CLASS = 'sv-legend-item';
+var CONTAINER_CLASS = 'sv-container';
+var LIST_CLASS = 'sv-list';
+var LEGEND_ITEM_CLASS = 'sv-legend-item';
 
 //Container ID's
-MAIN_CONTAINER_ID = 'sorting-visualiser-container';
-GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
-GRAPH_CONTAINER_ID = 'sv-graph-container';
-CONTROLS_CONTAINER_ID = 'sv-controls-container';
-INFOMATION_CONTAINER_ID = 'sv-infomation-container';
+var MAIN_CONTAINER_ID = 'sorting-visualiser-container';
+var GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
+var GRAPH_CONTAINER_ID = 'sv-graph-container';
+var CONTROLS_CONTAINER_ID = 'sv-controls-container';
+var INFOMATION_CONTAINER_ID = 'sv-infomation-container';
 
 //Graph Element ID's
-GRAPH_ID = 'sv-graph';
-GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
+var GRAPH_ID = 'sv-graph';
+var GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
 
 //Controls Element ID's
-STOP_BUTTON_ID = 'sv-stop-button';
-ALGORITHMS_CONTROLS_CONTAINER_ID = 'sv-controls';
-ALGORITHMS_SETTINGS_CONTAINER_ID = 'sv-settings';
-ALGORITHMS_CONTAINER_ID = 'sv-algorithms';
+var STOP_BUTTON_ID = 'sv-stop-button';
+var ALGORITHMS_CONTROLS_CONTAINER_ID = 'sv-controls';
+var ALGORITHMS_SETTINGS_CONTAINER_ID = 'sv-settings';
+var ALGORITHMS_CONTAINER_ID = 'sv-algorithms';
 
 //Information Element ID's
-STATS_ID = 'sv-stats';
-LEGEND_ID = 'sv-legend';
-STATS_COMPARISONS_ID = 'sv-comparisons-stat';
-STATS_SWAPS_ID = 'sv-swaps-stat';
-STAT_CLASS = 'sv-stat';
-INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
-INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
-ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
-ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
-ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
-INFORMATION_NAME_ID = 'sv-algorithm-name';
-INFORMATION_BEST_CASE_COMPLEXITY_ID = 'sv-algorithm-best-complexity';
-INFORMATION_AVERAGE_CASE_COMPLEXITY_ID = 'sv-algorithm-average-complexity';
-INFORMATION_WORST_CASE_COMPLEXITY_ID = 'sv-algorithm-worst-complexity';
-INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
-INFORMATION_STABLE_ID = 'sv-algorithm-stable';
-INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
-INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
-INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
+var STATS_ID = 'sv-stats';
+var LEGEND_ID = 'sv-legend';
+var STATS_COMPARISONS_ID = 'sv-comparisons-stat';
+var STATS_SWAPS_ID = 'sv-swaps-stat';
+var STAT_CLASS = 'sv-stat';
+var INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
+var INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
+var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
+var ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
+var ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
+var INFORMATION_NAME_ID = 'sv-algorithm-name';
+var INFORMATION_BEST_CASE_COMPLEXITY_ID = 'sv-algorithm-best-complexity';
+var INFORMATION_AVERAGE_CASE_COMPLEXITY_ID = 'sv-algorithm-average-complexity';
+var INFORMATION_WORST_CASE_COMPLEXITY_ID = 'sv-algorithm-worst-complexity';
+var INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
+var INFORMATION_STABLE_ID = 'sv-algorithm-stable';
+var INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
+var INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
+var INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
 
 //Bar class names
-BAR_NORMAL_CLASS = 'sv-bar-normal';
-BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
-BAR_COMPARISON_CLASS = 'sv-bar-comparison';
-BAR_BOUND_CLASS = 'sv-bar-bound';
+var BAR_NORMAL_CLASS = 'sv-bar-normal';
+var BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
+var BAR_COMPARISON_CLASS = 'sv-bar-comparison';
+var BAR_BOUND_CLASS = 'sv-bar-bound';
 
 //Button class names
-BUTTON_CLASS = 'sv-button'
-BUTTON_SELECTED_CLASS = 'sv-selected';
+var BUTTON_CLASS = 'sv-button'
+var BUTTON_SELECTED_CLASS = 'sv-selected';
 
 //Control class names
-CONTROL_CONTAINER_CLASS = 'sv-control';
-CONTROL_LABEL_CLASS = 'sv-control-label';
+var CONTROL_CONTAINER_CLASS = 'sv-control';
+var CONTROL_LABEL_CLASS = 'sv-control-label';
 
 //Controls
-CONTROL_ARRAY_SIZE_LABEL = "Array Size";
-CONTROL_ARRAY_SIZE_STEP = 5;
-CONTROL_LOOP_TIME_LABEL = "Time Step";
-CONTROL_LOOP_TIME_MIN = 0.01;
-CONTROL_LOOP_TIME_STEP = 0.01;
-CONTROL_ARRAY_TYPE_LABEL = 'Array Type';
-CONTROL_SOUND_TOGGLE_LABEL = 'Sound';
-CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
+var CONTROL_ARRAY_SIZE_STEP = 5;
+var CONTROL_LOOP_TIME_MIN = 0;
+var CONTROL_LOOP_TIME_STEP = 0.01;
+var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 //Logging should be turned on if verbose output is wanted
-LOGGING_ACTIVE = true;
+var LOGGING_ACTIVE = true;
 
-ARRAY_MIN_SIZE = 5;
-MAX_VALUE = 100;
-GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
+var ARRAY_MIN_SIZE = 5;
+var MAX_VALUE = 100;
+var GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
 
 //Graph margins
-margin = {
+var margin = {
   top: 0,
   right: 14,
   bottom: 10,
@@ -138,7 +159,8 @@ var sortingAlgorithmLoop;
 var arrayGenerationAlgorithm = generateRandomData;
 var audioContext;
 var audioOscillator;
-var soundOn = true;
+var soundOn = false;
+var AudioContext;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -200,6 +222,10 @@ function stopSortingAlgorithm() {
   updateScreen();
 
   setTimeout(stopSound, sortingStepDelay * 2);
+}
+
+function audioSupported() {
+  return AudioContext;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -385,6 +411,43 @@ function updateGraphDimensions() {
 /* ------------------------------------------------------------------------- */
 /* Controls Creation and Control
 /* ------------------------------------------------------------------------- */
+
+function updateArraySize() {
+  if (!sortingAlgorithmCurrentlyRunning) {
+    info('Array size updated to ' + this.value);
+    numberOfElementsToSort = this.value;
+    generateData();
+    updateScreen();
+  } else {
+    this.value = numberOfElementsToSort;
+  }
+}
+
+function updateTimeStep() {
+  info('Sorting time set set to' + this.value * 1000);
+  sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+}
+
+function updateArrayType() {
+  info('Array type selected: ' + this.value);
+  if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
+    arrayGenerationAlgorithm = generateBestCase;
+  } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
+    arrayGenerationAlgorithm = generateWorstCase;
+  } else {
+    arrayGenerationAlgorithm = generateRandomData;
+  }
+  generateData();
+}
+
+function updateSoundState() {
+  if (this.value == LABEL_SETTINGS_SOUND_OFF) {
+    turnSoundOff();
+  } else {
+    turnSoundOn();
+  }
+}
+
 function createButton(parent, text, callBack) {
   var button = parent.append('li').attr('class', BUTTON_CLASS);
   button.text(text);
@@ -406,7 +469,7 @@ function createAlgorithmButton(parent, buttonData) {
 
 function createSortingAlgorithmButtons(container) {
   var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text('Algorithms');
+  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
   for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
     createAlgorithmButton(container, sortingAlgorithmButtons[i]);
   }
@@ -428,77 +491,50 @@ function createAlgorithmControls(container) {
   var arraySizeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_ARRAY_SIZE);
-  var arraySizeControl = arraySizeControlContainer.append('input')
+
+  //Array size control
+  arraySizeControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', ARRAY_MIN_SIZE)
     .attr('step', CONTROL_ARRAY_SIZE_STEP)
-    .attr('value', numberOfElementsToSort);
-
-  arraySizeControl.on('input', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      numberOfElementsToSort = this.value;
-      generateData();
-      updateScreen();
-    } else {
-      this.value = numberOfElementsToSort;
-    }
-  });
+    .attr('value', numberOfElementsToSort)
+    .on('input', updateArraySize);
 
   var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_TIME_STEP);
-  var timeSetControl = timeStepControlContainer.append('input')
+
+  //Time step control
+  timeStepControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', CONTROL_LOOP_TIME_MIN)
     .attr('step', CONTROL_LOOP_TIME_STEP)
-    .attr('value', sortingStepDelay / 1000);
-
-  timeSetControl.on('input', function() {
-    sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
-  });
+    .attr('value', sortingStepDelay / 1000)
+    .on('input', updateTimeStep);
 
   var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_ARRAY_TYPE);
-  var select = arrayTypeControlContainer.append('select');
-  select.append('option').attr('value', 'best').text('Best');
-  select.append('option').attr('value', 'random').attr('selected', 'selected').text('Random');
-  select.append('option').attr('value', 'worst').text('Worst');
 
-  select.on('change', function() {
-      info('Array type selected: ' + this.value);
-      if (this.value == 'best') {
-        arrayGenerationAlgorithm = generateBestCase;
-      }
-      else if (this.value == 'worst') {
-        arrayGenerationAlgorithm = generateWorstCase;
-      } else {
-        arrayGenerationAlgorithm = generateRandomData;
-      }
-      generateData();
-  });
+  var select = arrayTypeControlContainer.append('select');
+  select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_BEST).text(LABEL_SETTINGS_ARRAY_TYPE_BEST);
+  select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_AVERAGE).attr('selected', 'selected')
+    .text(LABEL_SETTINGS_ARRAY_TYPE_AVERAGE);
+  select.append('option')
+  .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
+  .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
+
+  select.on('change', updateArrayType);
 
   var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_SOUND);
   var select = soundControlContainer.append('select');
-  select.append('option').attr('value', 'on').attr('selected', 'selected').text('On');
-  select.append('option').attr('value', 'off').text('Off');
+  select.append('option').attr('value', LABEL_SETTINGS_SOUND_ON).text(LABEL_SETTINGS_SOUND_ON);
+  select.append('option').attr('value', LABEL_SETTINGS_SOUND_OFF)
+    .attr('selected', 'selected').text(LABEL_SETTINGS_SOUND_OFF);
 
-  select.on('change', function() {
-      info('Array type selected: ' + this.value);
-      if (this.value == 'off') {
-        info('Sound turned off');
-        stopSound();
-        soundOn = false;
-      }
-      else {
-        info('Sound turned on');
-        soundOn = true;
-        startSound();
-      }
-      generateData();
-  });
+  select.on('change', updateSoundState);
 }
 
 function createControls() {
@@ -515,26 +551,26 @@ function createControls() {
 function createLegend(container) {
   var legendContainer = container
     .append('div').attr('id', LEGEND_ID).attr('class', LIST_CLASS);
-  legendContainer.append('h2').text('Legend');
+  legendContainer.append('h2').text(LABEL_LEGEND_HEADING);
 
   var list = legendContainer.append('ul');
 
   var item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_ACTIVE_CLASS);
-  item.append('p').text('= Current');
+  item.append('p').text('= ' + LABEL_LEGEND_CURRENT);
 
   item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_COMPARISON_CLASS);
-  item.append('p').text('= Comparison');
+  item.append('p').text('= ' + LABEL_LEGEND_COMPARISON);
 
   item = list.append('li');
   item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
-  item.append('p').text('= Bound');
+  item.append('p').text('= ' + LABEL_LEGEND_BOUND);
 }
 
 function createStats(container) {
   var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
-  statsContainer.append('h2').text('Stats');
+  statsContainer.append('h2').text(LABEL_STATS_HEADING);
   var list = statsContainer.append('ul');
   list.append('li').attr('id', STATS_COMPARISONS_ID).attr('class', STAT_CLASS);
   list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
@@ -542,29 +578,29 @@ function createStats(container) {
 
 function createAlgorithmProperties(container) {
   var propertiesContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_PROPERTIES_ID).attr('class', LIST_CLASS);
-  propertiesContainer.append('h2').text('Properties');
+  propertiesContainer.append('h2').text(LABEL_PROPERTIES_HEADING);
   var list = propertiesContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_NAME_ID).text('Name: ');
-  list.append('li').attr('id', INFORMATION_BEST_CASE_COMPLEXITY_ID).text('Best case: ');
-  list.append('li').attr('id', INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text('Average case: ');
-  list.append('li').attr('id', INFORMATION_WORST_CASE_COMPLEXITY_ID).text('Worst case: ');
-  list.append('li').attr('id', INFORMATION_MEMORY_ID).text('Memory Usage: ');
-  list.append('li').attr('id', INFORMATION_STABLE_ID).text('Stable: ');
-  list.append('li').attr('id', INFORMATION_TECHNIQUE_ID).text('Technique: ');
+  list.append('li').attr('id', INFORMATION_NAME_ID).text(LABEL_PROPERTIES_NAME + ': ');
+  list.append('li').attr('id', INFORMATION_BEST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_BEST_CASE + ': ');
+  list.append('li').attr('id', INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_AVERAGE_CASE + ': ');
+  list.append('li').attr('id', INFORMATION_WORST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_WORST_CASE + ': ');
+  list.append('li').attr('id', INFORMATION_MEMORY_ID).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ');
+  list.append('li').attr('id', INFORMATION_STABLE_ID).text(LABEL_PROPERTIES_STABLE + ': ');
+  list.append('li').attr('id', INFORMATION_TECHNIQUE_ID).text(LABEL_PROPERTIES_TECHNIQUE + ': ');
 }
 
 function createAlgorithmInformation(container) {
   var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
-  algorithmContainer.append('h2').text('Algorithm');
+  algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
   var list = algorithmContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
+  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
 }
 
 function createAlgorithmDescription(container) {
   var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
-  descriptionContainer.append('h2').text('Description');
+  descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
   var list = descriptionContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
+  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
 }
 
 function createInformation() {
@@ -585,25 +621,25 @@ function updateStats() {
 function updateAlgorithmInformation(algorithm) {
   if (algorithm != undefined) {
     if (algorithm.name != undefined) {
-      d3.select('#' + INFORMATION_NAME_ID).text("Name: " + algorithm.name);
+      d3.select('#' + INFORMATION_NAME_ID).text(LABEL_PROPERTIES_NAME + ': ' + algorithm.name);
     }
     if (algorithm.bestCase != undefined) {
-      d3.select('#' + INFORMATION_BEST_CASE_COMPLEXITY_ID).text("Best case: " + algorithm.bestCase);
+      d3.select('#' + INFORMATION_BEST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_BEST_CASE + ': ' + algorithm.bestCase);
     }
     if (algorithm.averageCase != undefined) {
-      d3.select('#' + INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text("Average case: " + algorithm.averageCase);
+      d3.select('#' + INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_AVERAGE_CASE + ': ' + algorithm.averageCase);
     }
     if (algorithm.worstCase != undefined) {
-      d3.select('#' + INFORMATION_WORST_CASE_COMPLEXITY_ID).text("Worst case: " + algorithm.worstCase);
+      d3.select('#' + INFORMATION_WORST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_WORST_CASE + ': ' + algorithm.worstCase);
     }
     if (algorithm.memory != undefined) {
-      d3.select('#' + INFORMATION_MEMORY_ID).text("Memory: " + algorithm.memory);
+      d3.select('#' + INFORMATION_MEMORY_ID).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ' + algorithm.memory);
     }
     if (algorithm.stable != undefined) {
-      d3.select('#' + INFORMATION_STABLE_ID).text("Stable: " + algorithm.stable);
+      d3.select('#' + INFORMATION_STABLE_ID).text(LABEL_PROPERTIES_STABLE + ': ' + String(algorithm.stable).toUpperCase());
     }
     if (algorithm.technique != undefined) {
-      d3.select('#' + INFORMATION_TECHNIQUE_ID).text("Technique: " + algorithm.technique);
+      d3.select('#' + INFORMATION_TECHNIQUE_ID).text(LABEL_PROPERTIES_TECHNIQUE + ': ' + algorithm.technique);
     }
     if (algorithm.algorithm != undefined) {
       d3.select('#' + INFORMATION_ALGORITHM_ID).text(algorithm.algorithm);
@@ -667,11 +703,11 @@ function getRenderData() {
 }
 
 function getWidthOfBar(numberOfElements) {
-  return graphDimensions.width / numberOfElements - 1;
+  return graphDimensions.width / numberOfElementsToSort - 1;
 }
 
 function getHeightOfBar(d) {
-  return graphDimensions.height - margin.top- graphScale.y(d.y);
+  return graphDimensions.height - margin.top - graphScale.y(d.y);
 }
 
 /**
@@ -702,7 +738,7 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", getWidthOfBar(dataToRender.length))
+    .attr("width", getWidthOfBar())
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
@@ -717,7 +753,7 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", getWidthOfBar(dataToRender.length))
+    .attr("width", getWidthOfBar())
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
@@ -742,12 +778,16 @@ function updateScreen() {
 /* ------------------------------------------------------------------------- */
 
 function initAudio() {
-  audioContext = new AudioContext();
-  info(audioContext);
+  AudioContext = window.AudioContext || window.webkitAudioContext || false;
+  if (audioSupported()) {
+    audioContext = new AudioContext();
+  } else {
+    info('Audio is not supported in this browser');
+  }
 }
 
 function startSound() {
-  if (!soundOn) {
+  if (!soundOn || !audioSupported()) {
     return;
   }
   info('Starting sound');
@@ -759,17 +799,16 @@ function startSound() {
 }
 
 function stopSound() {
-  if (!soundOn) {
+  if (!soundOn || !audioSupported()) {
     return;
   }
   if (audioOscillator != undefined) {
-      info('Stoping sound');
     audioOscillator.stop(0);
   }
 }
 
 function playFrequency(fequency) {
-  if (!soundOn) {
+  if (!soundOn || !audioSupported()) {
     return;
   }
   if (audioOscillator != undefined) {
@@ -779,6 +818,20 @@ function playFrequency(fequency) {
 
 function playSoundForValue(value) {
   playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
+}
+
+function turnSoundOn() {
+  info('Turning sound on');
+  soundOn = true;
+  startSound();
+  playFrequency(0);
+}
+
+function turnSoundOff() {
+  info('Turning sound off');
+  playFrequency(0);
+  soundOn = false;
+  stopSound();
 }
 
 /* ------------------------------------------------------------------------- */
@@ -836,11 +889,11 @@ function updateLayout() {
 
   //When screen compresses to single column adjusts the stats and legend tab
   if (width < 30) {
-      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
-      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
-    } else {
-      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
-      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
+    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
+    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
+  } else {
+    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
+    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
   }
 }
 
@@ -878,7 +931,7 @@ function generateRandomData() {
 function generateWorstCase() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
-  var delta = (MAX_VALUE) / numberOfElementsToSort;
+    var delta = (MAX_VALUE) / numberOfElementsToSort;
     arrayToSort.push(MAX_VALUE - i * delta);
   }
 }
