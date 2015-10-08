@@ -414,6 +414,7 @@ function updateGraphDimensions() {
 
 function updateArraySize() {
   if (!sortingAlgorithmCurrentlyRunning) {
+    info('Array size updated to ' + this.value);
     numberOfElementsToSort = this.value;
     generateData();
     updateScreen();
