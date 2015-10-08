@@ -35,15 +35,31 @@ var LABEL_PROPERTIES_TECHNIQUE = 'Technique';
 
 //Class names
 var CONTAINER_CLASS = 'sv-container';
+var CLASS_COLUMN = 'sv-column';
 var LIST_CLASS = 'sv-list';
 var LEGEND_ITEM_CLASS = 'sv-legend-item';
+var STAT_CLASS = 'sv-stat';
+var BAR_NORMAL_CLASS = 'sv-bar-normal';
+var BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
+var BAR_COMPARISON_CLASS = 'sv-bar-comparison';
+var BAR_BOUND_CLASS = 'sv-bar-bound';
+var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
+var BUTTON_CLASS = 'sv-button'
+var BUTTON_SELECTED_CLASS = 'sv-selected';
+var CONTROL_CONTAINER_CLASS = 'sv-control';
+var CONTROL_LABEL_CLASS = 'sv-control-label';
 
 //Container ID's
-var MAIN_CONTAINER_ID = 'sorting-visualiser-container';
-var GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
-var GRAPH_CONTAINER_ID = 'sv-graph-container';
-var CONTROLS_CONTAINER_ID = 'sv-controls-container';
-var INFOMATION_CONTAINER_ID = 'sv-infomation-container';
+var ID_MAIN_CONTAINER = 'sorting-visualiser-container';
+var ID_GRAPH_CONTAINER = 'sv-graph-container';
+
+var ID_LEFT_CONTAINER = 'sv-left-container';
+var ID_RIGHT_CONTAINER = 'sv-right-container';
+var COLUMN_PREFIX = 'sv-column-';
+var ID_COLUMN_0 = COLUMN_PREFIX + '0';
+var ID_COLUMN_1 = COLUMN_PREFIX + '1';
+var ID_COLUMN_2 = COLUMN_PREFIX + '2';
+var ID_COLUMN_3 = COLUMN_PREFIX + '3';
 
 //Graph Element ID's
 var GRAPH_ID = 'sv-graph';
@@ -60,10 +76,9 @@ var STATS_ID = 'sv-stats';
 var LEGEND_ID = 'sv-legend';
 var STATS_COMPARISONS_ID = 'sv-comparisons-stat';
 var STATS_SWAPS_ID = 'sv-swaps-stat';
-var STAT_CLASS = 'sv-stat';
 var INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
 var INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
-var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
+var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-properties';
 var ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
 var ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
 var INFORMATION_NAME_ID = 'sv-algorithm-name';
@@ -76,25 +91,10 @@ var INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
 var INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
 var INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
 
-//Bar class names
-var BAR_NORMAL_CLASS = 'sv-bar-normal';
-var BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
-var BAR_COMPARISON_CLASS = 'sv-bar-comparison';
-var BAR_BOUND_CLASS = 'sv-bar-bound';
-
-//Button class names
-var BUTTON_CLASS = 'sv-button'
-var BUTTON_SELECTED_CLASS = 'sv-selected';
-
-//Control class names
-var CONTROL_CONTAINER_CLASS = 'sv-control';
-var CONTROL_LABEL_CLASS = 'sv-control-label';
-
-//Controls
+//Settings
 var CONTROL_ARRAY_SIZE_STEP = 5;
 var CONTROL_LOOP_TIME_MIN = 0;
 var CONTROL_LOOP_TIME_STEP = 0.01;
-var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 //Logging should be turned on if verbose output is wanted
 var LOGGING_ACTIVE = true;
@@ -121,7 +121,7 @@ var sortingAlgorithmButtons = [{
   memory: 'O(1)',
   stable: true,
   technique: 'Exchanging',
-  algorithm: 'ToDo',
+  algorithm: 'ToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDo',
   description: 'ToDo'
 }]
 
@@ -237,61 +237,50 @@ function audioSupported() {
  * @return {boolean} Whether the parent container exsists
  */
 function mainContainerExsists() {
-  return $('#' + MAIN_CONTAINER_ID).length > 0;
+  return $('#' + ID_MAIN_CONTAINER).length > 0;
 }
 
-/**
- * Creates the graph and information container. This is the main left container
- */
-function createGraphAndInformationContainer() {
-  getMainContainer().append('div').attr('id', GRAPH_AND_INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createLeftContainer(parentContainer) {
+  parentContainer.append('div')
+  .attr('id', ID_LEFT_CONTAINER)
+  .attr('class', CONTAINER_CLASS);
 }
+
+function createRightContainer(parentContainer) {
+  parentContainer.append('div')
+  .attr('id', ID_RIGHT_CONTAINER)
+  .attr('class', CONTAINER_CLASS);
+}
+
 
 /**
  * Creates the graph container
  */
-function createGraphContainer() {
-  getGraphAndInformationContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createGraphContainer(parentContainer) {
+  parentContainer.append('div').attr('id', ID_GRAPH_CONTAINER).attr('class', CONTAINER_CLASS);
 }
 
-/**
- * Creates the controls container. This is the main right container
- */
-function createControlsContainer() {
-  getMainContainer().append('div').attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createColumn(parentContainer, columnNumber) {
+  info('Creating container ' + COLUMN_PREFIX + columnNumber.toString());
+  parentContainer.append('div')
+    .attr('id', COLUMN_PREFIX + columnNumber.toString())
+    .attr('class', CONTAINER_CLASS + ' ' + CLASS_COLUMN);
 }
 
-/**
- * Creates the information container
- */
-function createInfomationContainer() {
-  getGraphAndInformationContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-}
-
-/**
- * Creates the information left container
- */
-function createInformationLeftContainer() {
-  getInformationContainer().append('div').attr('id', INFORMATION_LEFT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-}
-
-/**
- * Creates the information right container
- */
-function createInformationRightContainer() {
-  getInformationContainer().append('div').attr('id', INFORMATION_RIGHT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createColumns(parentContainer, numberOfColumns) {
+  for (var i = 0; i < numberOfColumns; i++) {
+    createColumn(parentContainer, i);
+  }
 }
 
 /**
  * Creates all containers used in Sorter-Visualiser
  */
 function createContainers() {
-  createGraphAndInformationContainer();
-  createGraphContainer();
-  createControlsContainer();
-  createInfomationContainer();
-  createInformationLeftContainer();
-  createInformationRightContainer();
+  createLeftContainer(getMainContainer());
+  createRightContainer(getMainContainer());
+  createGraphContainer(getLeftContainer());
+  createColumns(getLeftContainer(), 4);
 }
 
 /**
@@ -299,15 +288,7 @@ function createContainers() {
  * @return {d3.element} Main container
  */
 function getMainContainer() {
-  return d3.select('#' + MAIN_CONTAINER_ID);
-}
-
-/**
- * Returns the main container for the whole program
- * @return {d3.element} Main container
- */
-function getGraphAndInformationContainer() {
-  return d3.select('#' + GRAPH_AND_INFOMATION_CONTAINER_ID);
+  return d3.select('#' + ID_MAIN_CONTAINER);
 }
 
 /**
@@ -315,51 +296,31 @@ function getGraphAndInformationContainer() {
  * @return {d3.element} Graph container
  */
 function getGraphContainer() {
-  return d3.select('#' + GRAPH_CONTAINER_ID);
+  return d3.select('#' + ID_GRAPH_CONTAINER);
 }
 
-/**
- * Returns the controls container for the whole program
- * @return {d3.element} Controls container
- */
-function getContolsContainer() {
-  return d3.select('#' + CONTROLS_CONTAINER_ID);
+
+function getColumn(id) {
+  return d3.select('#' + COLUMN_PREFIX + id.toString());
 }
 
-/**
- * Returns the information container for the whole program
- * @return {d3.element} Information container
- */
-function getInformationContainer() {
-  return d3.select('#' + INFOMATION_CONTAINER_ID);
+function getLeftContainer() {
+  return d3.select('#' + ID_LEFT_CONTAINER);
 }
 
-/**
- * Returns the information left container for the whole program
- * @return {d3.element} Informatio left container
- */
-function getInformationLeftContainer() {
-  return d3.select('#' + INFORMATION_LEFT_CONTAINER_ID);
-}
-
-/**
- * Returns the information right container for the whole program
- * @return {d3.element} Information right container
- */
-function getInformationRightContainer() {
-  return d3.select('#' + INFORMATION_RIGHT_CONTAINER_ID);
+function getRighttContainer() {
+  return d3.select('#' + ID_RIGHT_CONTAINER);
 }
 
 /* ------------------------------------------------------------------------- */
-/* Graph Creation and Control
+/* Graph
 /* ------------------------------------------------------------------------- */
 
 /**
  * Creates graph and associated DOM elements
  */
-function createGraph() {
-  var graphContainer = getGraphContainer();
-  var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
+function createGraph(parentContainer) {
+  var graph = parentContainer.append('svg').attr('id', GRAPH_ID);
   graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
 
   axisGraphicsElements.x = graph.append('g').attr('class', 'x sv-axis');
@@ -376,7 +337,7 @@ function updateGraphDimensions() {
 
   var graphContainerWidth = parseInt(graphContainer.style('width'));
   var graphContainerHeight = graphContainerWidth * GRAPH_HEIGHT_TO_WIDTH_RATIO;
-  $("#" + GRAPH_CONTAINER_ID).css("height", graphContainerHeight);
+  $("#" + ID_GRAPH_CONTAINER).css("height", graphContainerHeight);
 
   var width = graphDimensions.width = graphContainerWidth - margin.left - margin.right;
   var height = graphDimensions.height = graphContainerHeight - margin.top - margin.bottom;
@@ -409,7 +370,7 @@ function updateGraphDimensions() {
 }
 
 /* ------------------------------------------------------------------------- */
-/* Controls Creation and Control
+/* Setttings
 /* ------------------------------------------------------------------------- */
 
 function updateArraySize() {
@@ -448,42 +409,8 @@ function updateSoundState() {
   }
 }
 
-function createButton(parent, text, callBack) {
-  var button = parent.append('li').attr('class', BUTTON_CLASS);
-  button.text(text);
-  button.on('click', function() {
-    callBack()
-  });
-}
-
-function createAlgorithmButton(parent, buttonData) {
-  var button = parent.append('li').attr('class', BUTTON_CLASS);
-  button.text(buttonData.name);
-  button.on('click', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      button.classed(BUTTON_SELECTED_CLASS, true);
-      startSortingAlgorithm(buttonData);
-    }
-  });
-}
-
-function createSortingAlgorithmButtons(container) {
-  var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
-  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
-    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
-  }
-}
-
-function createControlButtons(container) {
-  var container = container.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text(LABEL_CONTROLS_HEADING);
-  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
-  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
-}
-
-function createAlgorithmControls(container) {
-  var controlsContainer = container.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
+function createSettings(parentContainer) {
+  var controlsContainer = parentContainer.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
 
   controlsContainer.append('h2').text(LABEL_SETTINGS_HEADING);
   var list = controlsContainer.append('ul');
@@ -521,8 +448,8 @@ function createAlgorithmControls(container) {
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_AVERAGE).attr('selected', 'selected')
     .text(LABEL_SETTINGS_ARRAY_TYPE_AVERAGE);
   select.append('option')
-  .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
-  .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
+    .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
+    .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
 
   select.on('change', updateArrayType);
 
@@ -537,15 +464,50 @@ function createAlgorithmControls(container) {
   select.on('change', updateSoundState);
 }
 
-function createControls() {
-  var container = getContolsContainer();
-  createControlButtons(container);
-  createAlgorithmControls(container);
-  createSortingAlgorithmButtons(container);
+/* ------------------------------------------------------------------------- */
+/* Algorithms
+/* ------------------------------------------------------------------------- */
+
+function createButton(parent, text, callBack) {
+  var button = parent.append('li').attr('class', BUTTON_CLASS);
+  button.text(text);
+  button.on('click', function() {
+    callBack()
+  });
+}
+
+function createAlgorithmButton(parent, buttonData) {
+  var button = parent.append('li').attr('class', BUTTON_CLASS);
+  button.text(buttonData.name);
+  button.on('click', function() {
+    if (!sortingAlgorithmCurrentlyRunning) {
+      button.classed(BUTTON_SELECTED_CLASS, true);
+      startSortingAlgorithm(buttonData);
+    }
+  });
+}
+
+function createAlgorithmButtons(container) {
+  var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
+  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
+  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
+    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
+  }
 }
 
 /* ------------------------------------------------------------------------- */
-/* Infomation Creating and Control
+/* Controls
+/* ------------------------------------------------------------------------- */
+
+function createControls(parentContainer) {
+  var container = parentContainer.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
+  container.append('h2').text(LABEL_CONTROLS_HEADING);
+  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
+  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Legend
 /* ------------------------------------------------------------------------- */
 
 function createLegend(container) {
@@ -568,6 +530,10 @@ function createLegend(container) {
   item.append('p').text('= ' + LABEL_LEGEND_BOUND);
 }
 
+/* ------------------------------------------------------------------------- */
+/* Stats
+/* ------------------------------------------------------------------------- */
+
 function createStats(container) {
   var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
   statsContainer.append('h2').text(LABEL_STATS_HEADING);
@@ -576,7 +542,16 @@ function createStats(container) {
   list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
 }
 
-function createAlgorithmProperties(container) {
+function updateStats() {
+  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
+  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Properties
+/* ------------------------------------------------------------------------- */
+
+function createProperties(container) {
   var propertiesContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_PROPERTIES_ID).attr('class', LIST_CLASS);
   propertiesContainer.append('h2').text(LABEL_PROPERTIES_HEADING);
   var list = propertiesContainer.append('ul');
@@ -587,35 +562,6 @@ function createAlgorithmProperties(container) {
   list.append('li').attr('id', INFORMATION_MEMORY_ID).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ');
   list.append('li').attr('id', INFORMATION_STABLE_ID).text(LABEL_PROPERTIES_STABLE + ': ');
   list.append('li').attr('id', INFORMATION_TECHNIQUE_ID).text(LABEL_PROPERTIES_TECHNIQUE + ': ');
-}
-
-function createAlgorithmInformation(container) {
-  var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
-  algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
-  var list = algorithmContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
-}
-
-function createAlgorithmDescription(container) {
-  var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
-  descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
-  var list = descriptionContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
-}
-
-function createInformation() {
-  var container = getInformationRightContainer();
-  createStats(container);
-  createLegend(container);
-  createAlgorithmDescription(container);
-  var container = getInformationLeftContainer();
-  createAlgorithmProperties(container);
-  createAlgorithmInformation(container);
-}
-
-function updateStats() {
-  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
-  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
 }
 
 function updateAlgorithmInformation(algorithm) {
@@ -651,8 +597,54 @@ function updateAlgorithmInformation(algorithm) {
 }
 
 /* ------------------------------------------------------------------------- */
+/* Algorithm
+/* ------------------------------------------------------------------------- */
+
+function createAlgorithmInformation(container) {
+  var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
+  algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
+  algorithmContainer.append('p').attr('id', INFORMATION_ALGORITHM_ID);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Description
+/* ------------------------------------------------------------------------- */
+
+function createAlgorithmDescription(container) {
+  var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
+  descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
+  descriptionContainer.append('p').attr('id', INFORMATION_DESCRIPTION_ID);
+}
+
+function createInformation() {
+  var container = getInformationRightContainer();
+  createStats(container);
+  createLegend(container);
+  createAlgorithmDescription(container);
+  var container = getInformationLeftContainer();
+  createAlgorithmProperties(container);
+  createAlgorithmInformation(container);
+}
+
+/* ------------------------------------------------------------------------- */
 /* UI Creation
 /* ------------------------------------------------------------------------- */
+
+function createRightContainerElements(parentContainer) {
+      createStats(getColumn(0));
+      createProperties(getColumn(0));
+
+      createAlgorithmInformation(getColumn(1));
+      createAlgorithmDescription(getColumn(1));
+
+      createSettings(getColumn(2));
+}
+
+function createLeftContainerElements(parentContainer) {
+    createLegend(parentContainer);
+    createControls(parentContainer);
+    createAlgorithmButtons(parentContainer);
+}
 
 /**
  * Creates the UI
@@ -660,10 +652,10 @@ function updateAlgorithmInformation(algorithm) {
 function createUI() {
   if (mainContainerExsists()) {
     createContainers();
-    createGraph();
+    createGraph(getGraphContainer());
     updateGraphDimensions();
-    createInformation();
-    createControls();
+    createRightContainerElements(getLeftContainer());
+    createLeftContainerElements(getRighttContainer());
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
@@ -843,58 +835,87 @@ function getWidthInEm(element) {
 }
 
 function getWidthOfContainerInEm() {
-  return getWidthInEm($('#' + MAIN_CONTAINER_ID));
+  return getWidthInEm($('#' + ID_MAIN_CONTAINER));
 }
 
 function setPercentageWidthOfElement(id, width) {
-  info('Setting ' + id + ' to width: ' + width.toString() + '%');
+//  info('Setting ' + id + ' to width: ' + width.toString() + '%');
   $(id).outerWidth(width + "%");
 }
 
-function setMainContainersPercentageWidths(graphAndInformationWidth, controlsWidth) {
-  setPercentageWidthOfElement('#' + GRAPH_AND_INFOMATION_CONTAINER_ID, graphAndInformationWidth);
-  setPercentageWidthOfElement('#' + CONTROLS_CONTAINER_ID, controlsWidth);
+function setMainContainersPercentageWidths(leftContainerWidth, rightContainerWidth) {
+  setPercentageWidthOfElement('#' + ID_LEFT_CONTAINER, leftContainerWidth);
+  setPercentageWidthOfElement('#' + ID_RIGHT_CONTAINER, rightContainerWidth);
 }
 
+/*
+ * This updates the layout for the panels as css will not allow resizing based
+ * on size of a div.
+ */
 function updateLayout() {
   var width = getWidthOfContainerInEm();
   info('Container width: ' + width + 'em');
 
-  //Main container positioning
+  //Main two containers
+  if (width >= 60) {
+    setMainContainersPercentageWidths(80, 19.5);
+  }
+  if (width < 60) {
+    setMainContainersPercentageWidths(75, 24.5);
+  }
   if (width < 50) {
-    setMainContainersPercentageWidths(98, 100);
-  } else if (width < 60) {
-    setMainContainersPercentageWidths(68, 30);
-  } else if (width < 75) {
-    setMainContainersPercentageWidths(73, 25);
-  } else {
-    setMainContainersPercentageWidths(78, 20);
+    setMainContainersPercentageWidths(70, 29.5);
+  }
+  if (width < 40) {
+    setMainContainersPercentageWidths(100, 99.5);
   }
 
-  //Adjust stat width to prevent overflow
-  if (width < 70) {
-    setPercentageWidthOfElement('.' + STAT_CLASS, 100);
-  } else {
-    setPercentageWidthOfElement('.' + STAT_CLASS, 50);
+  if (width < 55) {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 49);
+  }
+  else {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 32.3333);
   }
 
-  //When screen compresses to single column adjusts the controls and settings tab
-  if (width < 50 && width > 30) {
-    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
-    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
-  } else {
-    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
-    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
+  if (width < 28) {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 99);
   }
 
-  //When screen compresses to single column adjusts the stats and legend tab
-  if (width < 30) {
-    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
-    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
-  } else {
-    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
-    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
-  }
+  // //Main container positioning
+  // if (width < 50) {
+  //   setMainContainersPercentageWidths(98, 100);
+  // } else if (width < 60) {
+  //   setMainContainersPercentageWidths(68, 30);
+  // } else if (width < 75) {
+  //   setMainContainersPercentageWidths(73, 25);
+  // } else {
+  //   setMainContainersPercentageWidths(78, 20);
+  // }
+  //
+  // //Adjust stat width to prevent overflow
+  // if (width < 70) {
+  //   setPercentageWidthOfElement('.' + STAT_CLASS, 100);
+  // } else {
+  //   setPercentageWidthOfElement('.' + STAT_CLASS, 50);
+  // }
+  //
+  // //When screen compresses to single column adjusts the controls and settings tab
+  // if (width < 50 && width > 30) {
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
+  // } else {
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
+  // }
+  //
+  // //When screen compresses to single column adjusts the stats and legend tab
+  // if (width < 30) {
+  //   setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
+  //   setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
+  // } else {
+  //   setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
+  //   setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
+  // }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -985,17 +1006,18 @@ function bubbleSort() {
 }
 
 /* ------------------------------------------------------------------------- */
+function resizeScreen() {
+  updateLayout();
+  updateGraphDimensions();
+  updateScreen();
+}
+
 window.onload = function() {
   info('Load');
   createUI();
   initAudio();
   generateRandomData();
-  updateScreen();
-  updateLayout();
+  onresize();
 }
 
-window.onresize = function() {
-  updateLayout();
-  updateGraphDimensions();
-  updateScreen();
-}
+window.onresize = resizeScreen;
