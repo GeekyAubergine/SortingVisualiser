@@ -411,6 +411,17 @@ function updateGraphDimensions() {
 /* ------------------------------------------------------------------------- */
 /* Controls Creation and Control
 /* ------------------------------------------------------------------------- */
+
+function updateArraySize() {
+  if (!sortingAlgorithmCurrentlyRunning) {
+    numberOfElementsToSort = this.value;
+    generateData();
+    updateScreen();
+  } else {
+    this.value = numberOfElementsToSort;
+  }
+}
+
 function createButton(parent, text, callBack) {
   var button = parent.append('li').attr('class', BUTTON_CLASS);
   button.text(text);
@@ -454,21 +465,14 @@ function createAlgorithmControls(container) {
   var arraySizeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_ARRAY_SIZE);
-  var arraySizeControl = arraySizeControlContainer.append('input')
+
+  //Array size control
+  arraySizeControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', ARRAY_MIN_SIZE)
     .attr('step', CONTROL_ARRAY_SIZE_STEP)
-    .attr('value', numberOfElementsToSort);
-
-  arraySizeControl.on('input', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      numberOfElementsToSort = this.value;
-      generateData();
-      updateScreen();
-    } else {
-      this.value = numberOfElementsToSort;
-    }
-  });
+    .attr('value', numberOfElementsToSort)
+    .on('input', updateArraySize);
 
   var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
