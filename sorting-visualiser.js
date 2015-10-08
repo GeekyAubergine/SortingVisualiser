@@ -75,8 +75,6 @@ var ID_STATS = 'sv-stats';
 var ID_LEGEND = 'sv-legend';
 var ID_STATS_COMPARISONS = 'sv-comparisons-stat';
 var ID_STATS_SWAPS = 'sv-swaps-stat';
-var ID_INFORMATION_LEFT_CONTAINER = 'sv-information-left-container';
-var ID_INFORMATION_RIGHT_CONTAINER = 'sv-information-right-container';
 var ID_ALGORITHM_INFORMATION_PROPERTIES = 'sv-algorithm-properties';
 var ID_ALGORITHM_INFORMATION_ALGORITHM = 'sv-algorithm-information-algorithm-container';
 var ID_ALGORITHM_INFORMATION_DESCRIPTION = 'sv-algorithm-information-description-container';
@@ -120,8 +118,22 @@ var sortingAlgorithmButtons = [{
   memory: 'O(1)',
   stable: true,
   technique: 'Exchanging',
-  algorithm: 'ToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDo',
-  description: 'ToDo'
+  algorithm: 'swapped = true\n'
+    + 'while (swapped) {\n'
+    + '\tswapped = false;\n'
+    + '\tfor (int i = 0; i < n - 1; i++) {\n'
+    + '\t\tif (array[i] > array[i + 1]) {\n'
+    + '\t\t\ttemp = array[i];\n'
+    + '\t\t\tarray[i] = array[i + 1];\n'
+    + '\t\t\tarray[i + 1] = temp;\n'
+    + '\t\t\tswapped = true;\n'
+    + '\t\t}\n'
+    + '\t}\n'
+    + '}\n',
+  description: 'This algorithm works by looping over every time and checking if two '
+    + 'neighboring elements need to swap, if they do they are swapped. If a swap has '
+    + 'been made then the algorithm will iterate over all elements again until '
+    + 'no swaps occour'
 }]
 
 var graphDimensions = {
@@ -602,7 +614,7 @@ function updateAlgorithmInformation(algorithm) {
 function createAlgorithmInformation(container) {
   var algorithmContainer = container.append('div').attr('id', ID_ALGORITHM_INFORMATION_ALGORITHM).attr('class', CLASS_LIST);
   algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
-  algorithmContainer.append('p').attr('id', ID_INFORMATION_ALGORITHM);
+  algorithmContainer.append('pre').attr('id', ID_INFORMATION_ALGORITHM);
 }
 
 /* ------------------------------------------------------------------------- */

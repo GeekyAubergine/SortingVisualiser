@@ -200,6 +200,9 @@ svg {
   box-sizing: border-box;
   border-top: 0.15em solid #ccc;
 }
+#sv-algorithm-algorithm {
+  tab-size: 2;
+}
 
 #sv-algorithm-properties li {
   text-align: left;
