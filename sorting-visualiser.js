@@ -37,13 +37,20 @@ var LABEL_PROPERTIES_TECHNIQUE = 'Technique';
 var CONTAINER_CLASS = 'sv-container';
 var LIST_CLASS = 'sv-list';
 var LEGEND_ITEM_CLASS = 'sv-legend-item';
+var STAT_CLASS = 'sv-stat';
+var BAR_NORMAL_CLASS = 'sv-bar-normal';
+var BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
+var BAR_COMPARISON_CLASS = 'sv-bar-comparison';
+var BAR_BOUND_CLASS = 'sv-bar-bound';
+var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
+var BUTTON_CLASS = 'sv-button'
+var BUTTON_SELECTED_CLASS = 'sv-selected';
+var CONTROL_CONTAINER_CLASS = 'sv-control';
+var CONTROL_LABEL_CLASS = 'sv-control-label';
 
 //Container ID's
-var MAIN_CONTAINER_ID = 'sorting-visualiser-container';
-var GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
-var GRAPH_CONTAINER_ID = 'sv-graph-container';
-var CONTROLS_CONTAINER_ID = 'sv-controls-container';
-var INFOMATION_CONTAINER_ID = 'sv-infomation-container';
+var ID_MAIN_CONTAINER = 'sorting-visualiser-container';
+var ID_GRAPH_CONTAINER = 'sv-graph-container';
 
 var ID_LEFT_CONTAINER = 'sv-left-container';
 var ID_RIGHT_CONTAINER = 'sv-right-container';
@@ -68,7 +75,6 @@ var STATS_ID = 'sv-stats';
 var LEGEND_ID = 'sv-legend';
 var STATS_COMPARISONS_ID = 'sv-comparisons-stat';
 var STATS_SWAPS_ID = 'sv-swaps-stat';
-var STAT_CLASS = 'sv-stat';
 var INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
 var INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
 var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
@@ -84,25 +90,10 @@ var INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
 var INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
 var INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
 
-//Bar class names
-var BAR_NORMAL_CLASS = 'sv-bar-normal';
-var BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
-var BAR_COMPARISON_CLASS = 'sv-bar-comparison';
-var BAR_BOUND_CLASS = 'sv-bar-bound';
-
-//Button class names
-var BUTTON_CLASS = 'sv-button'
-var BUTTON_SELECTED_CLASS = 'sv-selected';
-
-//Control class names
-var CONTROL_CONTAINER_CLASS = 'sv-control';
-var CONTROL_LABEL_CLASS = 'sv-control-label';
-
-//Controls
+//Settings
 var CONTROL_ARRAY_SIZE_STEP = 5;
 var CONTROL_LOOP_TIME_MIN = 0;
 var CONTROL_LOOP_TIME_STEP = 0.01;
-var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 //Logging should be turned on if verbose output is wanted
 var LOGGING_ACTIVE = true;
@@ -245,7 +236,7 @@ function audioSupported() {
  * @return {boolean} Whether the parent container exsists
  */
 function mainContainerExsists() {
-  return $('#' + MAIN_CONTAINER_ID).length > 0;
+  return $('#' + ID_MAIN_CONTAINER).length > 0;
 }
 
 function createLeftContainer(parentContainer) {
@@ -265,7 +256,7 @@ function createRightContainer(parentContainer) {
  * Creates the graph container
  */
 function createGraphContainer(parentContainer) {
-  parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+  parentContainer.append('div').attr('id', ID_GRAPH_CONTAINER).attr('class', CONTAINER_CLASS);
 }
 
 function createColumn(parentContainer, columnNumber) {
@@ -296,7 +287,7 @@ function createContainers() {
  * @return {d3.element} Main container
  */
 function getMainContainer() {
-  return d3.select('#' + MAIN_CONTAINER_ID);
+  return d3.select('#' + ID_MAIN_CONTAINER);
 }
 
 /**
@@ -304,7 +295,7 @@ function getMainContainer() {
  * @return {d3.element} Graph container
  */
 function getGraphContainer() {
-  return d3.select('#' + GRAPH_CONTAINER_ID);
+  return d3.select('#' + ID_GRAPH_CONTAINER);
 }
 
 
@@ -345,7 +336,7 @@ function updateGraphDimensions() {
 
   var graphContainerWidth = parseInt(graphContainer.style('width'));
   var graphContainerHeight = graphContainerWidth * GRAPH_HEIGHT_TO_WIDTH_RATIO;
-  $("#" + GRAPH_CONTAINER_ID).css("height", graphContainerHeight);
+  $("#" + ID_GRAPH_CONTAINER).css("height", graphContainerHeight);
 
   var width = graphDimensions.width = graphContainerWidth - margin.left - margin.right;
   var height = graphDimensions.height = graphContainerHeight - margin.top - margin.bottom;
@@ -845,7 +836,7 @@ function getWidthInEm(element) {
 }
 
 function getWidthOfContainerInEm() {
-  return getWidthInEm($('#' + MAIN_CONTAINER_ID));
+  return getWidthInEm($('#' + ID_MAIN_CONTAINER));
 }
 
 function setPercentageWidthOfElement(id, width) {
