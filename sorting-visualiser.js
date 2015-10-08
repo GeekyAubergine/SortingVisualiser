@@ -45,6 +45,14 @@ var GRAPH_CONTAINER_ID = 'sv-graph-container';
 var CONTROLS_CONTAINER_ID = 'sv-controls-container';
 var INFOMATION_CONTAINER_ID = 'sv-infomation-container';
 
+var ID_LEFT_CONTAINER = 'sv-left-container';
+var ID_RIGHT_CONTAINER = 'sv-right-container';
+var COLUMN_PREFIX = 'sv-column-';
+var ID_COLUMN_0 = COLUMN_PREFIX + '0';
+var ID_COLUMN_1 = COLUMN_PREFIX + '1';
+var ID_COLUMN_2 = COLUMN_PREFIX + '2';
+var ID_COLUMN_3 = COLUMN_PREFIX + '3';
+
 //Graph Element ID's
 var GRAPH_ID = 'sv-graph';
 var GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
@@ -240,58 +248,47 @@ function mainContainerExsists() {
   return $('#' + MAIN_CONTAINER_ID).length > 0;
 }
 
-/**
- * Creates the graph and information container. This is the main left container
- */
-function createGraphAndInformationContainer() {
-  getMainContainer().append('div').attr('id', GRAPH_AND_INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createLeftContainer(parentContainer) {
+  parentContainer.append('div')
+  .attr('id', ID_LEFT_CONTAINER)
+  .attr('class', CONTAINER_CLASS);
 }
+
+function createRightContainer(parentContainer) {
+  parentContainer.append('div')
+  .attr('id', ID_RIGHT_CONTAINER)
+  .attr('class', CONTAINER_CLASS);
+}
+
 
 /**
  * Creates the graph container
  */
-function createGraphContainer() {
-  getGraphAndInformationContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createGraphContainer(parentContainer) {
+  parentContainer.append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
 }
 
-/**
- * Creates the controls container. This is the main right container
- */
-function createControlsContainer() {
-  getMainContainer().append('div').attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createColumn(parentContainer, columnNumber) {
+  info('Creating container ' + COLUMN_PREFIX + columnNumber.toString());
+  parentContainer.append('div')
+    .attr('id', COLUMN_PREFIX + columnNumber.toString())
+    .attr('class', CONTAINER_CLASS);
 }
 
-/**
- * Creates the information container
- */
-function createInfomationContainer() {
-  getGraphAndInformationContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-}
-
-/**
- * Creates the information left container
- */
-function createInformationLeftContainer() {
-  getInformationContainer().append('div').attr('id', INFORMATION_LEFT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-}
-
-/**
- * Creates the information right container
- */
-function createInformationRightContainer() {
-  getInformationContainer().append('div').attr('id', INFORMATION_RIGHT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createColumns(parentContainer, numberOfColumns) {
+  for (var i = 0; i < numberOfColumns; i++) {
+    createColumn(parentContainer, i);
+  }
 }
 
 /**
  * Creates all containers used in Sorter-Visualiser
  */
 function createContainers() {
-  createGraphAndInformationContainer();
-  createGraphContainer();
-  createControlsContainer();
-  createInfomationContainer();
-  createInformationLeftContainer();
-  createInformationRightContainer();
+  createLeftContainer(getMainContainer());
+  createRightContainer(getMainContainer());
+  createGraphContainer(getLeftContainer());
+  createColumns(getLeftContainer(), 4);
 }
 
 /**
@@ -303,14 +300,6 @@ function getMainContainer() {
 }
 
 /**
- * Returns the main container for the whole program
- * @return {d3.element} Main container
- */
-function getGraphAndInformationContainer() {
-  return d3.select('#' + GRAPH_AND_INFOMATION_CONTAINER_ID);
-}
-
-/**
  * Returns the graph container for the whole program
  * @return {d3.element} Graph container
  */
@@ -318,36 +307,17 @@ function getGraphContainer() {
   return d3.select('#' + GRAPH_CONTAINER_ID);
 }
 
-/**
- * Returns the controls container for the whole program
- * @return {d3.element} Controls container
- */
-function getContolsContainer() {
-  return d3.select('#' + CONTROLS_CONTAINER_ID);
+
+function getColumn(id) {
+  return d3.select('#' + COLUMN_PREFIX + id.toString());
 }
 
-/**
- * Returns the information container for the whole program
- * @return {d3.element} Information container
- */
-function getInformationContainer() {
-  return d3.select('#' + INFOMATION_CONTAINER_ID);
+function getLeftContainer() {
+  return d3.select('#' + ID_LEFT_CONTAINER);
 }
 
-/**
- * Returns the information left container for the whole program
- * @return {d3.element} Informatio left container
- */
-function getInformationLeftContainer() {
-  return d3.select('#' + INFORMATION_LEFT_CONTAINER_ID);
-}
-
-/**
- * Returns the information right container for the whole program
- * @return {d3.element} Information right container
- */
-function getInformationRightContainer() {
-  return d3.select('#' + INFORMATION_RIGHT_CONTAINER_ID);
+function getRighttContainer() {
+  return d3.select('#' + ID_RIGHT_CONTAINER);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -357,9 +327,8 @@ function getInformationRightContainer() {
 /**
  * Creates graph and associated DOM elements
  */
-function createGraph() {
-  var graphContainer = getGraphContainer();
-  var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
+function createGraph(parentContainer) {
+  var graph = parentContainer.append('svg').attr('id', GRAPH_ID);
   graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
 
   axisGraphicsElements.x = graph.append('g').attr('class', 'x sv-axis');
@@ -487,8 +456,8 @@ function createSettings(parentContainer) {
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_AVERAGE).attr('selected', 'selected')
     .text(LABEL_SETTINGS_ARRAY_TYPE_AVERAGE);
   select.append('option')
-  .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
-  .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
+    .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
+    .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
 
   select.on('change', updateArrayType);
 
@@ -672,20 +641,19 @@ function createInformation() {
 /* ------------------------------------------------------------------------- */
 
 function createRightContainerElements(parentContainer) {
-  createLegend(parentContainer);
-  createControls(parentContainer);
-  createSettings(parentContainer);
-  createAlgorithmButtons(parentContainer);
+      createStats(getColumn(0));
+      createProperties(getColumn(0));
+
+      createAlgorithmInformation(getColumn(1));
+      createAlgorithmDescription(getColumn(1));
+
+      createSettings(getColumn(2));
 }
 
-function createLowerLeftContainer(parentContainer) {
-  createAlgorithmDescription(parentContainer);
-  createAlgorithmInformation(parentContainer);
-}
-
-function createLowerRightContainer(parentContainer) {
-  createStats(parentContainer);
-  createProperties(parentContainer);
+function createLeftContainerElements(parentContainer) {
+    createLegend(parentContainer);
+    createControls(parentContainer);
+    createAlgorithmButtons(parentContainer);
 }
 
 /**
@@ -694,11 +662,10 @@ function createLowerRightContainer(parentContainer) {
 function createUI() {
   if (mainContainerExsists()) {
     createContainers();
-    createGraph();
+    createGraph(getGraphContainer());
     updateGraphDimensions();
-    createRightContainerElements(getContolsContainer());
-    createLowerLeftContainer(getInformationLeftContainer());
-    createLowerRightContainer(getInformationRightContainer());
+    createRightContainerElements(getLeftContainer());
+    createLeftContainerElements(getRighttContainer());
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
