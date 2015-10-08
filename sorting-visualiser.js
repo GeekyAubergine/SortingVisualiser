@@ -92,7 +92,7 @@ var CONTROL_LABEL_CLASS = 'sv-control-label';
 
 //Controls
 var CONTROL_ARRAY_SIZE_STEP = 5;
-var CONTROL_LOOP_TIME_MIN = 0.01;
+var CONTROL_LOOP_TIME_MIN = 0;
 var CONTROL_LOOP_TIME_STEP = 0.01;
 var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
@@ -411,6 +411,43 @@ function updateGraphDimensions() {
 /* ------------------------------------------------------------------------- */
 /* Controls Creation and Control
 /* ------------------------------------------------------------------------- */
+
+function updateArraySize() {
+  if (!sortingAlgorithmCurrentlyRunning) {
+    info('Array size updated to ' + this.value);
+    numberOfElementsToSort = this.value;
+    generateData();
+    updateScreen();
+  } else {
+    this.value = numberOfElementsToSort;
+  }
+}
+
+function updateTimeStep() {
+  info('Sorting time set set to' + this.value * 1000);
+  sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+}
+
+function updateArrayType() {
+  info('Array type selected: ' + this.value);
+  if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
+    arrayGenerationAlgorithm = generateBestCase;
+  } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
+    arrayGenerationAlgorithm = generateWorstCase;
+  } else {
+    arrayGenerationAlgorithm = generateRandomData;
+  }
+  generateData();
+}
+
+function updateSoundState() {
+  if (this.value == LABEL_SETTINGS_SOUND_OFF) {
+    turnSoundOff();
+  } else {
+    turnSoundOn();
+  }
+}
+
 function createButton(parent, text, callBack) {
   var button = parent.append('li').attr('class', BUTTON_CLASS);
   button.text(text);
@@ -454,55 +491,40 @@ function createAlgorithmControls(container) {
   var arraySizeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_ARRAY_SIZE);
-  var arraySizeControl = arraySizeControlContainer.append('input')
+
+  //Array size control
+  arraySizeControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', ARRAY_MIN_SIZE)
     .attr('step', CONTROL_ARRAY_SIZE_STEP)
-    .attr('value', numberOfElementsToSort);
-
-  arraySizeControl.on('input', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      numberOfElementsToSort = this.value;
-      generateData();
-      updateScreen();
-    } else {
-      this.value = numberOfElementsToSort;
-    }
-  });
+    .attr('value', numberOfElementsToSort)
+    .on('input', updateArraySize);
 
   var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_TIME_STEP);
-  var timeSetControl = timeStepControlContainer.append('input')
+
+  //Time step control
+  timeStepControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', CONTROL_LOOP_TIME_MIN)
     .attr('step', CONTROL_LOOP_TIME_STEP)
-    .attr('value', sortingStepDelay / 1000);
-
-  timeSetControl.on('input', function() {
-    sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
-  });
+    .attr('value', sortingStepDelay / 1000)
+    .on('input', updateTimeStep);
 
   var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_ARRAY_TYPE);
+
   var select = arrayTypeControlContainer.append('select');
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_BEST).text(LABEL_SETTINGS_ARRAY_TYPE_BEST);
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_AVERAGE).attr('selected', 'selected')
     .text(LABEL_SETTINGS_ARRAY_TYPE_AVERAGE);
-  select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST).text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
+  select.append('option')
+  .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
+  .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
 
-  select.on('change', function() {
-    info('Array type selected: ' + this.value);
-    if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
-      arrayGenerationAlgorithm = generateBestCase;
-    } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
-      arrayGenerationAlgorithm = generateWorstCase;
-    } else {
-      arrayGenerationAlgorithm = generateRandomData;
-    }
-    generateData();
-  });
+  select.on('change', updateArrayType);
 
   var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
@@ -512,19 +534,7 @@ function createAlgorithmControls(container) {
   select.append('option').attr('value', LABEL_SETTINGS_SOUND_OFF)
     .attr('selected', 'selected').text(LABEL_SETTINGS_SOUND_OFF);
 
-  select.on('change', function() {
-    info('Array type selected: ' + this.value);
-    if (this.value == LABEL_SETTINGS_SOUND_OFF) {
-      info('Sound turned off');
-      stopSound();
-      soundOn = false;
-    } else {
-      info('Sound turned on');
-      soundOn = true;
-      startSound();
-    }
-    generateData();
-  });
+  select.on('change', updateSoundState);
 }
 
 function createControls() {
@@ -693,7 +703,7 @@ function getRenderData() {
 }
 
 function getWidthOfBar(numberOfElements) {
-  return graphDimensions.width / numberOfElements - 1;
+  return graphDimensions.width / numberOfElementsToSort - 1;
 }
 
 function getHeightOfBar(d) {
@@ -728,7 +738,7 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", getWidthOfBar(dataToRender.length))
+    .attr("width", getWidthOfBar())
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
@@ -743,7 +753,7 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", getWidthOfBar(dataToRender.length))
+    .attr("width", getWidthOfBar())
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
@@ -793,7 +803,6 @@ function stopSound() {
     return;
   }
   if (audioOscillator != undefined) {
-    info('Stoping sound');
     audioOscillator.stop(0);
   }
 }
@@ -809,6 +818,20 @@ function playFrequency(fequency) {
 
 function playSoundForValue(value) {
   playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
+}
+
+function turnSoundOn() {
+  info('Turning sound on');
+  soundOn = true;
+  startSound();
+  playFrequency(0);
+}
+
+function turnSoundOff() {
+  info('Turning sound off');
+  playFrequency(0);
+  soundOn = false;
+  stopSound();
 }
 
 /* ------------------------------------------------------------------------- */
