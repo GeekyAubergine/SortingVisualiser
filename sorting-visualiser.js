@@ -139,6 +139,7 @@ var arrayGenerationAlgorithm = generateRandomData;
 var audioContext;
 var audioOscillator;
 var soundOn = true;
+var AudioContext;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -200,6 +201,10 @@ function stopSortingAlgorithm() {
   updateScreen();
 
   setTimeout(stopSound, sortingStepDelay * 2);
+}
+
+function audioSupported() {
+  return AudioContext;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -466,16 +471,15 @@ function createAlgorithmControls(container) {
   select.append('option').attr('value', 'worst').text('Worst');
 
   select.on('change', function() {
-      info('Array type selected: ' + this.value);
-      if (this.value == 'best') {
-        arrayGenerationAlgorithm = generateBestCase;
-      }
-      else if (this.value == 'worst') {
-        arrayGenerationAlgorithm = generateWorstCase;
-      } else {
-        arrayGenerationAlgorithm = generateRandomData;
-      }
-      generateData();
+    info('Array type selected: ' + this.value);
+    if (this.value == 'best') {
+      arrayGenerationAlgorithm = generateBestCase;
+    } else if (this.value == 'worst') {
+      arrayGenerationAlgorithm = generateWorstCase;
+    } else {
+      arrayGenerationAlgorithm = generateRandomData;
+    }
+    generateData();
   });
 
   var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
@@ -486,18 +490,17 @@ function createAlgorithmControls(container) {
   select.append('option').attr('value', 'off').text('Off');
 
   select.on('change', function() {
-      info('Array type selected: ' + this.value);
-      if (this.value == 'off') {
-        info('Sound turned off');
-        stopSound();
-        soundOn = false;
-      }
-      else {
-        info('Sound turned on');
-        soundOn = true;
-        startSound();
-      }
-      generateData();
+    info('Array type selected: ' + this.value);
+    if (this.value == 'off') {
+      info('Sound turned off');
+      stopSound();
+      soundOn = false;
+    } else {
+      info('Sound turned on');
+      soundOn = true;
+      startSound();
+    }
+    generateData();
   });
 }
 
@@ -671,7 +674,7 @@ function getWidthOfBar(numberOfElements) {
 }
 
 function getHeightOfBar(d) {
-  return graphDimensions.height - margin.top- graphScale.y(d.y);
+  return graphDimensions.height - margin.top - graphScale.y(d.y);
 }
 
 /**
@@ -742,12 +745,17 @@ function updateScreen() {
 /* ------------------------------------------------------------------------- */
 
 function initAudio() {
-  audioContext = new AudioContext();
-  info(audioContext);
+  AudioContext = window.AudioContext || window.webkitAudioContext || false;
+  if (audioSupported()) {
+    audioContext = new AudioContext();
+    info(audioContext);
+  } else {
+    info('Audio is not supported in this browser');
+  }
 }
 
 function startSound() {
-  if (!soundOn) {
+  if (!soundOn || !audioSupported()) {
     return;
   }
   info('Starting sound');
@@ -759,17 +767,17 @@ function startSound() {
 }
 
 function stopSound() {
-  if (!soundOn) {
+  if (!soundOn || !audioSupported()) {
     return;
   }
   if (audioOscillator != undefined) {
-      info('Stoping sound');
+    info('Stoping sound');
     audioOscillator.stop(0);
   }
 }
 
 function playFrequency(fequency) {
-  if (!soundOn) {
+  if (!soundOn || !audioSupported()) {
     return;
   }
   if (audioOscillator != undefined) {
@@ -836,11 +844,11 @@ function updateLayout() {
 
   //When screen compresses to single column adjusts the stats and legend tab
   if (width < 30) {
-      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
-      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
-    } else {
-      setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
-      setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
+    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
+    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
+  } else {
+    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
+    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
   }
 }
 
@@ -878,7 +886,7 @@ function generateRandomData() {
 function generateWorstCase() {
   arrayToSort = [];
   for (var i = 0; i < numberOfElementsToSort; i++) {
-  var delta = (MAX_VALUE) / numberOfElementsToSort;
+    var delta = (MAX_VALUE) / numberOfElementsToSort;
     arrayToSort.push(MAX_VALUE - i * delta);
   }
 }
