@@ -428,6 +428,30 @@ function updateTimeStep() {
   sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
 }
 
+function updateArrayType() {
+  info('Array type selected: ' + this.value);
+  if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
+    arrayGenerationAlgorithm = generateBestCase;
+  } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
+    arrayGenerationAlgorithm = generateWorstCase;
+  } else {
+    arrayGenerationAlgorithm = generateRandomData;
+  }
+  generateData();
+}
+
+function updateSoundState() {
+  if (this.value == LABEL_SETTINGS_SOUND_OFF) {
+    info('Sound turned off');
+    stopSound();
+    soundOn = false;
+  } else {
+    info('Sound turned on');
+    soundOn = true;
+    startSound();
+  }
+}
+
 function createButton(parent, text, callBack) {
   var button = parent.append('li').attr('class', BUTTON_CLASS);
   button.text(text);
@@ -495,23 +519,16 @@ function createAlgorithmControls(container) {
   var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_ARRAY_TYPE);
+
   var select = arrayTypeControlContainer.append('select');
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_BEST).text(LABEL_SETTINGS_ARRAY_TYPE_BEST);
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_AVERAGE).attr('selected', 'selected')
     .text(LABEL_SETTINGS_ARRAY_TYPE_AVERAGE);
-  select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST).text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
+  select.append('option')
+  .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
+  .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
 
-  select.on('change', function() {
-    info('Array type selected: ' + this.value);
-    if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
-      arrayGenerationAlgorithm = generateBestCase;
-    } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
-      arrayGenerationAlgorithm = generateWorstCase;
-    } else {
-      arrayGenerationAlgorithm = generateRandomData;
-    }
-    generateData();
-  });
+  select.on('change', updateArrayType);
 
   var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
@@ -521,19 +538,7 @@ function createAlgorithmControls(container) {
   select.append('option').attr('value', LABEL_SETTINGS_SOUND_OFF)
     .attr('selected', 'selected').text(LABEL_SETTINGS_SOUND_OFF);
 
-  select.on('change', function() {
-    info('Array type selected: ' + this.value);
-    if (this.value == LABEL_SETTINGS_SOUND_OFF) {
-      info('Sound turned off');
-      stopSound();
-      soundOn = false;
-    } else {
-      info('Sound turned on');
-      soundOn = true;
-      startSound();
-    }
-    generateData();
-  });
+  select.on('change', updateSoundState);
 }
 
 function createControls() {
