@@ -351,7 +351,7 @@ function getInformationRightContainer() {
 }
 
 /* ------------------------------------------------------------------------- */
-/* Graph Creation and Control
+/* Graph
 /* ------------------------------------------------------------------------- */
 
 /**
@@ -409,7 +409,7 @@ function updateGraphDimensions() {
 }
 
 /* ------------------------------------------------------------------------- */
-/* Controls Creation and Control
+/* Setttings
 /* ------------------------------------------------------------------------- */
 
 function updateArraySize() {
@@ -448,42 +448,8 @@ function updateSoundState() {
   }
 }
 
-function createButton(parent, text, callBack) {
-  var button = parent.append('li').attr('class', BUTTON_CLASS);
-  button.text(text);
-  button.on('click', function() {
-    callBack()
-  });
-}
-
-function createAlgorithmButton(parent, buttonData) {
-  var button = parent.append('li').attr('class', BUTTON_CLASS);
-  button.text(buttonData.name);
-  button.on('click', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      button.classed(BUTTON_SELECTED_CLASS, true);
-      startSortingAlgorithm(buttonData);
-    }
-  });
-}
-
-function createSortingAlgorithmButtons(container) {
-  var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
-  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
-    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
-  }
-}
-
-function createControlButtons(container) {
-  var container = container.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text(LABEL_CONTROLS_HEADING);
-  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
-  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
-}
-
-function createAlgorithmControls(container) {
-  var controlsContainer = container.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
+function createSettings(parentContainer) {
+  var controlsContainer = parentContainer.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
 
   controlsContainer.append('h2').text(LABEL_SETTINGS_HEADING);
   var list = controlsContainer.append('ul');
@@ -537,15 +503,50 @@ function createAlgorithmControls(container) {
   select.on('change', updateSoundState);
 }
 
-function createControls() {
-  var container = getContolsContainer();
-  createControlButtons(container);
-  createAlgorithmControls(container);
-  createSortingAlgorithmButtons(container);
+/* ------------------------------------------------------------------------- */
+/* Algorithms
+/* ------------------------------------------------------------------------- */
+
+function createButton(parent, text, callBack) {
+  var button = parent.append('li').attr('class', BUTTON_CLASS);
+  button.text(text);
+  button.on('click', function() {
+    callBack()
+  });
+}
+
+function createAlgorithmButton(parent, buttonData) {
+  var button = parent.append('li').attr('class', BUTTON_CLASS);
+  button.text(buttonData.name);
+  button.on('click', function() {
+    if (!sortingAlgorithmCurrentlyRunning) {
+      button.classed(BUTTON_SELECTED_CLASS, true);
+      startSortingAlgorithm(buttonData);
+    }
+  });
+}
+
+function createAlgorithmButtons(container) {
+  var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
+  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
+  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
+    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
+  }
 }
 
 /* ------------------------------------------------------------------------- */
-/* Infomation Creating and Control
+/* Controls
+/* ------------------------------------------------------------------------- */
+
+function createControls(parentContainer) {
+  var container = parentContainer.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
+  container.append('h2').text(LABEL_CONTROLS_HEADING);
+  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
+  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Legend
 /* ------------------------------------------------------------------------- */
 
 function createLegend(container) {
@@ -568,6 +569,10 @@ function createLegend(container) {
   item.append('p').text('= ' + LABEL_LEGEND_BOUND);
 }
 
+/* ------------------------------------------------------------------------- */
+/* Stats
+/* ------------------------------------------------------------------------- */
+
 function createStats(container) {
   var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
   statsContainer.append('h2').text(LABEL_STATS_HEADING);
@@ -576,7 +581,16 @@ function createStats(container) {
   list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
 }
 
-function createAlgorithmProperties(container) {
+function updateStats() {
+  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
+  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Properties
+/* ------------------------------------------------------------------------- */
+
+function createProperties(container) {
   var propertiesContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_PROPERTIES_ID).attr('class', LIST_CLASS);
   propertiesContainer.append('h2').text(LABEL_PROPERTIES_HEADING);
   var list = propertiesContainer.append('ul');
@@ -587,35 +601,6 @@ function createAlgorithmProperties(container) {
   list.append('li').attr('id', INFORMATION_MEMORY_ID).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ');
   list.append('li').attr('id', INFORMATION_STABLE_ID).text(LABEL_PROPERTIES_STABLE + ': ');
   list.append('li').attr('id', INFORMATION_TECHNIQUE_ID).text(LABEL_PROPERTIES_TECHNIQUE + ': ');
-}
-
-function createAlgorithmInformation(container) {
-  var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
-  algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
-  var list = algorithmContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
-}
-
-function createAlgorithmDescription(container) {
-  var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
-  descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
-  var list = descriptionContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
-}
-
-function createInformation() {
-  var container = getInformationRightContainer();
-  createStats(container);
-  createLegend(container);
-  createAlgorithmDescription(container);
-  var container = getInformationLeftContainer();
-  createAlgorithmProperties(container);
-  createAlgorithmInformation(container);
-}
-
-function updateStats() {
-  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
-  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
 }
 
 function updateAlgorithmInformation(algorithm) {
@@ -651,8 +636,57 @@ function updateAlgorithmInformation(algorithm) {
 }
 
 /* ------------------------------------------------------------------------- */
+/* Algorithm
+/* ------------------------------------------------------------------------- */
+
+function createAlgorithmInformation(container) {
+  var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
+  algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
+  var list = algorithmContainer.append('ul');
+  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Description
+/* ------------------------------------------------------------------------- */
+
+function createAlgorithmDescription(container) {
+  var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
+  descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
+  var list = descriptionContainer.append('ul');
+  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
+}
+
+function createInformation() {
+  var container = getInformationRightContainer();
+  createStats(container);
+  createLegend(container);
+  createAlgorithmDescription(container);
+  var container = getInformationLeftContainer();
+  createAlgorithmProperties(container);
+  createAlgorithmInformation(container);
+}
+
+/* ------------------------------------------------------------------------- */
 /* UI Creation
 /* ------------------------------------------------------------------------- */
+
+function createRightContainerElements(parentContainer) {
+  createLegend(parentContainer);
+  createControls(parentContainer);
+  createSettings(parentContainer);
+  createAlgorithmButtons(parentContainer);
+}
+
+function createLowerLeftContainer(parentContainer) {
+  createAlgorithmDescription(parentContainer);
+  createAlgorithmInformation(parentContainer);
+}
+
+function createLowerRightContainer(parentContainer) {
+  createStats(parentContainer);
+  createProperties(parentContainer);
+}
 
 /**
  * Creates the UI
@@ -662,8 +696,9 @@ function createUI() {
     createContainers();
     createGraph();
     updateGraphDimensions();
-    createInformation();
-    createControls();
+    createRightContainerElements(getContolsContainer());
+    createLowerLeftContainer(getInformationLeftContainer());
+    createLowerRightContainer(getInformationRightContainer());
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
@@ -860,41 +895,41 @@ function updateLayout() {
   var width = getWidthOfContainerInEm();
   info('Container width: ' + width + 'em');
 
-  //Main container positioning
-  if (width < 50) {
-    setMainContainersPercentageWidths(98, 100);
-  } else if (width < 60) {
-    setMainContainersPercentageWidths(68, 30);
-  } else if (width < 75) {
-    setMainContainersPercentageWidths(73, 25);
-  } else {
-    setMainContainersPercentageWidths(78, 20);
-  }
-
-  //Adjust stat width to prevent overflow
-  if (width < 70) {
-    setPercentageWidthOfElement('.' + STAT_CLASS, 100);
-  } else {
-    setPercentageWidthOfElement('.' + STAT_CLASS, 50);
-  }
-
-  //When screen compresses to single column adjusts the controls and settings tab
-  if (width < 50 && width > 30) {
-    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
-    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
-  } else {
-    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
-    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
-  }
-
-  //When screen compresses to single column adjusts the stats and legend tab
-  if (width < 30) {
-    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
-    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
-  } else {
-    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
-    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
-  }
+  // //Main container positioning
+  // if (width < 50) {
+  //   setMainContainersPercentageWidths(98, 100);
+  // } else if (width < 60) {
+  //   setMainContainersPercentageWidths(68, 30);
+  // } else if (width < 75) {
+  //   setMainContainersPercentageWidths(73, 25);
+  // } else {
+  //   setMainContainersPercentageWidths(78, 20);
+  // }
+  //
+  // //Adjust stat width to prevent overflow
+  // if (width < 70) {
+  //   setPercentageWidthOfElement('.' + STAT_CLASS, 100);
+  // } else {
+  //   setPercentageWidthOfElement('.' + STAT_CLASS, 50);
+  // }
+  //
+  // //When screen compresses to single column adjusts the controls and settings tab
+  // if (width < 50 && width > 30) {
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
+  // } else {
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
+  //   setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
+  // }
+  //
+  // //When screen compresses to single column adjusts the stats and legend tab
+  // if (width < 30) {
+  //   setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
+  //   setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
+  // } else {
+  //   setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
+  //   setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
+  // }
 }
 
 /* ------------------------------------------------------------------------- */
