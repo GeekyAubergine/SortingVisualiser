@@ -35,6 +35,7 @@ var LABEL_PROPERTIES_TECHNIQUE = 'Technique';
 
 //Class names
 var CONTAINER_CLASS = 'sv-container';
+var CLASS_COLUMN = 'sv-column';
 var LIST_CLASS = 'sv-list';
 var LEGEND_ITEM_CLASS = 'sv-legend-item';
 var STAT_CLASS = 'sv-stat';
@@ -77,7 +78,7 @@ var STATS_COMPARISONS_ID = 'sv-comparisons-stat';
 var STATS_SWAPS_ID = 'sv-swaps-stat';
 var INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
 var INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
-var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
+var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-properties';
 var ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
 var ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
 var INFORMATION_NAME_ID = 'sv-algorithm-name';
@@ -120,7 +121,7 @@ var sortingAlgorithmButtons = [{
   memory: 'O(1)',
   stable: true,
   technique: 'Exchanging',
-  algorithm: 'ToDo',
+  algorithm: 'ToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDoToDo',
   description: 'ToDo'
 }]
 
@@ -263,7 +264,7 @@ function createColumn(parentContainer, columnNumber) {
   info('Creating container ' + COLUMN_PREFIX + columnNumber.toString());
   parentContainer.append('div')
     .attr('id', COLUMN_PREFIX + columnNumber.toString())
-    .attr('class', CONTAINER_CLASS);
+    .attr('class', CONTAINER_CLASS + ' ' + CLASS_COLUMN);
 }
 
 function createColumns(parentContainer, numberOfColumns) {
@@ -602,8 +603,7 @@ function updateAlgorithmInformation(algorithm) {
 function createAlgorithmInformation(container) {
   var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
   algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
-  var list = algorithmContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
+  algorithmContainer.append('p').attr('id', INFORMATION_ALGORITHM_ID);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -613,8 +613,7 @@ function createAlgorithmInformation(container) {
 function createAlgorithmDescription(container) {
   var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
   descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
-  var list = descriptionContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
+  descriptionContainer.append('p').attr('id', INFORMATION_DESCRIPTION_ID);
 }
 
 function createInformation() {
@@ -840,18 +839,47 @@ function getWidthOfContainerInEm() {
 }
 
 function setPercentageWidthOfElement(id, width) {
-  info('Setting ' + id + ' to width: ' + width.toString() + '%');
+//  info('Setting ' + id + ' to width: ' + width.toString() + '%');
   $(id).outerWidth(width + "%");
 }
 
-function setMainContainersPercentageWidths(graphAndInformationWidth, controlsWidth) {
-  setPercentageWidthOfElement('#' + GRAPH_AND_INFOMATION_CONTAINER_ID, graphAndInformationWidth);
-  setPercentageWidthOfElement('#' + CONTROLS_CONTAINER_ID, controlsWidth);
+function setMainContainersPercentageWidths(leftContainerWidth, rightContainerWidth) {
+  setPercentageWidthOfElement('#' + ID_LEFT_CONTAINER, leftContainerWidth);
+  setPercentageWidthOfElement('#' + ID_RIGHT_CONTAINER, rightContainerWidth);
 }
 
+/*
+ * This updates the layout for the panels as css will not allow resizing based
+ * on size of a div.
+ */
 function updateLayout() {
   var width = getWidthOfContainerInEm();
   info('Container width: ' + width + 'em');
+
+  //Main two containers
+  if (width >= 60) {
+    setMainContainersPercentageWidths(80, 19.5);
+  }
+  if (width < 60) {
+    setMainContainersPercentageWidths(75, 24.5);
+  }
+  if (width < 50) {
+    setMainContainersPercentageWidths(70, 29.5);
+  }
+  if (width < 40) {
+    setMainContainersPercentageWidths(100, 99.5);
+  }
+
+  if (width < 55) {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 49);
+  }
+  else {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 32.3333);
+  }
+
+  if (width < 28) {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 99);
+  }
 
   // //Main container positioning
   // if (width < 50) {
@@ -978,17 +1006,18 @@ function bubbleSort() {
 }
 
 /* ------------------------------------------------------------------------- */
+function resizeScreen() {
+  updateLayout();
+  updateGraphDimensions();
+  updateScreen();
+}
+
 window.onload = function() {
   info('Load');
   createUI();
   initAudio();
   generateRandomData();
-  updateScreen();
-  updateLayout();
+  onresize();
 }
 
-window.onresize = function() {
-  updateLayout();
-  updateGraphDimensions();
-  updateScreen();
-}
+window.onresize = resizeScreen;

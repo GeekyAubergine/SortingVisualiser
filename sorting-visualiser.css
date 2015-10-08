@@ -14,10 +14,6 @@ svg {
 #sv-graph-container {
   width: 100%;
 }
-#sv-column-0, #sv-column-1, #sv-column-2, #sv-column-3 {
-  width: 32.33333%;
-  margin: 0.5%;
-}
 #sv-left-container {
   width: 80%;
 }
@@ -25,8 +21,13 @@ svg {
   margin-left: 0.5%;
   width: 19.5%;
 }
+.sv-column {
+  width: 32.33333%;
+  margin: 0.5%;
+}
 
 /* Bars */
+
 .sv-bar-normal {
   fill: steelblue;
   background: steelblue;
@@ -167,7 +168,9 @@ svg {
   border-left: 0.1em solid #aaa;
   box-sizing: border-box;
 }
+
 /* Information */
+
 #sv-legend li p {
   width: auto;
   margin: 0;
@@ -184,8 +187,21 @@ svg {
 #sv-stats li {
   width: 100%;
 }
-#sv-algorithm-information-properties-container li {
+#sv-algorithm-algorithm, #sv-algorithm-description {
+  float: left;
+  width: 100%;
+  min-height: 2em;
+  margin: 0;
+  padding: 0.5em;
+  text-align: left;
+  word-wrap: break-word;
+  overflow: auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  border-top: 0.15em solid #ccc;
+}
+
+#sv-algorithm-properties li {
   text-align: left;
   padding-left: 0.5em;
-  width: 100%;
 }
