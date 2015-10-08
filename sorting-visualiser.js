@@ -707,7 +707,7 @@ function getRenderData() {
 }
 
 function getWidthOfBar(numberOfElements) {
-  return graphDimensions.width / numberOfElements - 1;
+  return graphDimensions.width / numberOfElementsToSort - 1;
 }
 
 function getHeightOfBar(d) {
@@ -742,7 +742,7 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", getWidthOfBar(dataToRender.length))
+    .attr("width", getWidthOfBar())
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
@@ -757,7 +757,7 @@ function render() {
     .attr("x", function(d) {
       return graphScale.x(d.x);
     })
-    .attr("width", getWidthOfBar(dataToRender.length))
+    .attr("width", getWidthOfBar())
     .attr("y", function(d) {
       return graphScale.y(d.y);
     })
