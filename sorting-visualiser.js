@@ -442,13 +442,9 @@ function updateArrayType() {
 
 function updateSoundState() {
   if (this.value == LABEL_SETTINGS_SOUND_OFF) {
-    info('Sound turned off');
-    stopSound();
-    soundOn = false;
+    turnSoundOff();
   } else {
-    info('Sound turned on');
-    soundOn = true;
-    startSound();
+    turnSoundOn();
   }
 }
 
@@ -807,7 +803,6 @@ function stopSound() {
     return;
   }
   if (audioOscillator != undefined) {
-    info('Stoping sound');
     audioOscillator.stop(0);
   }
 }
@@ -823,6 +818,20 @@ function playFrequency(fequency) {
 
 function playSoundForValue(value) {
   playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
+}
+
+function turnSoundOn() {
+  info('Turning sound on');
+  soundOn = true;
+  startSound();
+  playFrequency(0);
+}
+
+function turnSoundOff() {
+  info('Turning sound off');
+  playFrequency(0);
+  soundOn = false;
+  stopSound();
 }
 
 /* ------------------------------------------------------------------------- */
