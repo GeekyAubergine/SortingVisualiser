@@ -34,67 +34,64 @@ var LABEL_PROPERTIES_STABLE = 'Stable';
 var LABEL_PROPERTIES_TECHNIQUE = 'Technique';
 
 //Class names
-var CONTAINER_CLASS = 'sv-container';
-var LIST_CLASS = 'sv-list';
-var LEGEND_ITEM_CLASS = 'sv-legend-item';
+var CLASS_CONTAINER = 'sv-container';
+var CLASS_COLUMN = 'sv-column';
+var CLASS_LIST = 'sv-list';
+var CLASS_LEGEND_ITEM = 'sv-legend-item';
+var CLASS_STAT = 'sv-stat';
+var CLASS_BAR_NORMAL = 'sv-bar-normal';
+var CLASS_BAR_ACTIVE = 'sv-bar-active'; //Current bar indexed
+var CLASS_BAR_COMPARISON = 'sv-bar-comparison';
+var CLASS_BAR_BOUND = 'sv-bar-bound';
+var CLASS_STOP_BUTTON = 'sv-control sv-button sv-control-button';
+var CLASS_BUTTON = 'sv-button'
+var CLASS_BUTTON_SELECTED = 'sv-selected';
+var CLASS_CONTROL_CONTAINER = 'sv-control';
+var CLASS_CONTROL_LABEL = 'sv-control-label';
 
 //Container ID's
-var MAIN_CONTAINER_ID = 'sorting-visualiser-container';
-var GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
-var GRAPH_CONTAINER_ID = 'sv-graph-container';
-var CONTROLS_CONTAINER_ID = 'sv-controls-container';
-var INFOMATION_CONTAINER_ID = 'sv-infomation-container';
+var ID_MAIN_CONTAINER = 'sorting-visualiser-container';
+var ID_GRAPH_CONTAINER = 'sv-graph-container';
+var ID_LEFT_CONTAINER = 'sv-left-container';
+var ID_RIGHT_CONTAINER = 'sv-right-container';
+var COLUMN_PREFIX = 'sv-column-';
+var ID_COLUMN_0 = COLUMN_PREFIX + '0';
+var ID_COLUMN_1 = COLUMN_PREFIX + '1';
+var ID_COLUMN_2 = COLUMN_PREFIX + '2';
+var ID_COLUMN_3 = COLUMN_PREFIX + '3';
 
 //Graph Element ID's
-var GRAPH_ID = 'sv-graph';
-var GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
+var ID_GRAPH = 'sv-graph';
+var ID_GRAPH_GRAPHICS = 'sv-graph-graphics-element';
 
 //Controls Element ID's
-var STOP_BUTTON_ID = 'sv-stop-button';
-var ALGORITHMS_CONTROLS_CONTAINER_ID = 'sv-controls';
-var ALGORITHMS_SETTINGS_CONTAINER_ID = 'sv-settings';
-var ALGORITHMS_CONTAINER_ID = 'sv-algorithms';
+var ID_STOP_BUTTON = 'sv-stop-button';
+var ID_ALGORITHMS_CONTROLS_CONTAINER = 'sv-controls';
+var ID_ALGORITHMS_SETTINGS_CONTAINER = 'sv-settings';
+var ID_ALGORITHMS_CONTAINER = 'sv-algorithms';
 
 //Information Element ID's
-var STATS_ID = 'sv-stats';
-var LEGEND_ID = 'sv-legend';
-var STATS_COMPARISONS_ID = 'sv-comparisons-stat';
-var STATS_SWAPS_ID = 'sv-swaps-stat';
-var STAT_CLASS = 'sv-stat';
-var INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
-var INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
-var ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
-var ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
-var ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
-var INFORMATION_NAME_ID = 'sv-algorithm-name';
-var INFORMATION_BEST_CASE_COMPLEXITY_ID = 'sv-algorithm-best-complexity';
-var INFORMATION_AVERAGE_CASE_COMPLEXITY_ID = 'sv-algorithm-average-complexity';
-var INFORMATION_WORST_CASE_COMPLEXITY_ID = 'sv-algorithm-worst-complexity';
-var INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
-var INFORMATION_STABLE_ID = 'sv-algorithm-stable';
-var INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
-var INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
-var INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
+var ID_STATS = 'sv-stats';
+var ID_LEGEND = 'sv-legend';
+var ID_STATS_COMPARISONS = 'sv-comparisons-stat';
+var ID_STATS_SWAPS = 'sv-swaps-stat';
+var ID_ALGORITHM_INFORMATION_PROPERTIES = 'sv-algorithm-properties';
+var ID_ALGORITHM_INFORMATION_ALGORITHM = 'sv-algorithm-information-algorithm-container';
+var ID_ALGORITHM_INFORMATION_DESCRIPTION = 'sv-algorithm-information-description-container';
+var ID_INFORMATION_NAME = 'sv-algorithm-name';
+var ID_INFORMATION_BEST_CASE_COMPLEXITY = 'sv-algorithm-best-complexity';
+var ID_INFORMATION_AVERAGE_CASE_COMPLEXITY = 'sv-algorithm-average-complexity';
+var ID_INFORMATION_WORST_CASE_COMPLEXITY = 'sv-algorithm-worst-complexity';
+var ID_INFORMATION_MEMORY = 'sv-algorithm-memory';
+var ID_INFORMATION_STABLE = 'sv-algorithm-stable';
+var ID_INFORMATION_TECHNIQUE = 'sv-algorithm-technique';
+var ID_INFORMATION_ALGORITHM = 'sv-algorithm-algorithm';
+var ID_INFORMATION_DESCRIPTION = 'sv-algorithm-description';
 
-//Bar class names
-var BAR_NORMAL_CLASS = 'sv-bar-normal';
-var BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
-var BAR_COMPARISON_CLASS = 'sv-bar-comparison';
-var BAR_BOUND_CLASS = 'sv-bar-bound';
-
-//Button class names
-var BUTTON_CLASS = 'sv-button'
-var BUTTON_SELECTED_CLASS = 'sv-selected';
-
-//Control class names
-var CONTROL_CONTAINER_CLASS = 'sv-control';
-var CONTROL_LABEL_CLASS = 'sv-control-label';
-
-//Controls
+//Settings
 var CONTROL_ARRAY_SIZE_STEP = 5;
 var CONTROL_LOOP_TIME_MIN = 0;
 var CONTROL_LOOP_TIME_STEP = 0.01;
-var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 //Logging should be turned on if verbose output is wanted
 var LOGGING_ACTIVE = true;
@@ -121,8 +118,22 @@ var sortingAlgorithmButtons = [{
   memory: 'O(1)',
   stable: true,
   technique: 'Exchanging',
-  algorithm: 'ToDo',
-  description: 'ToDo'
+  algorithm: 'swapped = true\n'
+    + 'while (swapped) {\n'
+    + '\tswapped = false;\n'
+    + '\tfor (int i = 0; i < n - 1; i++) {\n'
+    + '\t\tif (array[i] > array[i + 1]) {\n'
+    + '\t\t\ttemp = array[i];\n'
+    + '\t\t\tarray[i] = array[i + 1];\n'
+    + '\t\t\tarray[i + 1] = temp;\n'
+    + '\t\t\tswapped = true;\n'
+    + '\t\t}\n'
+    + '\t}\n'
+    + '}\n',
+  description: 'This algorithm works by looping over every time and checking if two '
+    + 'neighboring elements need to swap, if they do they are swapped. If a swap has '
+    + 'been made then the algorithm will iterate over all elements again until '
+    + 'no swaps occour'
 }]
 
 var graphDimensions = {
@@ -212,7 +223,7 @@ function stopSortingAlgorithm() {
   }
 
   //Removes selected class from all buttons
-  d3.selectAll('.' + BUTTON_CLASS).classed(BUTTON_SELECTED_CLASS, false);
+  d3.selectAll('.' + CLASS_BUTTON).classed(CLASS_BUTTON_SELECTED, false);
 
   //Resets the sorting algorithm index markers to -1
   sortingCurrentIndex = -1;
@@ -237,61 +248,50 @@ function audioSupported() {
  * @return {boolean} Whether the parent container exsists
  */
 function mainContainerExsists() {
-  return $('#' + MAIN_CONTAINER_ID).length > 0;
+  return $('#' + ID_MAIN_CONTAINER).length > 0;
 }
 
-/**
- * Creates the graph and information container. This is the main left container
- */
-function createGraphAndInformationContainer() {
-  getMainContainer().append('div').attr('id', GRAPH_AND_INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createLeftContainer(parentContainer) {
+  parentContainer.append('div')
+  .attr('id', ID_LEFT_CONTAINER)
+  .attr('class', CLASS_CONTAINER);
 }
+
+function createRightContainer(parentContainer) {
+  parentContainer.append('div')
+  .attr('id', ID_RIGHT_CONTAINER)
+  .attr('class', CLASS_CONTAINER);
+}
+
 
 /**
  * Creates the graph container
  */
-function createGraphContainer() {
-  getGraphAndInformationContainer().append('div').attr('id', GRAPH_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createGraphContainer(parentContainer) {
+  parentContainer.append('div').attr('id', ID_GRAPH_CONTAINER).attr('class', CLASS_CONTAINER);
 }
 
-/**
- * Creates the controls container. This is the main right container
- */
-function createControlsContainer() {
-  getMainContainer().append('div').attr('id', CONTROLS_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createColumn(parentContainer, columnNumber) {
+  info('Creating container ' + COLUMN_PREFIX + columnNumber.toString());
+  parentContainer.append('div')
+    .attr('id', COLUMN_PREFIX + columnNumber.toString())
+    .attr('class', CLASS_CONTAINER + ' ' + CLASS_COLUMN);
 }
 
-/**
- * Creates the information container
- */
-function createInfomationContainer() {
-  getGraphAndInformationContainer().append('div').attr('id', INFOMATION_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-}
-
-/**
- * Creates the information left container
- */
-function createInformationLeftContainer() {
-  getInformationContainer().append('div').attr('id', INFORMATION_LEFT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
-}
-
-/**
- * Creates the information right container
- */
-function createInformationRightContainer() {
-  getInformationContainer().append('div').attr('id', INFORMATION_RIGHT_CONTAINER_ID).attr('class', CONTAINER_CLASS);
+function createColumns(parentContainer, numberOfColumns) {
+  for (var i = 0; i < numberOfColumns; i++) {
+    createColumn(parentContainer, i);
+  }
 }
 
 /**
  * Creates all containers used in Sorter-Visualiser
  */
 function createContainers() {
-  createGraphAndInformationContainer();
-  createGraphContainer();
-  createControlsContainer();
-  createInfomationContainer();
-  createInformationLeftContainer();
-  createInformationRightContainer();
+  createLeftContainer(getMainContainer());
+  createRightContainer(getMainContainer());
+  createGraphContainer(getLeftContainer());
+  createColumns(getLeftContainer(), 4);
 }
 
 /**
@@ -299,15 +299,7 @@ function createContainers() {
  * @return {d3.element} Main container
  */
 function getMainContainer() {
-  return d3.select('#' + MAIN_CONTAINER_ID);
-}
-
-/**
- * Returns the main container for the whole program
- * @return {d3.element} Main container
- */
-function getGraphAndInformationContainer() {
-  return d3.select('#' + GRAPH_AND_INFOMATION_CONTAINER_ID);
+  return d3.select('#' + ID_MAIN_CONTAINER);
 }
 
 /**
@@ -315,52 +307,32 @@ function getGraphAndInformationContainer() {
  * @return {d3.element} Graph container
  */
 function getGraphContainer() {
-  return d3.select('#' + GRAPH_CONTAINER_ID);
+  return d3.select('#' + ID_GRAPH_CONTAINER);
 }
 
-/**
- * Returns the controls container for the whole program
- * @return {d3.element} Controls container
- */
-function getContolsContainer() {
-  return d3.select('#' + CONTROLS_CONTAINER_ID);
+
+function getColumn(id) {
+  return d3.select('#' + COLUMN_PREFIX + id.toString());
 }
 
-/**
- * Returns the information container for the whole program
- * @return {d3.element} Information container
- */
-function getInformationContainer() {
-  return d3.select('#' + INFOMATION_CONTAINER_ID);
+function getLeftContainer() {
+  return d3.select('#' + ID_LEFT_CONTAINER);
 }
 
-/**
- * Returns the information left container for the whole program
- * @return {d3.element} Informatio left container
- */
-function getInformationLeftContainer() {
-  return d3.select('#' + INFORMATION_LEFT_CONTAINER_ID);
-}
-
-/**
- * Returns the information right container for the whole program
- * @return {d3.element} Information right container
- */
-function getInformationRightContainer() {
-  return d3.select('#' + INFORMATION_RIGHT_CONTAINER_ID);
+function getRighttContainer() {
+  return d3.select('#' + ID_RIGHT_CONTAINER);
 }
 
 /* ------------------------------------------------------------------------- */
-/* Graph Creation and Control
+/* Graph
 /* ------------------------------------------------------------------------- */
 
 /**
  * Creates graph and associated DOM elements
  */
-function createGraph() {
-  var graphContainer = getGraphContainer();
-  var graph = graphContainer.append('svg').attr('id', GRAPH_ID);
-  graph.append('g').attr('id', GRAPH_GRAPHICS_ID);
+function createGraph(parentContainer) {
+  var graph = parentContainer.append('svg').attr('id', ID_GRAPH);
+  graph.append('g').attr('id', ID_GRAPH_GRAPHICS);
 
   axisGraphicsElements.x = graph.append('g').attr('class', 'x sv-axis');
   axisGraphicsElements.y = graph.append('g').attr('class', 'y sv-axis');
@@ -372,11 +344,11 @@ function createGraph() {
 function updateGraphDimensions() {
   //Get graphics objects
   var graphContainer = getGraphContainer();
-  var graph = d3.select('#' + GRAPH_ID);
+  var graph = d3.select('#' + ID_GRAPH);
 
   var graphContainerWidth = parseInt(graphContainer.style('width'));
   var graphContainerHeight = graphContainerWidth * GRAPH_HEIGHT_TO_WIDTH_RATIO;
-  $("#" + GRAPH_CONTAINER_ID).css("height", graphContainerHeight);
+  $("#" + ID_GRAPH_CONTAINER).css("height", graphContainerHeight);
 
   var width = graphDimensions.width = graphContainerWidth - margin.left - margin.right;
   var height = graphDimensions.height = graphContainerHeight - margin.top - margin.bottom;
@@ -395,7 +367,7 @@ function updateGraphDimensions() {
 
   //Translate graph from
   //Select graph 'g'
-  d3.select('#' + GRAPH_GRAPHICS_ID).attr('transform',
+  d3.select('#' + ID_GRAPH_GRAPHICS).attr('transform',
     'translate(' + margin.left + ', ' + margin.top + ')');
 
   axisGraphicsElements.x
@@ -409,7 +381,7 @@ function updateGraphDimensions() {
 }
 
 /* ------------------------------------------------------------------------- */
-/* Controls Creation and Control
+/* Setttings
 /* ------------------------------------------------------------------------- */
 
 function updateArraySize() {
@@ -448,48 +420,14 @@ function updateSoundState() {
   }
 }
 
-function createButton(parent, text, callBack) {
-  var button = parent.append('li').attr('class', BUTTON_CLASS);
-  button.text(text);
-  button.on('click', function() {
-    callBack()
-  });
-}
-
-function createAlgorithmButton(parent, buttonData) {
-  var button = parent.append('li').attr('class', BUTTON_CLASS);
-  button.text(buttonData.name);
-  button.on('click', function() {
-    if (!sortingAlgorithmCurrentlyRunning) {
-      button.classed(BUTTON_SELECTED_CLASS, true);
-      startSortingAlgorithm(buttonData);
-    }
-  });
-}
-
-function createSortingAlgorithmButtons(container) {
-  var container = container.append('div').attr('id', ALGORITHMS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
-  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
-    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
-  }
-}
-
-function createControlButtons(container) {
-  var container = container.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text(LABEL_CONTROLS_HEADING);
-  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
-  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
-}
-
-function createAlgorithmControls(container) {
-  var controlsContainer = container.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
+function createSettings(parentContainer) {
+  var controlsContainer = parentContainer.append('div').attr('id', ID_ALGORITHMS_SETTINGS_CONTAINER).attr('class', CLASS_LIST);
 
   controlsContainer.append('h2').text(LABEL_SETTINGS_HEADING);
   var list = controlsContainer.append('ul');
 
-  var arraySizeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
-  arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+  var arraySizeControlContainer = list.append('li').attr('class', CLASS_CONTROL_CONTAINER);
+  arraySizeControlContainer.append('div').attr('class', CLASS_CONTROL_LABEL)
     .append('p').text(LABEL_SETTINGS_ARRAY_SIZE);
 
   //Array size control
@@ -500,8 +438,8 @@ function createAlgorithmControls(container) {
     .attr('value', numberOfElementsToSort)
     .on('input', updateArraySize);
 
-  var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
-  timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+  var timeStepControlContainer = list.append('li').attr('class', CLASS_CONTROL_CONTAINER);
+  timeStepControlContainer.append('div').attr('class', CLASS_CONTROL_LABEL)
     .append('p').text(LABEL_SETTINGS_TIME_STEP);
 
   //Time step control
@@ -512,8 +450,8 @@ function createAlgorithmControls(container) {
     .attr('value', sortingStepDelay / 1000)
     .on('input', updateTimeStep);
 
-  var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
-  arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+  var arrayTypeControlContainer = list.append('li').attr('class', CLASS_CONTROL_CONTAINER);
+  arrayTypeControlContainer.append('div').attr('class', CLASS_CONTROL_LABEL)
     .append('p').text(LABEL_SETTINGS_ARRAY_TYPE);
 
   var select = arrayTypeControlContainer.append('select');
@@ -521,13 +459,13 @@ function createAlgorithmControls(container) {
   select.append('option').attr('value', LABEL_SETTINGS_ARRAY_TYPE_AVERAGE).attr('selected', 'selected')
     .text(LABEL_SETTINGS_ARRAY_TYPE_AVERAGE);
   select.append('option')
-  .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
-  .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
+    .attr('value', LABEL_SETTINGS_ARRAY_TYPE_WORST)
+    .text(LABEL_SETTINGS_ARRAY_TYPE_WORST);
 
   select.on('change', updateArrayType);
 
-  var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
-  soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
+  var soundControlContainer = list.append('li').attr('class', CLASS_CONTROL_CONTAINER);
+  soundControlContainer.append('div').attr('class', CLASS_CONTROL_LABEL)
     .append('p').text(LABEL_SETTINGS_SOUND);
   var select = soundControlContainer.append('select');
   select.append('option').attr('value', LABEL_SETTINGS_SOUND_ON).text(LABEL_SETTINGS_SOUND_ON);
@@ -537,70 +475,156 @@ function createAlgorithmControls(container) {
   select.on('change', updateSoundState);
 }
 
-function createControls() {
-  var container = getContolsContainer();
-  createControlButtons(container);
-  createAlgorithmControls(container);
-  createSortingAlgorithmButtons(container);
+/* ------------------------------------------------------------------------- */
+/* Algorithms
+/* ------------------------------------------------------------------------- */
+
+function createButton(parent, text, callBack) {
+  var button = parent.append('li').attr('class', CLASS_BUTTON);
+  button.text(text);
+  button.on('click', function() {
+    callBack()
+  });
+}
+
+function createAlgorithmButton(parent, buttonData) {
+  var button = parent.append('li').attr('class', CLASS_BUTTON);
+  button.text(buttonData.name);
+  button.on('click', function() {
+    if (!sortingAlgorithmCurrentlyRunning) {
+      button.classed(CLASS_BUTTON_SELECTED, true);
+      startSortingAlgorithm(buttonData);
+    }
+  });
+}
+
+function createAlgorithmButtons(container) {
+  var container = container.append('div').attr('id', ID_ALGORITHMS_CONTAINER).attr('class', CLASS_LIST);
+  container.append('h2').text(LABEL_ALGORITHMS_HEADING);
+  for (var i = 0; i < sortingAlgorithmButtons.length; i++) {
+    createAlgorithmButton(container, sortingAlgorithmButtons[i]);
+  }
 }
 
 /* ------------------------------------------------------------------------- */
-/* Infomation Creating and Control
+/* Controls
+/* ------------------------------------------------------------------------- */
+
+function createControls(parentContainer) {
+  var container = parentContainer.append('div').attr('id', ID_ALGORITHMS_CONTROLS_CONTAINER).attr('class', CLASS_LIST);
+  container.append('h2').text(LABEL_CONTROLS_HEADING);
+  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
+  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Legend
 /* ------------------------------------------------------------------------- */
 
 function createLegend(container) {
   var legendContainer = container
-    .append('div').attr('id', LEGEND_ID).attr('class', LIST_CLASS);
+    .append('div').attr('id', ID_LEGEND).attr('class', CLASS_LIST);
   legendContainer.append('h2').text(LABEL_LEGEND_HEADING);
 
   var list = legendContainer.append('ul');
 
   var item = list.append('li');
-  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_ACTIVE_CLASS);
+  item.append('div').attr('class', CLASS_LEGEND_ITEM + ' ' + CLASS_BAR_ACTIVE);
   item.append('p').text('= ' + LABEL_LEGEND_CURRENT);
 
   item = list.append('li');
-  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_COMPARISON_CLASS);
+  item.append('div').attr('class', CLASS_LEGEND_ITEM + ' ' + CLASS_BAR_COMPARISON);
   item.append('p').text('= ' + LABEL_LEGEND_COMPARISON);
 
   item = list.append('li');
-  item.append('div').attr('class', LEGEND_ITEM_CLASS + ' ' + BAR_BOUND_CLASS);
+  item.append('div').attr('class', CLASS_LEGEND_ITEM + ' ' + CLASS_BAR_BOUND);
   item.append('p').text('= ' + LABEL_LEGEND_BOUND);
 }
 
+/* ------------------------------------------------------------------------- */
+/* Stats
+/* ------------------------------------------------------------------------- */
+
 function createStats(container) {
-  var statsContainer = container.append('div').attr('id', STATS_ID).attr('class', LIST_CLASS);
+  var statsContainer = container.append('div').attr('id', ID_STATS).attr('class', CLASS_LIST);
   statsContainer.append('h2').text(LABEL_STATS_HEADING);
   var list = statsContainer.append('ul');
-  list.append('li').attr('id', STATS_COMPARISONS_ID).attr('class', STAT_CLASS);
-  list.append('li').attr('id', STATS_SWAPS_ID).attr('class', STAT_CLASS);
+  list.append('li').attr('id', ID_STATS_COMPARISONS).attr('class', CLASS_STAT);
+  list.append('li').attr('id', ID_STATS_SWAPS).attr('class', CLASS_STAT);
 }
 
-function createAlgorithmProperties(container) {
-  var propertiesContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_PROPERTIES_ID).attr('class', LIST_CLASS);
+function updateStats() {
+  d3.select('#' + ID_STATS_COMPARISONS).text("Comparisons: " + sortingStats.numberOfComparisons);
+  d3.select('#' + ID_STATS_SWAPS).text("Swaps: " + sortingStats.numberOfSwaps);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Properties
+/* ------------------------------------------------------------------------- */
+
+function createProperties(container) {
+  var propertiesContainer = container.append('div').attr('id', ID_ALGORITHM_INFORMATION_PROPERTIES).attr('class', CLASS_LIST);
   propertiesContainer.append('h2').text(LABEL_PROPERTIES_HEADING);
   var list = propertiesContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_NAME_ID).text(LABEL_PROPERTIES_NAME + ': ');
-  list.append('li').attr('id', INFORMATION_BEST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_BEST_CASE + ': ');
-  list.append('li').attr('id', INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_AVERAGE_CASE + ': ');
-  list.append('li').attr('id', INFORMATION_WORST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_WORST_CASE + ': ');
-  list.append('li').attr('id', INFORMATION_MEMORY_ID).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ');
-  list.append('li').attr('id', INFORMATION_STABLE_ID).text(LABEL_PROPERTIES_STABLE + ': ');
-  list.append('li').attr('id', INFORMATION_TECHNIQUE_ID).text(LABEL_PROPERTIES_TECHNIQUE + ': ');
+  list.append('li').attr('id', ID_INFORMATION_NAME).text(LABEL_PROPERTIES_NAME + ': ');
+  list.append('li').attr('id', ID_INFORMATION_BEST_CASE_COMPLEXITY).text(LABEL_PROPERTIES_BEST_CASE + ': ');
+  list.append('li').attr('id', ID_INFORMATION_AVERAGE_CASE_COMPLEXITY).text(LABEL_PROPERTIES_AVERAGE_CASE + ': ');
+  list.append('li').attr('id', ID_INFORMATION_WORST_CASE_COMPLEXITY).text(LABEL_PROPERTIES_WORST_CASE + ': ');
+  list.append('li').attr('id', ID_INFORMATION_MEMORY).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ');
+  list.append('li').attr('id', ID_INFORMATION_STABLE).text(LABEL_PROPERTIES_STABLE + ': ');
+  list.append('li').attr('id', ID_INFORMATION_TECHNIQUE).text(LABEL_PROPERTIES_TECHNIQUE + ': ');
 }
+
+function updateAlgorithmInformation(algorithm) {
+  if (algorithm != undefined) {
+    if (algorithm.name != undefined) {
+      d3.select('#' + ID_INFORMATION_NAME).text(LABEL_PROPERTIES_NAME + ': ' + algorithm.name);
+    }
+    if (algorithm.bestCase != undefined) {
+      d3.select('#' + ID_INFORMATION_BEST_CASE_COMPLEXITY).text(LABEL_PROPERTIES_BEST_CASE + ': ' + algorithm.bestCase);
+    }
+    if (algorithm.averageCase != undefined) {
+      d3.select('#' + ID_INFORMATION_AVERAGE_CASE_COMPLEXITY).text(LABEL_PROPERTIES_AVERAGE_CASE + ': ' + algorithm.averageCase);
+    }
+    if (algorithm.worstCase != undefined) {
+      d3.select('#' + ID_INFORMATION_WORST_CASE_COMPLEXITY).text(LABEL_PROPERTIES_WORST_CASE + ': ' + algorithm.worstCase);
+    }
+    if (algorithm.memory != undefined) {
+      d3.select('#' + ID_INFORMATION_MEMORY).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ' + algorithm.memory);
+    }
+    if (algorithm.stable != undefined) {
+      d3.select('#' + ID_INFORMATION_STABLE).text(LABEL_PROPERTIES_STABLE + ': ' + String(algorithm.stable).toUpperCase());
+    }
+    if (algorithm.technique != undefined) {
+      d3.select('#' + ID_INFORMATION_TECHNIQUE).text(LABEL_PROPERTIES_TECHNIQUE + ': ' + algorithm.technique);
+    }
+    if (algorithm.algorithm != undefined) {
+      d3.select('#' + ID_INFORMATION_ALGORITHM).text(algorithm.algorithm);
+    }
+    if (algorithm.technique != undefined) {
+      d3.select('#' + ID_INFORMATION_DESCRIPTION).text(algorithm.description);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* Algorithm
+/* ------------------------------------------------------------------------- */
 
 function createAlgorithmInformation(container) {
-  var algorithmContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_ALGORITHM_ID).attr('class', LIST_CLASS);
+  var algorithmContainer = container.append('div').attr('id', ID_ALGORITHM_INFORMATION_ALGORITHM).attr('class', CLASS_LIST);
   algorithmContainer.append('h2').text(LABEL_ALGORITHM_HEADING);
-  var list = algorithmContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_ALGORITHM_ID);
+  algorithmContainer.append('pre').attr('id', ID_INFORMATION_ALGORITHM);
 }
 
+/* ------------------------------------------------------------------------- */
+/* Description
+/* ------------------------------------------------------------------------- */
+
 function createAlgorithmDescription(container) {
-  var descriptionContainer = container.append('div').attr('id', ALGORITHM_INFORMATION_DESCRIPTION_ID).attr('class', LIST_CLASS);
+  var descriptionContainer = container.append('div').attr('id', ID_ALGORITHM_INFORMATION_DESCRIPTION).attr('class', CLASS_LIST);
   descriptionContainer.append('h2').text(LABEL_DESCRIPTION_HEADING);
-  var list = descriptionContainer.append('ul');
-  list.append('li').attr('id', INFORMATION_DESCRIPTION_ID);
+  descriptionContainer.append('p').attr('id', ID_INFORMATION_DESCRIPTION);
 }
 
 function createInformation() {
@@ -613,46 +637,25 @@ function createInformation() {
   createAlgorithmInformation(container);
 }
 
-function updateStats() {
-  d3.select('#' + STATS_COMPARISONS_ID).text("Comparisons: " + sortingStats.numberOfComparisons);
-  d3.select('#' + STATS_SWAPS_ID).text("Swaps: " + sortingStats.numberOfSwaps);
-}
-
-function updateAlgorithmInformation(algorithm) {
-  if (algorithm != undefined) {
-    if (algorithm.name != undefined) {
-      d3.select('#' + INFORMATION_NAME_ID).text(LABEL_PROPERTIES_NAME + ': ' + algorithm.name);
-    }
-    if (algorithm.bestCase != undefined) {
-      d3.select('#' + INFORMATION_BEST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_BEST_CASE + ': ' + algorithm.bestCase);
-    }
-    if (algorithm.averageCase != undefined) {
-      d3.select('#' + INFORMATION_AVERAGE_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_AVERAGE_CASE + ': ' + algorithm.averageCase);
-    }
-    if (algorithm.worstCase != undefined) {
-      d3.select('#' + INFORMATION_WORST_CASE_COMPLEXITY_ID).text(LABEL_PROPERTIES_WORST_CASE + ': ' + algorithm.worstCase);
-    }
-    if (algorithm.memory != undefined) {
-      d3.select('#' + INFORMATION_MEMORY_ID).text(LABEL_PROPERTIES_MEMORY_USAGE + ': ' + algorithm.memory);
-    }
-    if (algorithm.stable != undefined) {
-      d3.select('#' + INFORMATION_STABLE_ID).text(LABEL_PROPERTIES_STABLE + ': ' + String(algorithm.stable).toUpperCase());
-    }
-    if (algorithm.technique != undefined) {
-      d3.select('#' + INFORMATION_TECHNIQUE_ID).text(LABEL_PROPERTIES_TECHNIQUE + ': ' + algorithm.technique);
-    }
-    if (algorithm.algorithm != undefined) {
-      d3.select('#' + INFORMATION_ALGORITHM_ID).text(algorithm.algorithm);
-    }
-    if (algorithm.technique != undefined) {
-      d3.select('#' + INFORMATION_DESCRIPTION_ID).text(algorithm.description);
-    }
-  }
-}
-
 /* ------------------------------------------------------------------------- */
 /* UI Creation
 /* ------------------------------------------------------------------------- */
+
+function createRightContainerElements(parentContainer) {
+      createStats(getColumn(0));
+      createProperties(getColumn(0));
+
+      createAlgorithmInformation(getColumn(1));
+      createAlgorithmDescription(getColumn(1));
+
+      createSettings(getColumn(2));
+}
+
+function createLeftContainerElements(parentContainer) {
+    createLegend(parentContainer);
+    createControls(parentContainer);
+    createAlgorithmButtons(parentContainer);
+}
 
 /**
  * Creates the UI
@@ -660,10 +663,10 @@ function updateAlgorithmInformation(algorithm) {
 function createUI() {
   if (mainContainerExsists()) {
     createContainers();
-    createGraph();
+    createGraph(getGraphContainer());
     updateGraphDimensions();
-    createInformation();
-    createControls();
+    createRightContainerElements(getLeftContainer());
+    createLeftContainerElements(getRighttContainer());
   } else {
     info('No element found with id "' + PARENT_CONTAINER_ID + '"');
     info('Please create a div with that id where you wish for the visualiser to be created.');
@@ -676,15 +679,15 @@ function createUI() {
 
 function getClassForBar(d) {
   if (d.x == sortingCurrentIndex) {
-    return BAR_ACTIVE_CLASS;
+    return CLASS_BAR_ACTIVE;
   }
   if (d.x == sortingComparisonIndex) {
-    return BAR_COMPARISON_CLASS;
+    return CLASS_BAR_COMPARISON;
   }
   if (d.x == sortingLeftBound || d.x == sortingRightBound) {
-    return BAR_BOUND_CLASS;
+    return CLASS_BAR_BOUND;
   }
-  return BAR_NORMAL_CLASS;
+  return CLASS_BAR_NORMAL;
 }
 
 /**
@@ -721,14 +724,14 @@ function render() {
   graphScale.y.domain([0, d3.max(arrayToSort)]);
   graphScale.x.domain([0, arrayToSort.length]);
 
-  var graph = d3.select('#' + GRAPH_ID);
+  var graph = d3.select('#' + ID_GRAPH);
 
   //Reset all bars (not used to not interact with legend)
-  d3.selectAll('.' + BAR_ACTIVE_CLASS + ':not(.' + LEGEND_ITEM_CLASS + ')').attr('class', BAR_NORMAL_CLASS);
-  d3.selectAll('.' + BAR_COMPARISON_CLASS + ':not(.' + LEGEND_ITEM_CLASS + ')').attr('class', BAR_NORMAL_CLASS);
-  d3.selectAll('.' + BAR_BOUND_CLASS + ':not(.' + LEGEND_ITEM_CLASS + ')').attr('class', BAR_NORMAL_CLASS);
+  d3.selectAll('.' + CLASS_BAR_ACTIVE + ':not(.' + CLASS_LEGEND_ITEM + ')').attr('class', CLASS_BAR_NORMAL);
+  d3.selectAll('.' + CLASS_BAR_COMPARISON + ':not(.' + CLASS_LEGEND_ITEM + ')').attr('class', CLASS_BAR_NORMAL);
+  d3.selectAll('.' + CLASS_BAR_BOUND + ':not(.' + CLASS_LEGEND_ITEM + ')').attr('class', CLASS_BAR_NORMAL);
 
-  var bars = graph.selectAll('.' + BAR_NORMAL_CLASS)
+  var bars = graph.selectAll('.' + CLASS_BAR_NORMAL)
     .data(dataToRender);
 
   bars.enter().append("rect")
@@ -843,58 +846,87 @@ function getWidthInEm(element) {
 }
 
 function getWidthOfContainerInEm() {
-  return getWidthInEm($('#' + MAIN_CONTAINER_ID));
+  return getWidthInEm($('#' + ID_MAIN_CONTAINER));
 }
 
 function setPercentageWidthOfElement(id, width) {
-  info('Setting ' + id + ' to width: ' + width.toString() + '%');
+//  info('Setting ' + id + ' to width: ' + width.toString() + '%');
   $(id).outerWidth(width + "%");
 }
 
-function setMainContainersPercentageWidths(graphAndInformationWidth, controlsWidth) {
-  setPercentageWidthOfElement('#' + GRAPH_AND_INFOMATION_CONTAINER_ID, graphAndInformationWidth);
-  setPercentageWidthOfElement('#' + CONTROLS_CONTAINER_ID, controlsWidth);
+function setMainContainersPercentageWidths(leftContainerWidth, rightContainerWidth) {
+  setPercentageWidthOfElement('#' + ID_LEFT_CONTAINER, leftContainerWidth);
+  setPercentageWidthOfElement('#' + ID_RIGHT_CONTAINER, rightContainerWidth);
 }
 
+/*
+ * This updates the layout for the panels as css will not allow resizing based
+ * on size of a div.
+ */
 function updateLayout() {
   var width = getWidthOfContainerInEm();
   info('Container width: ' + width + 'em');
 
-  //Main container positioning
+  //Main two containers
+  if (width >= 60) {
+    setMainContainersPercentageWidths(80, 19.5);
+  }
+  if (width < 60) {
+    setMainContainersPercentageWidths(75, 24.5);
+  }
   if (width < 50) {
-    setMainContainersPercentageWidths(98, 100);
-  } else if (width < 60) {
-    setMainContainersPercentageWidths(68, 30);
-  } else if (width < 75) {
-    setMainContainersPercentageWidths(73, 25);
-  } else {
-    setMainContainersPercentageWidths(78, 20);
+    setMainContainersPercentageWidths(70, 29.5);
+  }
+  if (width < 40) {
+    setMainContainersPercentageWidths(100, 99.5);
   }
 
-  //Adjust stat width to prevent overflow
-  if (width < 70) {
-    setPercentageWidthOfElement('.' + STAT_CLASS, 100);
-  } else {
-    setPercentageWidthOfElement('.' + STAT_CLASS, 50);
+  if (width < 55) {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 49);
+  }
+  else {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 32.3333);
   }
 
-  //When screen compresses to single column adjusts the controls and settings tab
-  if (width < 50 && width > 30) {
-    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 48);
-    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 48);
-  } else {
-    setPercentageWidthOfElement('#' + ALGORITHMS_CONTROLS_CONTAINER_ID, 98);
-    setPercentageWidthOfElement('#' + ALGORITHMS_SETTINGS_CONTAINER_ID, 98);
+  if (width < 28) {
+    setPercentageWidthOfElement('.' + CLASS_COLUMN, 99);
   }
 
-  //When screen compresses to single column adjusts the stats and legend tab
-  if (width < 30) {
-    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 99.5);
-    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 99.5);
-  } else {
-    setPercentageWidthOfElement('#' + INFORMATION_LEFT_CONTAINER_ID, 49.5);
-    setPercentageWidthOfElement('#' + INFORMATION_RIGHT_CONTAINER_ID, 49.5);
-  }
+  // //Main container positioning
+  // if (width < 50) {
+  //   setMainContainersPercentageWidths(98, 100);
+  // } else if (width < 60) {
+  //   setMainContainersPercentageWidths(68, 30);
+  // } else if (width < 75) {
+  //   setMainContainersPercentageWidths(73, 25);
+  // } else {
+  //   setMainContainersPercentageWidths(78, 20);
+  // }
+  //
+  // //Adjust stat width to prevent overflow
+  // if (width < 70) {
+  //   setPercentageWidthOfElement('.' + CLASS_STAT, 100);
+  // } else {
+  //   setPercentageWidthOfElement('.' + CLASS_STAT, 50);
+  // }
+  //
+  // //When screen compresses to single column adjusts the controls and settings tab
+  // if (width < 50 && width > 30) {
+  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_CONTROLS_CONTAINER, 48);
+  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_SETTINGS_CONTAINER, 48);
+  // } else {
+  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_CONTROLS_CONTAINER, 98);
+  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_SETTINGS_CONTAINER, 98);
+  // }
+  //
+  // //When screen compresses to single column adjusts the stats and legend tab
+  // if (width < 30) {
+  //   setPercentageWidthOfElement('#' + ID_INFORMATION_LEFT_CONTAINER, 99.5);
+  //   setPercentageWidthOfElement('#' + ID_INFORMATION_RIGHT_CONTAINER, 99.5);
+  // } else {
+  //   setPercentageWidthOfElement('#' + ID_INFORMATION_LEFT_CONTAINER, 49.5);
+  //   setPercentageWidthOfElement('#' + ID_INFORMATION_RIGHT_CONTAINER, 49.5);
+  // }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -985,17 +1017,18 @@ function bubbleSort() {
 }
 
 /* ------------------------------------------------------------------------- */
+function resizeScreen() {
+  updateLayout();
+  updateGraphDimensions();
+  updateScreen();
+}
+
 window.onload = function() {
   info('Load');
   createUI();
   initAudio();
   generateRandomData();
-  updateScreen();
-  updateLayout();
+  onresize();
 }
 
-window.onresize = function() {
-  updateLayout();
-  updateGraphDimensions();
-  updateScreen();
-}
+window.onresize = resizeScreen;
