@@ -92,7 +92,7 @@ var CONTROL_LABEL_CLASS = 'sv-control-label';
 
 //Controls
 var CONTROL_ARRAY_SIZE_STEP = 5;
-var CONTROL_LOOP_TIME_MIN = 0.01;
+var CONTROL_LOOP_TIME_MIN = 0;
 var CONTROL_LOOP_TIME_STEP = 0.01;
 var CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
@@ -423,6 +423,11 @@ function updateArraySize() {
   }
 }
 
+function updateTimeStep() {
+  info('Sorting time set set to' + this.value * 1000);
+  sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+}
+
 function createButton(parent, text, callBack) {
   var button = parent.append('li').attr('class', BUTTON_CLASS);
   button.text(text);
@@ -478,15 +483,14 @@ function createAlgorithmControls(container) {
   var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
     .append('p').text(LABEL_SETTINGS_TIME_STEP);
-  var timeSetControl = timeStepControlContainer.append('input')
+
+  //Time step control
+  timeStepControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', CONTROL_LOOP_TIME_MIN)
     .attr('step', CONTROL_LOOP_TIME_STEP)
-    .attr('value', sortingStepDelay / 1000);
-
-  timeSetControl.on('input', function() {
-    sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
-  });
+    .attr('value', sortingStepDelay / 1000)
+    .on('input', updateTimeStep);
 
   var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
