@@ -1,81 +1,89 @@
-'use strict';
+//Labels
+LABEL_CONTROLS_HEADING = 'Controls';
+LABEL_CONTROLS_STOP = 'Stop';
+LABEL_CONTROLS_NEW_ARRAY = 'New Array';
+LABEL_SETTINGS_HEADING = 'Settings';
+LABEL_SETTINGS_ARRAY_SIZE = 'Array Size';
+LABEL_SETTINGS_TIME_STEP = 'Time Step';
+LABEL_SETTINGS_ARRAY_TYPE = 'Array Type';
+LABEL_SETTINGS_SOUND = 'Sound';
 
 //Class names
-const CONTAINER_CLASS = 'sv-container';
-const LIST_CLASS = 'sv-list';
-const LEGEND_ITEM_CLASS = 'sv-legend-item';
+CONTAINER_CLASS = 'sv-container';
+LIST_CLASS = 'sv-list';
+LEGEND_ITEM_CLASS = 'sv-legend-item';
 
 //Container ID's
-const MAIN_CONTAINER_ID = 'sorting-visualiser-container';
-const GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
-const GRAPH_CONTAINER_ID = 'sv-graph-container';
-const CONTROLS_CONTAINER_ID = 'sv-controls-container';
-const INFOMATION_CONTAINER_ID = 'sv-infomation-container';
+MAIN_CONTAINER_ID = 'sorting-visualiser-container';
+GRAPH_AND_INFOMATION_CONTAINER_ID = 'sv-grap-and-information-container';
+GRAPH_CONTAINER_ID = 'sv-graph-container';
+CONTROLS_CONTAINER_ID = 'sv-controls-container';
+INFOMATION_CONTAINER_ID = 'sv-infomation-container';
 
 //Graph Element ID's
-const GRAPH_ID = 'sv-graph';
-const GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
+GRAPH_ID = 'sv-graph';
+GRAPH_GRAPHICS_ID = 'sv-graph-graphics-element';
 
 //Controls Element ID's
-const STOP_BUTTON_ID = 'sv-stop-button';
-const ALGORITHMS_CONTROLS_CONTAINER_ID = 'sv-controls';
-const ALGORITHMS_SETTINGS_CONTAINER_ID = 'sv-settings';
-const ALGORITHMS_CONTAINER_ID = 'sv-algorithms';
+STOP_BUTTON_ID = 'sv-stop-button';
+ALGORITHMS_CONTROLS_CONTAINER_ID = 'sv-controls';
+ALGORITHMS_SETTINGS_CONTAINER_ID = 'sv-settings';
+ALGORITHMS_CONTAINER_ID = 'sv-algorithms';
 
 //Information Element ID's
-const STATS_ID = 'sv-stats';
-const LEGEND_ID = 'sv-legend';
-const STATS_COMPARISONS_ID = 'sv-comparisons-stat';
-const STATS_SWAPS_ID = 'sv-swaps-stat';
-const STAT_CLASS = 'sv-stat';
-const INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
-const INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
-const ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
-const ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
-const ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
-const INFORMATION_NAME_ID = 'sv-algorithm-name';
-const INFORMATION_BEST_CASE_COMPLEXITY_ID = 'sv-algorithm-best-complexity';
-const INFORMATION_AVERAGE_CASE_COMPLEXITY_ID = 'sv-algorithm-average-complexity';
-const INFORMATION_WORST_CASE_COMPLEXITY_ID = 'sv-algorithm-worst-complexity';
-const INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
-const INFORMATION_STABLE_ID = 'sv-algorithm-stable';
-const INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
-const INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
-const INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
+STATS_ID = 'sv-stats';
+LEGEND_ID = 'sv-legend';
+STATS_COMPARISONS_ID = 'sv-comparisons-stat';
+STATS_SWAPS_ID = 'sv-swaps-stat';
+STAT_CLASS = 'sv-stat';
+INFORMATION_LEFT_CONTAINER_ID = 'sv-information-left-container';
+INFORMATION_RIGHT_CONTAINER_ID = 'sv-information-right-container';
+ALGORITHM_INFORMATION_PROPERTIES_ID = 'sv-algorithm-information-properties-container';
+ALGORITHM_INFORMATION_ALGORITHM_ID = 'sv-algorithm-information-algorithm-container';
+ALGORITHM_INFORMATION_DESCRIPTION_ID = 'sv-algorithm-information-description-container';
+INFORMATION_NAME_ID = 'sv-algorithm-name';
+INFORMATION_BEST_CASE_COMPLEXITY_ID = 'sv-algorithm-best-complexity';
+INFORMATION_AVERAGE_CASE_COMPLEXITY_ID = 'sv-algorithm-average-complexity';
+INFORMATION_WORST_CASE_COMPLEXITY_ID = 'sv-algorithm-worst-complexity';
+INFORMATION_MEMORY_ID = 'sv-algorithm-memory';
+INFORMATION_STABLE_ID = 'sv-algorithm-stable';
+INFORMATION_TECHNIQUE_ID = 'sv-algorithm-technique';
+INFORMATION_ALGORITHM_ID = 'sv-algorithm-algorithm';
+INFORMATION_DESCRIPTION_ID = 'sv-algorithm-description';
 
 //Bar class names
-const BAR_NORMAL_CLASS = 'sv-bar-normal';
-const BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
-const BAR_COMPARISON_CLASS = 'sv-bar-comparison';
-const BAR_BOUND_CLASS = 'sv-bar-bound';
+BAR_NORMAL_CLASS = 'sv-bar-normal';
+BAR_ACTIVE_CLASS = 'sv-bar-active'; //Current bar indexed
+BAR_COMPARISON_CLASS = 'sv-bar-comparison';
+BAR_BOUND_CLASS = 'sv-bar-bound';
 
 //Button class names
-const BUTTON_CLASS = 'sv-button'
-const BUTTON_SELECTED_CLASS = 'sv-selected';
+BUTTON_CLASS = 'sv-button'
+BUTTON_SELECTED_CLASS = 'sv-selected';
 
 //Control class names
-const CONTROL_CONTAINER_CLASS = 'sv-control';
-const CONTROL_LABEL_CLASS = 'sv-control-label';
+CONTROL_CONTAINER_CLASS = 'sv-control';
+CONTROL_LABEL_CLASS = 'sv-control-label';
 
 //Controls
-const CONTROL_ARRAY_SIZE_LABEL = "Array Size";
-const CONTROL_ARRAY_SIZE_STEP = 5;
-const CONTROL_LOOP_TIME_LABEL = "Time Step";
-const CONTROL_LOOP_TIME_MIN = 0.01;
-const CONTROL_LOOP_TIME_STEP = 0.01;
-const CONTROL_ARRAY_TYPE_LABEL = 'Array Type';
-const CONTROL_SOUND_TOGGLE_LABEL = 'Sound';
-const CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
+CONTROL_ARRAY_SIZE_LABEL = "Array Size";
+CONTROL_ARRAY_SIZE_STEP = 5;
+CONTROL_LOOP_TIME_LABEL = "Time Step";
+CONTROL_LOOP_TIME_MIN = 0.01;
+CONTROL_LOOP_TIME_STEP = 0.01;
+CONTROL_ARRAY_TYPE_LABEL = 'Array Type';
+CONTROL_SOUND_TOGGLE_LABEL = 'Sound';
+CONTROL_STOP_BUTTON_CLASS = 'sv-control sv-button sv-control-button';
 
 //Logging should be turned on if verbose output is wanted
-const LOGGING_ACTIVE = true;
+LOGGING_ACTIVE = true;
 
-const ARRAY_MIN_SIZE = 5;
-const MAX_VALUE = 100;
-const GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
+ARRAY_MIN_SIZE = 5;
+MAX_VALUE = 100;
+GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
 
 //Graph margins
-const margin = {
+margin = {
   top: 0,
   right: 14,
   bottom: 10,
@@ -406,20 +414,20 @@ function createSortingAlgorithmButtons(container) {
 
 function createControlButtons(container) {
   var container = container.append('div').attr('id', ALGORITHMS_CONTROLS_CONTAINER_ID).attr('class', LIST_CLASS);
-  container.append('h2').text('Controls');
-  createButton(container, 'Stop', stopSortingAlgorithm);
-  createButton(container, 'New Array', generateData);
+  container.append('h2').text(LABEL_CONTROLS_HEADING);
+  createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
+  createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
 }
 
 function createAlgorithmControls(container) {
   var controlsContainer = container.append('div').attr('id', ALGORITHMS_SETTINGS_CONTAINER_ID).attr('class', LIST_CLASS);
 
-  controlsContainer.append('h2').text('Settings');
+  controlsContainer.append('h2').text(LABEL_SETTINGS_HEADING);
   var list = controlsContainer.append('ul');
 
   var arraySizeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arraySizeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
-    .append('p').text(CONTROL_ARRAY_SIZE_LABEL);
+    .append('p').text(LABEL_SETTINGS_ARRAY_SIZE);
   var arraySizeControl = arraySizeControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', ARRAY_MIN_SIZE)
@@ -438,7 +446,7 @@ function createAlgorithmControls(container) {
 
   var timeStepControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   timeStepControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
-    .append('p').text(CONTROL_LOOP_TIME_LABEL);
+    .append('p').text(LABEL_SETTINGS_TIME_STEP);
   var timeSetControl = timeStepControlContainer.append('input')
     .attr('type', 'number')
     .attr('min', CONTROL_LOOP_TIME_MIN)
@@ -451,7 +459,7 @@ function createAlgorithmControls(container) {
 
   var arrayTypeControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   arrayTypeControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
-    .append('p').text(CONTROL_ARRAY_TYPE_LABEL);
+    .append('p').text(LABEL_SETTINGS_ARRAY_TYPE);
   var select = arrayTypeControlContainer.append('select');
   select.append('option').attr('value', 'best').text('Best');
   select.append('option').attr('value', 'random').attr('selected', 'selected').text('Random');
@@ -472,7 +480,7 @@ function createAlgorithmControls(container) {
 
   var soundControlContainer = list.append('li').attr('class', CONTROL_CONTAINER_CLASS);
   soundControlContainer.append('div').attr('class', CONTROL_LABEL_CLASS)
-    .append('p').text(CONTROL_SOUND_TOGGLE_LABEL);
+    .append('p').text(LABEL_SETTINGS_SOUND);
   var select = soundControlContainer.append('select');
   select.append('option').attr('value', 'on').attr('selected', 'selected').text('On');
   select.append('option').attr('value', 'off').text('Off');
@@ -924,13 +932,14 @@ function bubbleSort() {
 }
 
 /* ------------------------------------------------------------------------- */
-$(function() {
+window.onload = function() {
+  info('Load');
   createUI();
   initAudio();
   generateRandomData();
   updateScreen();
   updateLayout();
-})
+}
 
 window.onresize = function() {
   updateLayout();
