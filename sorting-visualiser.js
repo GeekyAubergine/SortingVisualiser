@@ -647,13 +647,12 @@ function createRightContainerElements(parentContainer) {
 
       createAlgorithmInformation(getColumn(1));
       createAlgorithmDescription(getColumn(1));
-
-      createSettings(getColumn(2));
 }
 
 function createLeftContainerElements(parentContainer) {
     createLegend(parentContainer);
     createControls(parentContainer);
+    createSettings(parentContainer);
     createAlgorithmButtons(parentContainer);
 }
 
@@ -881,52 +880,9 @@ function updateLayout() {
     setMainContainersPercentageWidths(100, 99.5);
   }
 
-  if (width < 55) {
-    setPercentageWidthOfElement('.' + CLASS_COLUMN, 49);
-  }
-  else {
-    setPercentageWidthOfElement('.' + CLASS_COLUMN, 32.3333);
-  }
-
   if (width < 28) {
     setPercentageWidthOfElement('.' + CLASS_COLUMN, 99);
   }
-
-  // //Main container positioning
-  // if (width < 50) {
-  //   setMainContainersPercentageWidths(98, 100);
-  // } else if (width < 60) {
-  //   setMainContainersPercentageWidths(68, 30);
-  // } else if (width < 75) {
-  //   setMainContainersPercentageWidths(73, 25);
-  // } else {
-  //   setMainContainersPercentageWidths(78, 20);
-  // }
-  //
-  // //Adjust stat width to prevent overflow
-  // if (width < 70) {
-  //   setPercentageWidthOfElement('.' + CLASS_STAT, 100);
-  // } else {
-  //   setPercentageWidthOfElement('.' + CLASS_STAT, 50);
-  // }
-  //
-  // //When screen compresses to single column adjusts the controls and settings tab
-  // if (width < 50 && width > 30) {
-  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_CONTROLS_CONTAINER, 48);
-  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_SETTINGS_CONTAINER, 48);
-  // } else {
-  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_CONTROLS_CONTAINER, 98);
-  //   setPercentageWidthOfElement('#' + ID_ALGORITHMS_SETTINGS_CONTAINER, 98);
-  // }
-  //
-  // //When screen compresses to single column adjusts the stats and legend tab
-  // if (width < 30) {
-  //   setPercentageWidthOfElement('#' + ID_INFORMATION_LEFT_CONTAINER, 99.5);
-  //   setPercentageWidthOfElement('#' + ID_INFORMATION_RIGHT_CONTAINER, 99.5);
-  // } else {
-  //   setPercentageWidthOfElement('#' + ID_INFORMATION_LEFT_CONTAINER, 49.5);
-  //   setPercentageWidthOfElement('#' + ID_INFORMATION_RIGHT_CONTAINER, 49.5);
-  // }
 }
 
 /* ------------------------------------------------------------------------- */
