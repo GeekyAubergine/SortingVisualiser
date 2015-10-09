@@ -151,9 +151,9 @@ svg {
   width: 50%;
   height: 97%;
   border: none;
-  font-size: 100%;
+  font-size: 85%;
   text-align: center;
-  line-height: 200%;
+  line-height: 225%;
   border-left: 0.1em solid #aaa;
   box-sizing: border-box;
 }
@@ -161,9 +161,9 @@ svg {
   float: left;
   margin: 0;
   width: 50%;
-  height: 2em;
+  height: 2.3em;
   border: none;
-  font-size: 100%;
+  font-size: 85%;
   text-align: center;
   border-left: 0.1em solid #aaa;
   box-sizing: border-box;
