@@ -209,30 +209,34 @@ function startSortingAlgorithm(algorithm) {
  * Stops the current sorting algorithm
  */
 function stopSortingAlgorithm() {
-  info('Sorting algorithm stopped');
-  sortingAlgorithmCurrentlyRunning = false;
+  setTimeout(function() {
+    info('Sorting algorithm stopped');
+    sortingAlgorithmCurrentlyRunning = false;
 
-  //Loops as it sometimes fails
-  for (var i = 0; i < 10; i++) {
+    //Loops as it sometimes fails
+    for (var i = 0; i < 10; i++) {
+      setTimeout(function() {
+        clearTimeout(sortingAlgorithmLoop);
+      }, 0);
+      setTimeout(function() {
+        clearInterval(sortingAlgorithmLoop);
+      }, 0);
+    }
+
+    //Removes selected class from all buttons
+    d3.selectAll('.' + CLASS_BUTTON).classed(CLASS_BUTTON_SELECTED, false);
+
     setTimeout(function() {
-      clearTimeout(sortingAlgorithmLoop);
-    }, 0);
-    setTimeout(function() {
-      clearInterval(sortingAlgorithmLoop);
-    }, 0);
-  }
+      //Resets the sorting algorithm index markers to -1
+      sortingCurrentIndex = -1;
+      sortingComparisonIndex = -1;
+      sortingLeftBound = -1;
+      sortingRightBound = -1;
+      updateScreen();
 
-  //Removes selected class from all buttons
-  d3.selectAll('.' + CLASS_BUTTON).classed(CLASS_BUTTON_SELECTED, false);
-
-  //Resets the sorting algorithm index markers to -1
-  sortingCurrentIndex = -1;
-  sortingComparisonIndex = -1;
-  sortingLeftBound = -1;
-  sortingRightBound = -1;
-  updateScreen();
-
-  setTimeout(stopSound, sortingStepDelay * 2);
+      stopSound();
+    }, sortingStepDelay * 2);
+  }, sortingStepDelay);
 }
 
 function audioSupported() {
