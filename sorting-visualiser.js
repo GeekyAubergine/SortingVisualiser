@@ -5,7 +5,7 @@ window.sortingVisualiser.util = (function() {
   var
   //Logging should be turned on if verbose output is wanted
     LOGGING_ACTIVE = true,
-    
+
     log = function(stringToLog) {
       if (stringToLog == undefined || stringToLog == null) {
         return;
@@ -24,6 +24,51 @@ window.sortingVisualiser.ui = (function() {
   "use strict";
 
   var
+  //Settings
+    CONTROL_ARRAY_SIZE_STEP = 5,
+    CONTROL_LOOP_TIME_MIN = 0,
+    CONTROL_LOOP_TIME_STEP = 0.01,
+    GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3,
+
+    //Graph margins
+    margin = {
+      top: 0,
+      right: 14,
+      bottom: 10,
+      left: 6
+    },
+
+    //Buttons
+    sortingAlgorithmButtons = [{
+      name: 'Bubble',
+      callBack: bubbleSort,
+      bestCase: 'O(n)',
+      averageCase: 'O(n^2)',
+      worstCase: 'O(n^2)',
+      memory: 'O(1)',
+      stable: true,
+      technique: 'Exchanging',
+      algorithm: 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n',
+      description: 'This algorithm works by looping over every time and checking if two ' + 'neighboring elements need to swap, if they do they are swapped. If a swap has ' + 'been made then the algorithm will iterate over all elements again until ' + 'no swaps occour'
+    }],
+
+    graphDimensions = {
+      width: 0,
+      height: 0
+    },
+    axis = {
+      x: null,
+      y: null
+    },
+    axisGraphicsElements = {
+      x: null,
+      y: null
+    },
+    graphScale = {
+      x: null,
+      y: null
+    },
+
     LABEL_CONTROLS_HEADING = 'Controls',
     LABEL_CONTROLS_STOP = 'Stop',
     LABEL_CONTROLS_NEW_ARRAY = 'New Array',
