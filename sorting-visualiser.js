@@ -1,7 +1,27 @@
 window.sortingVisualiser = window.sortingVisualiser || {};
 
+window.sortingVisualiser.util = (function() {
+  "use strict";
+  var
+  //Logging should be turned on if verbose output is wanted
+    LOGGING_ACTIVE = true,
+    
+    log = function(stringToLog) {
+      if (stringToLog == undefined || stringToLog == null) {
+        return;
+      }
+      if (LOGGING_ACTIVE) {
+        console.log(stringToLog);
+      }
+    };
+
+  return {
+    "log": log
+  }
+}());
+
 window.sortingVisualiser.ui = (function() {
-  'use strict';
+  "use strict";
 
   var
     LABEL_CONTROLS_HEADING = 'Controls',
@@ -124,7 +144,7 @@ window.sortingVisualiser.ui = (function() {
     },
 
     createColumn = function(parentContainer, columnNumber) {
-      info('Creating container ' + COLUMN_PREFIX + columnNumber.toString());
+      window.sortingVisualiser.util.log('Creating container ' + COLUMN_PREFIX + columnNumber.toString());
       parentContainer.append('div')
         .attr('id', COLUMN_PREFIX + columnNumber.toString())
         .attr('class', CLASS_CONTAINER + ' ' + CLASS_COLUMN);
@@ -238,7 +258,7 @@ window.sortingVisualiser.ui = (function() {
 
     updateArraySize = function() {
       if (!sortingAlgorithmCurrentlyRunning) {
-        info('Array size updated to ' + this.value);
+        window.sortingVisualiser.util.log('Array size updated to ' + this.value);
         numberOfElementsToSort = this.value;
         generateData();
         updateScreen();
@@ -248,12 +268,12 @@ window.sortingVisualiser.ui = (function() {
     },
 
     updateTimeStep = function() {
-      info('Sorting time set set to' + this.value * 1000);
+      window.sortingVisualiser.util.log('Sorting time set set to' + this.value * 1000);
       sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
     },
 
     updateArrayType = function() {
-      info('Array type selected: ' + this.value);
+      window.sortingVisualiser.util.log('Array type selected: ' + this.value);
       if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
         arrayGenerationAlgorithm = generateBestCase;
       } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
@@ -524,8 +544,8 @@ window.sortingVisualiser.ui = (function() {
         createRightContainerElements(getLeftContainer());
         createLeftContainerElements(getRighttContainer());
       } else {
-        info('No element found with id "' + PARENT_CONTAINER_ID + '"');
-        info('Please create a div with that id where you wish for the visualiser to be created.');
+        window.sortingVisualiser.util.log('No element found with id "' + PARENT_CONTAINER_ID + '"');
+        window.sortingVisualiser.util.log('Please create a div with that id where you wish for the visualiser to be created.');
       }
     },
 
@@ -637,7 +657,7 @@ window.sortingVisualiser.ui = (function() {
     },
 
     setPercentageWidthOfElement = function(id, width) {
-      //  info('Setting ' + id + ' to width: ' + width.toString() + '%');
+      //  window.sortingVisualiser.util.log('Setting ' + id + ' to width: ' + width.toString() + '%');
       $(id).outerWidth(width + "%");
     },
 
@@ -652,7 +672,7 @@ window.sortingVisualiser.ui = (function() {
      */
     updateLayout = function() {
       var width = getWidthOfContainerInEm();
-      info('Container width: ' + width + 'em');
+      window.sortingVisualiser.util.log('Container width: ' + width + 'em');
 
       //Main two containers
       if (width >= 60) {
@@ -723,7 +743,7 @@ window.sortingVisualiser.audio = (function() {
       if (!soundOn || !audioSupported()) {
         return;
       }
-      info('Starting sound');
+      window.sortingVisualiser.util.log('Starting sound');
       if (audioContext != undefined) {
         audioOscillator = audioContext.createOscillator();
         audioOscillator.connect(audioContext.destination);
@@ -754,14 +774,14 @@ window.sortingVisualiser.audio = (function() {
     },
 
     turnSoundOn = function() {
-      info('Turning sound on');
+      window.sortingVisualiser.util.log('Turning sound on');
       soundOn = true;
       startSound();
       playFrequency(0);
     },
 
     turnSoundOff = function() {
-      info('Turning sound off');
+      window.sortingVisualiser.util.log('Turning sound off');
       playFrequency(0);
       soundOn = false;
       stopSound();
@@ -786,9 +806,6 @@ window.sortingVisualiser.audio = (function() {
 var CONTROL_ARRAY_SIZE_STEP = 5;
 var CONTROL_LOOP_TIME_MIN = 0;
 var CONTROL_LOOP_TIME_STEP = 0.01;
-
-//Logging should be turned on if verbose output is wanted
-var LOGGING_ACTIVE = true;
 
 var ARRAY_MIN_SIZE = 5;
 var MAX_VALUE = 100;
@@ -853,17 +870,6 @@ var arrayGenerationAlgorithm = generateRandomData;
 /* Utility Methods
 /* ------------------------------------------------------------------------- */
 
-/**
- * Prints given string to console.log if LOGGING_ACTIVE is true
- */
-function info(stringToLog) {
-  if (stringToLog == undefined || stringToLog == null) {
-    return;
-  }
-  if (LOGGING_ACTIVE) {
-    console.log(stringToLog);
-  }
-}
 
 /**
  * Sets information for algorithm and start algorithm
@@ -886,7 +892,7 @@ function startSortingAlgorithm(algorithm) {
  */
 function stopSortingAlgorithm() {
   setTimeout(function() {
-    info('Sorting algorithm stopped');
+    window.sortingVisualiser.util.log('Sorting algorithm stopped');
     sortingAlgorithmCurrentlyRunning = false;
 
     //Loops as it sometimes fails
@@ -973,7 +979,7 @@ function bubbleSort() {
   startSortingAlgorithm();
   var sorted = true;
   var i = 0;
-  info('Bubble sort started');
+  window.sortingVisualiser.util.log('Bubble sort started');
   //Pass variables to inner function
   (function(arrayToSort, sorted, i) {
     sortingAlgorithmLoop = setInterval(function() {
@@ -995,7 +1001,7 @@ function bubbleSort() {
       if (i >= arrayToSort.length - 1) {
         i = 0;
         if (sorted || !sortingAlgorithmCurrentlyRunning) {
-          info('Bubble sort ended');
+          window.sortingVisualiser.util.log('Bubble sort ended');
           stopSortingAlgorithm();
         }
         sorted = true;
@@ -1010,6 +1016,6 @@ window.addEventListener("load", window.sortingVisualiser.ui.setUp);
 window.addEventListener("load", window.sortingVisualiser.audio.setUp);
 
 window.addEventListener("load", function() {
-  info('Load');
+  window.sortingVisualiser.util.log('Load');
   generateRandomData();
 });
