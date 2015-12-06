@@ -20,55 +20,224 @@ window.sortingVisualiser.util = (function() {
   }
 }());
 
+window.sortingVisualiser.algorithm = (function() {
+  "use strict";
+
+  var
+
+    ARRAY_MIN_SIZE = 5,
+    MAX_VALUE = 100,
+
+    //Sorting variables
+    numberOfElementsToSort = 20,
+    arrayToSort = [],
+    sortingStepDelay = 50,
+    sortingCurrentIndex = -1,
+    sortingComparisonIndex = -1,
+    sortingLeftBound = -1,
+    sortingRightBound = -1,
+    sortingStats = {
+      numberOfComparisons: 0,
+      numberOfSwaps: 0
+    },
+    sortingAlgorithmCurrentlyRunning = false,
+    sortingAlgorithmLoop,
+    arrayGenerationAlgorithm = generateRandomData,
+
+    /* ------------------------------------------------------------------------- */
+    /* Generation of data
+    /* ------------------------------------------------------------------------- */
+
+    /**
+     * Generates a best case array to sort.
+     * Best case defined as ascending order
+     */
+    generateBestCase = function() {
+      arrayToSort = [];
+      var delta = (MAX_VALUE - 1) / numberOfElementsToSort;
+      for (var i = 0; i < numberOfElementsToSort; i++) {
+        arrayToSort.push(i * delta + 1);
+      }
+    },
+
+    /**
+     * Generates a random case array to sort.
+     * Best case defined as random order
+     */
+    generateRandomData = function() {
+      arrayToSort = [];
+      for (var i = 0; i < numberOfElementsToSort; i++) {
+        arrayToSort.push(Math.random() * (MAX_VALUE - 1)) + 1;
+      }
+    },
+
+    /**
+     * Generates a worst case array to sort.
+     * Best case defined as descending order
+     */
+    generateWorstCase = function() {
+      arrayToSort = [];
+      for (var i = 0; i < numberOfElementsToSort; i++) {
+        var delta = (MAX_VALUE) / numberOfElementsToSort;
+        arrayToSort.push(MAX_VALUE - i * delta);
+      }
+    },
+
+    generateData = function() {
+      if (!sortingAlgorithmCurrentlyRunning) {
+        arrayGenerationAlgorithm();
+        render();
+      }
+    },
+
+    setNumberOfElements = function(n) {
+      numberOfElementsToSort = n;
+    },
+
+    setTimeStep = function(t) {
+      sortingStepDelay = t;
+    },
+
+    /**
+     * Sets information for algorithm and start algorithm
+     * @param {Object} algorithm object
+     */
+    startSortingAlgorithm = function(algorithm) {
+      if (algorithm == undefined || algorithm == null) {
+        return;
+      }
+      sortingAlgorithmCurrentlyRunning = true;
+      sortingStats.numberOfComparisons = 0;
+      sortingStats.numberOfSwaps = 0;
+      window.sortingVisualiser.ui.updateAlgorithmInformation(algorithm);
+      algorithm.callBack();
+      window.sortingVisualiser.audio.startSound();
+    },
+
+    /**
+     * Stops the current sorting algorithm
+     */
+    stopSortingAlgorithm = function() {
+      setTimeout(function() {
+        window.sortingVisualiser.util.log('Sorting algorithm stopped');
+        sortingAlgorithmCurrentlyRunning = false;
+
+        //Loops as it sometimes fails
+        for (var i = 0; i < 10; i++) {
+          setTimeout(function() {
+            clearTimeout(sortingAlgorithmLoop);
+          }, 0);
+          setTimeout(function() {
+            clearInterval(sortingAlgorithmLoop);
+          }, 0);
+        }
+
+        window.sortingVisualiser.ui.deselectAllButtons();
+
+        setTimeout(function() {
+          //Resets the sorting algorithm index markers to -1
+          sortingCurrentIndex = -1;
+          sortingComparisonIndex = -1;
+          sortingLeftBound = -1;
+          sortingRightBound = -1;
+          render();
+          window.sortingVisualiser.audio.stopSound();
+        }, sortingStepDelay * 2);
+      }, sortingStepDelay);
+    },
+
+    playSoundForValue = function(value) {
+      window.sortingVisualiser.audio.playSoundForValue(value);
+    },
+
+    render = function() {
+      window.sortingVisualiser.ui.update(getInfo());
+    },
+
+    getInfo = function() {
+      return {
+        array: arrayToSort,
+        numberOfSwaps: sortingStats.numberOfSwaps,
+        numberOfComparisons: sortingStats.numberOfComparisons,
+        sortingCurrentIndex: sortingCurrentIndex,
+        sortingComparisonIndex: sortingComparisonIndex,
+        numberOfElements: numberOfElementsToSort,
+        timeStep : sortingStepDelay,
+        maxValue: MAX_VALUE
+      };
+    },
+
+    getSortingAlgorithmCurrentlyRunning = function() {
+      return sortingAlgorithmCurrentlyRunning;
+    },
+
+    setDataGenerationAlgorithm = function(algorithm) {
+        arrayGenerationAlgorithm = algorithm;
+    },
+
+    /* ---- Bubble Sort ---- */
+    bubbleSort = function() {
+      var sorted = true;
+      var i = 0;
+      window.sortingVisualiser.util.log('Bubble sort started');
+      //Pass variables to inner function
+      (function(arrayToSort, sorted, i) {
+        sortingAlgorithmLoop = setInterval(function() {
+          sortingCurrentIndex = i;
+          sortingComparisonIndex = i + 1;
+          playSoundForValue(arrayToSort[i + 1]);
+          //Comparison
+          sortingStats.numberOfComparisons++;
+          if (arrayToSort[i] > arrayToSort[i + 1]) {
+            //Swap
+            sortingStats.numberOfSwaps++;
+            var temp = arrayToSort[i];
+            arrayToSort[i] = arrayToSort[i + 1];
+            arrayToSort[i + 1] = temp;
+            sorted = false;
+          }
+          i++;
+          //Return to start of array when done
+          render();
+          if (i >= arrayToSort.length - 1) {
+            i = 0;
+            if (sorted || !sortingAlgorithmCurrentlyRunning) {
+              window.sortingVisualiser.util.log('Bubble sort ended');
+              stopSortingAlgorithm();
+            }
+            sorted = true;
+          }
+        }, sortingStepDelay);
+      })(arrayToSort, sorted, i);
+    },
+
+    setUp = function() {
+      setDataGenerationAlgorithm(generateRandomData);
+      generateData();
+    };
+
+  return {
+    "start": startSortingAlgorithm,
+    "stop": stopSortingAlgorithm,
+    "setUp": setUp,
+    "getInfo": getInfo,
+    "getSortingAlgorithmCurrentlyRunning": getSortingAlgorithmCurrentlyRunning,
+    "generateData": generateData,
+    "setDataGenerationAlgorithm": setDataGenerationAlgorithm,
+    "generateBestCase": generateBestCase,
+    "generateRandomData": generateRandomData,
+    "generateWorstCase": generateWorstCase,
+    "setNumberOfElements": setNumberOfElements,
+    "setTimeStep": setTimeStep,
+    "bubbleSort": bubbleSort
+  };
+
+}());
+
 window.sortingVisualiser.ui = (function() {
   "use strict";
 
   var
-  //Settings
-    CONTROL_ARRAY_SIZE_STEP = 5,
-    CONTROL_LOOP_TIME_MIN = 0,
-    CONTROL_LOOP_TIME_STEP = 0.01,
-    GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3,
-
-    //Graph margins
-    margin = {
-      top: 0,
-      right: 14,
-      bottom: 10,
-      left: 6
-    },
-
-    //Buttons
-    sortingAlgorithmButtons = [{
-      name: 'Bubble',
-      callBack: bubbleSort,
-      bestCase: 'O(n)',
-      averageCase: 'O(n^2)',
-      worstCase: 'O(n^2)',
-      memory: 'O(1)',
-      stable: true,
-      technique: 'Exchanging',
-      algorithm: 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n',
-      description: 'This algorithm works by looping over every time and checking if two ' + 'neighboring elements need to swap, if they do they are swapped. If a swap has ' + 'been made then the algorithm will iterate over all elements again until ' + 'no swaps occour'
-    }],
-
-    graphDimensions = {
-      width: 0,
-      height: 0
-    },
-    axis = {
-      x: null,
-      y: null
-    },
-    axisGraphicsElements = {
-      x: null,
-      y: null
-    },
-    graphScale = {
-      x: null,
-      y: null
-    },
-
     LABEL_CONTROLS_HEADING = 'Controls',
     LABEL_CONTROLS_STOP = 'Stop',
     LABEL_CONTROLS_NEW_ARRAY = 'New Array',
@@ -155,6 +324,51 @@ window.sortingVisualiser.ui = (function() {
     ID_INFORMATION_TECHNIQUE = 'sv-algorithm-technique',
     ID_INFORMATION_ALGORITHM = 'sv-algorithm-algorithm',
     ID_INFORMATION_DESCRIPTION = 'sv-algorithm-description',
+
+    //Settings
+    CONTROL_ARRAY_SIZE_STEP = 5,
+    CONTROL_LOOP_TIME_MIN = 0,
+    CONTROL_LOOP_TIME_STEP = 0.01,
+    GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3,
+
+    //Graph margins
+    margin = {
+      top: 0,
+      right: 14,
+      bottom: 10,
+      left: 6
+    },
+
+    //Buttons
+    sortingAlgorithmButtons = [{
+      name: 'Bubble',
+      callBack: window.sortingVisualiser.algorithm.bubbleSort,
+      bestCase: 'O(n)',
+      averageCase: 'O(n^2)',
+      worstCase: 'O(n^2)',
+      memory: 'O(1)',
+      stable: true,
+      technique: 'Exchanging',
+      algorithm: 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n',
+      description: 'This algorithm works by looping over every time and checking if two ' + 'neighboring elements need to swap, if they do they are swapped. If a swap has ' + 'been made then the algorithm will iterate over all elements again until ' + 'no swaps occour'
+    }],
+
+    graphDimensions = {
+      width: 0,
+      height: 0
+    },
+    axis = {
+      x: null,
+      y: null
+    },
+    axisGraphicsElements = {
+      x: null,
+      y: null
+    },
+    graphScale = {
+      x: null,
+      y: null
+    },
 
     /* ------------------------------------------------------------------------- */
     /* Main containers
@@ -302,38 +516,43 @@ window.sortingVisualiser.ui = (function() {
     /* ------------------------------------------------------------------------- */
 
     updateArraySize = function() {
-      if (!sortingAlgorithmCurrentlyRunning) {
+      if (!window.sortingVisualiser.algorithm.getSortingAlgorithmCurrentlyRunning()) {
         window.sortingVisualiser.util.log('Array size updated to ' + this.value);
-        numberOfElementsToSort = this.value;
-        generateData();
-        updateScreen();
+        window.sortingVisualiser.algorithm.setNumberOfElements(this.value);
+        window.sortingVisualiser.algorithm.generateData();
       } else {
-        this.value = numberOfElementsToSort;
+        this.value = window.sortingVisualiser.algorithm.getInfo().array.length;
       }
     },
 
     updateTimeStep = function() {
       window.sortingVisualiser.util.log('Sorting time set set to' + this.value * 1000);
-      sortingStepDelay = Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN);
+      window.sortingVisualiser.algorithm.setTimeStep(Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN));
     },
 
     updateArrayType = function() {
       window.sortingVisualiser.util.log('Array type selected: ' + this.value);
       if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
-        arrayGenerationAlgorithm = generateBestCase;
+        window.sortingVisualiser.algorithm.setDataGenerationAlgorithm(
+          window.sortingVisualiser.algorithm.generateBestCase
+        );
       } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
-        arrayGenerationAlgorithm = generateWorstCase;
+        window.sortingVisualiser.algorithm.setDataGenerationAlgorithm(
+          window.sortingVisualiser.algorithm.generateWorstCase
+        );
       } else {
-        arrayGenerationAlgorithm = generateRandomData;
+        window.sortingVisualiser.algorithm.setDataGenerationAlgorithm(
+          window.sortingVisualiser.algorithm.generateRandomData
+        );
       }
-      generateData();
+      window.sortingVisualiser.algorithm.generateData();
     },
 
     updateSoundState = function() {
       if (this.value == LABEL_SETTINGS_SOUND_OFF) {
-        turnSoundOff();
+        window.sortingVisualiser.audio.turnSoundOff();
       } else {
-        turnSoundOn();
+        window.sortingVisualiser.audio.turnSoundOn();
       }
     },
 
@@ -350,9 +569,9 @@ window.sortingVisualiser.ui = (function() {
       //Array size control
       arraySizeControlContainer.append('input')
         .attr('type', 'number')
-        .attr('min', ARRAY_MIN_SIZE)
+        .attr('min', window.sortingVisualiser.algorithm.ARRAY_MIN_SIZE)
         .attr('step', CONTROL_ARRAY_SIZE_STEP)
-        .attr('value', numberOfElementsToSort)
+        .attr('value', window.sortingVisualiser.algorithm.getInfo().numberOfElements)
         .on('input', updateArraySize);
 
       var timeStepControlContainer = list.append('li').attr('class', CLASS_CONTROL_CONTAINER);
@@ -364,7 +583,7 @@ window.sortingVisualiser.ui = (function() {
         .attr('type', 'number')
         .attr('min', CONTROL_LOOP_TIME_MIN)
         .attr('step', CONTROL_LOOP_TIME_STEP)
-        .attr('value', sortingStepDelay / 1000)
+        .attr('value', window.sortingVisualiser.algorithm.getInfo().timeStep / 1000)
         .on('input', updateTimeStep);
 
       var arrayTypeControlContainer = list.append('li').attr('class', CLASS_CONTROL_CONTAINER);
@@ -413,9 +632,9 @@ window.sortingVisualiser.ui = (function() {
       var button = parent.append('li').attr('class', CLASS_BUTTON);
       button.text(buttonData.name);
       button.on('click', function() {
-        if (!sortingAlgorithmCurrentlyRunning) {
+        if (!window.sortingVisualiser.algorithm.sortingAlgorithmCurrentlyRunning) {
           button.classed(CLASS_BUTTON_SELECTED, true);
-          startSortingAlgorithm(buttonData);
+          window.sortingVisualiser.algorithm.start(buttonData);
         }
       });
     },
@@ -435,8 +654,8 @@ window.sortingVisualiser.ui = (function() {
     createControls = function(parentContainer) {
       var container = parentContainer.append('div').attr('id', ID_ALGORITHMS_CONTROLS_CONTAINER).attr('class', CLASS_LIST);
       container.append('h2').text(LABEL_CONTROLS_HEADING);
-      createButton(container, LABEL_CONTROLS_STOP, stopSortingAlgorithm);
-      createButton(container, LABEL_CONTROLS_NEW_ARRAY, generateData);
+      createButton(container, LABEL_CONTROLS_STOP, window.sortingVisualiser.algorithm.stop);
+      createButton(container, LABEL_CONTROLS_NEW_ARRAY, window.sortingVisualiser.algorithm.generateData);
     },
 
     /* ------------------------------------------------------------------------- */
@@ -475,9 +694,19 @@ window.sortingVisualiser.ui = (function() {
       list.append('li').attr('id', ID_STATS_SWAPS).attr('class', CLASS_STAT);
     },
 
-    updateStats = function() {
-      d3.select('#' + ID_STATS_COMPARISONS).text("Comparisons: " + sortingStats.numberOfComparisons);
-      d3.select('#' + ID_STATS_SWAPS).text("Swaps: " + sortingStats.numberOfSwaps);
+    updateStats = function(data) {
+      var
+        comparisons = 0,
+        swaps = 0;
+
+      if (data && data.numberOfComparisons) {
+        comparisons = data.numberOfComparisons;
+      }
+      if (data && data.numberOfSwaps) {
+        swaps = data.numberOfSwaps;
+      }
+      d3.select('#' + ID_STATS_COMPARISONS).text("Comparisons: " + comparisons);
+      d3.select('#' + ID_STATS_SWAPS).text("Swaps: " + swaps);
     },
 
     /* ------------------------------------------------------------------------- */
@@ -598,14 +827,14 @@ window.sortingVisualiser.ui = (function() {
     /* Render
     /* ------------------------------------------------------------------------- */
 
-    getClassForBar = function(d) {
-      if (d.x == sortingCurrentIndex) {
+    getClassForBar = function(d, data) {
+      if (d.x == data.sortingCurrentIndex) {
         return CLASS_BAR_ACTIVE;
       }
-      if (d.x == sortingComparisonIndex) {
+      if (d.x == data.sortingComparisonIndex) {
         return CLASS_BAR_COMPARISON;
       }
-      if (d.x == sortingLeftBound || d.x == sortingRightBound) {
+      if (d.x == data.sortingLeftBound || d.x == data.sortingRightBound) {
         return CLASS_BAR_BOUND;
       }
       return CLASS_BAR_NORMAL;
@@ -614,9 +843,8 @@ window.sortingVisualiser.ui = (function() {
     /**
      * Returns the data to render in a usable format for d3.js
      */
-    getRenderData = function() {
+    getRenderData = function(data) {
       var out = [];
-      var data = arrayToSort.slice();
       for (var i = 0; i < data.length; i++) {
         out.push({
           x: i,
@@ -626,8 +854,11 @@ window.sortingVisualiser.ui = (function() {
       return out;
     },
 
-    getWidthOfBar = function(numberOfElements) {
-      return graphDimensions.width / numberOfElementsToSort - 1;
+    getWidthOfBar = function(data) {
+      if (data.array.length) {
+        return graphDimensions.width / data.array.length - 1;
+      }
+      return 0;
     },
 
     getHeightOfBar = function(d) {
@@ -637,13 +868,16 @@ window.sortingVisualiser.ui = (function() {
     /**
      * Renders the graph to screen
      */
-    render = function() {
-      var dataToRender = getRenderData();
-      if (dataToRender == undefined || dataToRender == null) {
+    render = function(data) {
+      if (!data) {
         return;
       }
-      graphScale.y.domain([0, d3.max(arrayToSort)]);
-      graphScale.x.domain([0, arrayToSort.length]);
+      if (data.array == undefined || data.array == null) {
+        return;
+      }
+      var dataToRender = getRenderData(data.array);
+      graphScale.y.domain([0, d3.max(data.array)]);
+      graphScale.x.domain([0, data.array.length]);
 
       var graph = d3.select('#' + ID_GRAPH);
 
@@ -657,12 +891,12 @@ window.sortingVisualiser.ui = (function() {
 
       bars.enter().append("rect")
         .attr("class", function(d) {
-          return getClassForBar(d)
+          return getClassForBar(d, data)
         })
         .attr("x", function(d) {
           return graphScale.x(d.x);
         })
-        .attr("width", getWidthOfBar())
+        .attr("width", getWidthOfBar(data))
         .attr("y", function(d) {
           return graphScale.y(d.y);
         })
@@ -672,12 +906,12 @@ window.sortingVisualiser.ui = (function() {
         .attr("transform", "translate(" + margin.left + ", " + margin.top + "0)");
 
       bars.attr("class", function(d) {
-          return getClassForBar(d)
+          return getClassForBar(d, data)
         })
         .attr("x", function(d) {
           return graphScale.x(d.x);
         })
-        .attr("width", getWidthOfBar())
+        .attr("width", getWidthOfBar(data))
         .attr("y", function(d) {
           return graphScale.y(d.y);
         })
@@ -738,12 +972,9 @@ window.sortingVisualiser.ui = (function() {
       }
     },
 
-    update = function() {
-      //Yeild
-      setTimeout(function() {
-        render();
-        updateStats();
-      }, 0);
+    update = function(data) {
+      render(data);
+      updateStats(data);
     },
 
     resize = function() {
@@ -809,17 +1040,19 @@ window.sortingVisualiser.audio = (function() {
       }
     },
 
-    playFrequency = function(fequency) {
+    playFrequency = function(frequency) {
       if (!soundOn || !audioSupported()) {
         return;
       }
       if (audioOscillator != undefined) {
-        audioOscillator.frequency.value = fequency;
+        audioOscillator.frequency.value = frequency;
       }
     },
 
     playSoundForValue = function(value) {
-      playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
+      var frequency = 110 + Math.pow(1000, value / window.sortingVisualiser.algorithm.getInfo().maxValue);
+      frequency = Math.min(10000, Math.max(0, frequency));
+      playFrequency(frequency);
     },
 
     turnSoundOn = function() {
@@ -850,217 +1083,13 @@ window.sortingVisualiser.audio = (function() {
   }
 }());
 
-'use strict'
-//Settings
-var CONTROL_ARRAY_SIZE_STEP = 5;
-var CONTROL_LOOP_TIME_MIN = 0;
-var CONTROL_LOOP_TIME_STEP = 0.01;
-
-var ARRAY_MIN_SIZE = 5;
-var MAX_VALUE = 100;
-var GRAPH_HEIGHT_TO_WIDTH_RATIO = 0.3;
-
-//Graph margins
-var margin = {
-  top: 0,
-  right: 14,
-  bottom: 10,
-  left: 6
-};
-
-//Buttons
-var sortingAlgorithmButtons = [{
-  name: 'Bubble',
-  callBack: bubbleSort,
-  bestCase: 'O(n)',
-  averageCase: 'O(n^2)',
-  worstCase: 'O(n^2)',
-  memory: 'O(1)',
-  stable: true,
-  technique: 'Exchanging',
-  algorithm: 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n',
-  description: 'This algorithm works by looping over every time and checking if two ' + 'neighboring elements need to swap, if they do they are swapped. If a swap has ' + 'been made then the algorithm will iterate over all elements again until ' + 'no swaps occour'
-}]
-
-var graphDimensions = {
-  width: 0,
-  height: 0
-}
-var axis = {
-  x: null,
-  y: null
-};
-var axisGraphicsElements = {
-  x: null,
-  y: null
-};
-var graphScale = {
-  x: null,
-  y: null
-};
-
-//Sorting variables
-var numberOfElementsToSort = 20;
-var arrayToSort = [];
-var sortingStepDelay = 50;
-var sortingCurrentIndex;
-var sortingComparisonIndex;
-var sortingLeftBound;
-var sortingRightBound;
-var sortingStats = {
-  numberOfComparisons: 0,
-  numberOfSwaps: 0
-}
-var sortingAlgorithmCurrentlyRunning = false;
-var sortingAlgorithmLoop;
-var arrayGenerationAlgorithm = generateRandomData;
-
-/* ------------------------------------------------------------------------- */
-/* Utility Methods
-/* ------------------------------------------------------------------------- */
-
-
-/**
- * Sets information for algorithm and start algorithm
- * @param {Object} algorithm object
- */
-function startSortingAlgorithm(algorithm) {
-  if (algorithm == undefined || algorithm == null) {
-    return;
-  }
-  sortingAlgorithmCurrentlyRunning = true;
-  sortingStats.numberOfComparisons = 0;
-  sortingStats.numberOfSwaps = 0;
-  window.sortingVisualiser.ui.updateAlgorithmInformation(algorithm);
-  algorithm.callBack();
-  window.sortingVisualiser.audio.startSound();
-}
-
-/**
- * Stops the current sorting algorithm
- */
-function stopSortingAlgorithm() {
-  setTimeout(function() {
-    window.sortingVisualiser.util.log('Sorting algorithm stopped');
-    sortingAlgorithmCurrentlyRunning = false;
-
-    //Loops as it sometimes fails
-    for (var i = 0; i < 10; i++) {
-      setTimeout(function() {
-        clearTimeout(sortingAlgorithmLoop);
-      }, 0);
-      setTimeout(function() {
-        clearInterval(sortingAlgorithmLoop);
-      }, 0);
-    }
-
-    window.sortingVisualiser.ui.deselectAllButtons();
-
-    setTimeout(function() {
-      //Resets the sorting algorithm index markers to -1
-      sortingCurrentIndex = -1;
-      sortingComparisonIndex = -1;
-      sortingLeftBound = -1;
-      sortingRightBound = -1;
-      window.sortingVisualiser.ui.update();
-
-      window.sortingVisualiser.audio.stopSound();
-    }, sortingStepDelay * 2);
-  }, sortingStepDelay);
-}
-
-/* ------------------------------------------------------------------------- */
-/* Generation of data
-/* ------------------------------------------------------------------------- */
-
-/**
- * Generates a best case array to sort.
- * Best case defined as ascending order
- */
-function generateBestCase() {
-  arrayToSort = [];
-  var delta = (MAX_VALUE - 1) / numberOfElementsToSort;
-  for (var i = 0; i < numberOfElementsToSort; i++) {
-    arrayToSort.push(i * delta + 1);
-  }
-}
-
-/**
- * Generates a random case array to sort.
- * Best case defined as random order
- */
-function generateRandomData() {
-  arrayToSort = [];
-  for (var i = 0; i < numberOfElementsToSort; i++) {
-    arrayToSort.push(Math.random() * (MAX_VALUE - 1)) + 1;
-  }
-}
-
-/**
- * Generates a worst case array to sort.
- * Best case defined as descending order
- */
-function generateWorstCase() {
-  arrayToSort = [];
-  for (var i = 0; i < numberOfElementsToSort; i++) {
-    var delta = (MAX_VALUE) / numberOfElementsToSort;
-    arrayToSort.push(MAX_VALUE - i * delta);
-  }
-}
-
-function generateData() {
-  if (!sortingAlgorithmCurrentlyRunning) {
-    arrayGenerationAlgorithm();
-    window.sortingVisualiser.ui.update();
-  }
-}
+"use strict";
 
 /* ------------------------------------------------------------------------- */
 /* Sorting algorithms
 /* ------------------------------------------------------------------------- */
 
-/* ---- Bubble Sort ---- */
-function bubbleSort() {
-  startSortingAlgorithm();
-  var sorted = true;
-  var i = 0;
-  window.sortingVisualiser.util.log('Bubble sort started');
-  //Pass variables to inner function
-  (function(arrayToSort, sorted, i) {
-    sortingAlgorithmLoop = setInterval(function() {
-      sortingCurrentIndex = i;
-      sortingComparisonIndex = i + 1;
-      window.sortingVisualiser.audio.playSoundForValue(arrayToSort[i + 1]);
-      //Comparison
-      sortingStats.numberOfComparisons++;
-      if (arrayToSort[i] > arrayToSort[i + 1]) {
-        //Swap
-        sortingStats.numberOfSwaps++;
-        var temp = arrayToSort[i];
-        arrayToSort[i] = arrayToSort[i + 1];
-        arrayToSort[i + 1] = temp;
-        sorted = false;
-      }
-      i++;
-      //Return to start of array when done
-      if (i >= arrayToSort.length - 1) {
-        i = 0;
-        if (sorted || !sortingAlgorithmCurrentlyRunning) {
-          window.sortingVisualiser.util.log('Bubble sort ended');
-          stopSortingAlgorithm();
-        }
-        sorted = true;
-      }
-      window.sortingVisualiser.ui.update();
-    }, sortingStepDelay);
-  })(arrayToSort, sorted, i);
-}
-
 /* ------------------------------------------------------------------------- */
 window.addEventListener("load", window.sortingVisualiser.ui.setUp);
 window.addEventListener("load", window.sortingVisualiser.audio.setUp);
-
-window.addEventListener("load", function() {
-  window.sortingVisualiser.util.log('Load');
-  generateRandomData();
-});
+window.addEventListener("load", window.sortingVisualiser.algorithm.setUp);
