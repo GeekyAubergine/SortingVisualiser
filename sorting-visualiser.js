@@ -730,12 +730,16 @@ window.sortingVisualiser.audio = (function() {
     soundOn = false,
     AudioContext,
 
+    audioSupported = function() {
+      return AudioContext;
+    },
+
     initAudio = function() {
       AudioContext = window.AudioContext || window.webkitAudioContext || false;
       if (audioSupported()) {
         audioContext = new AudioContext();
       } else {
-        info('Audio is not supported in this browser');
+        window.sortingVisualiser.util.log('Audio is not supported in this browser');
       }
     },
 
@@ -791,14 +795,14 @@ window.sortingVisualiser.audio = (function() {
       initAudio();
     };
 
-    return {
-      "setUp": setUp,
-      "turnSoundOn": turnSoundOn,
-      "turnSoundOff": turnSoundOff,
-      "playSoundForValue": playSoundForValue,
-      "startSound": startSound,
-      "stopSound": stopSound
-    }
+  return {
+    "setUp": setUp,
+    "turnSoundOn": turnSoundOn,
+    "turnSoundOff": turnSoundOff,
+    "playSoundForValue": playSoundForValue,
+    "startSound": startSound,
+    "stopSound": stopSound
+  }
 }());
 
 'use strict'
@@ -918,10 +922,6 @@ function stopSortingAlgorithm() {
       window.sortingVisualiser.audio.stopSound();
     }, sortingStepDelay * 2);
   }, sortingStepDelay);
-}
-
-function audioSupported() {
-  return AudioContext;
 }
 
 /* ------------------------------------------------------------------------- */
