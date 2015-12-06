@@ -702,6 +702,85 @@ window.sortingVisualiser.ui = (function() {
 
 }());
 
+window.sortingVisualiser.audio = (function() {
+  "use strict";
+  var
+    audioContext,
+    audioOscillator,
+    soundOn = false,
+    AudioContext,
+
+    initAudio = function() {
+      AudioContext = window.AudioContext || window.webkitAudioContext || false;
+      if (audioSupported()) {
+        audioContext = new AudioContext();
+      } else {
+        info('Audio is not supported in this browser');
+      }
+    },
+
+    startSound = function() {
+      if (!soundOn || !audioSupported()) {
+        return;
+      }
+      info('Starting sound');
+      if (audioContext != undefined) {
+        audioOscillator = audioContext.createOscillator();
+        audioOscillator.connect(audioContext.destination);
+        audioOscillator.start(0);
+      }
+    },
+
+    stopSound = function() {
+      if (!soundOn || !audioSupported()) {
+        return;
+      }
+      if (audioOscillator != undefined) {
+        audioOscillator.stop(0);
+      }
+    },
+
+    playFrequency = function(fequency) {
+      if (!soundOn || !audioSupported()) {
+        return;
+      }
+      if (audioOscillator != undefined) {
+        audioOscillator.frequency.value = fequency;
+      }
+    },
+
+    playSoundForValue = function(value) {
+      playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
+    },
+
+    turnSoundOn = function() {
+      info('Turning sound on');
+      soundOn = true;
+      startSound();
+      playFrequency(0);
+    },
+
+    turnSoundOff = function() {
+      info('Turning sound off');
+      playFrequency(0);
+      soundOn = false;
+      stopSound();
+    },
+
+    setUp = function() {
+      initAudio();
+    };
+
+    return {
+      "setUp": setUp,
+      "turnSoundOn": turnSoundOn,
+      "turnSoundOff": turnSoundOff,
+      "playSoundForValue": playSoundForValue,
+      "startSound": startSound,
+      "stopSound": stopSound
+    }
+}());
+
 'use strict'
 //Settings
 var CONTROL_ARRAY_SIZE_STEP = 5;
@@ -769,10 +848,6 @@ var sortingStats = {
 var sortingAlgorithmCurrentlyRunning = false;
 var sortingAlgorithmLoop;
 var arrayGenerationAlgorithm = generateRandomData;
-var audioContext;
-var audioOscillator;
-var soundOn = false;
-var AudioContext;
 
 /* ------------------------------------------------------------------------- */
 /* Utility Methods
@@ -803,7 +878,7 @@ function startSortingAlgorithm(algorithm) {
   sortingStats.numberOfSwaps = 0;
   window.sortingVisualiser.ui.updateAlgorithmInformation(algorithm);
   algorithm.callBack();
-  startSound();
+  window.sortingVisualiser.audio.startSound();
 }
 
 /**
@@ -834,74 +909,13 @@ function stopSortingAlgorithm() {
       sortingRightBound = -1;
       window.sortingVisualiser.ui.update();
 
-      stopSound();
+      window.sortingVisualiser.audio.stopSound();
     }, sortingStepDelay * 2);
   }, sortingStepDelay);
 }
 
 function audioSupported() {
   return AudioContext;
-}
-
-/* ------------------------------------------------------------------------- */
-/* Audio
-/* ------------------------------------------------------------------------- */
-
-function initAudio() {
-  AudioContext = window.AudioContext || window.webkitAudioContext || false;
-  if (audioSupported()) {
-    audioContext = new AudioContext();
-  } else {
-    info('Audio is not supported in this browser');
-  }
-}
-
-function startSound() {
-  if (!soundOn || !audioSupported()) {
-    return;
-  }
-  info('Starting sound');
-  if (audioContext != undefined) {
-    audioOscillator = audioContext.createOscillator();
-    audioOscillator.connect(audioContext.destination);
-    audioOscillator.start(0);
-  }
-}
-
-function stopSound() {
-  if (!soundOn || !audioSupported()) {
-    return;
-  }
-  if (audioOscillator != undefined) {
-    audioOscillator.stop(0);
-  }
-}
-
-function playFrequency(fequency) {
-  if (!soundOn || !audioSupported()) {
-    return;
-  }
-  if (audioOscillator != undefined) {
-    audioOscillator.frequency.value = fequency;
-  }
-}
-
-function playSoundForValue(value) {
-  playFrequency(110 + Math.pow(1000, value / MAX_VALUE));
-}
-
-function turnSoundOn() {
-  info('Turning sound on');
-  soundOn = true;
-  startSound();
-  playFrequency(0);
-}
-
-function turnSoundOff() {
-  info('Turning sound off');
-  playFrequency(0);
-  soundOn = false;
-  stopSound();
 }
 
 /* ------------------------------------------------------------------------- */
@@ -965,7 +979,7 @@ function bubbleSort() {
     sortingAlgorithmLoop = setInterval(function() {
       sortingCurrentIndex = i;
       sortingComparisonIndex = i + 1;
-      playSoundForValue(arrayToSort[i + 1]);
+      window.sortingVisualiser.audio.playSoundForValue(arrayToSort[i + 1]);
       //Comparison
       sortingStats.numberOfComparisons++;
       if (arrayToSort[i] > arrayToSort[i + 1]) {
@@ -993,9 +1007,9 @@ function bubbleSort() {
 
 /* ------------------------------------------------------------------------- */
 window.addEventListener("load", window.sortingVisualiser.ui.setUp);
+window.addEventListener("load", window.sortingVisualiser.audio.setUp);
 
 window.addEventListener("load", function() {
   info('Load');
-  initAudio();
   generateRandomData();
 });
