@@ -162,7 +162,7 @@ window.sortingVisualiser.algorithm = (function() {
         sortingCurrentIndex: sortingCurrentIndex,
         sortingComparisonIndex: sortingComparisonIndex,
         numberOfElements: numberOfElementsToSort,
-        timeStep : sortingStepDelay,
+        timeStep: sortingStepDelay,
         maxValue: MAX_VALUE
       };
     },
@@ -172,7 +172,7 @@ window.sortingVisualiser.algorithm = (function() {
     },
 
     setDataGenerationAlgorithm = function(algorithm) {
-        arrayGenerationAlgorithm = algorithm;
+      arrayGenerationAlgorithm = algorithm;
     },
 
     /* ---- Bubble Sort ---- */
@@ -750,7 +750,7 @@ window.sortingVisualiser.ui = (function() {
           d3.select('#' + ID_INFORMATION_TECHNIQUE).text(LABEL_PROPERTIES_TECHNIQUE + ': ' + algorithm.technique);
         }
         if (algorithm.algorithm != undefined) {
-          d3.select('#' + ID_INFORMATION_ALGORITHM).text(algorithm.algorithm);
+          d3.select('#' + ID_INFORMATION_ALGORITHM).text(algorithm.algorithm.replace("/\\t/g", "  "));
         }
         if (algorithm.technique != undefined) {
           d3.select('#' + ID_INFORMATION_DESCRIPTION).text(algorithm.description);
