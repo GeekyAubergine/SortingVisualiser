@@ -211,6 +211,23 @@ window.sortingVisualiser.algorithm = (function() {
       })(arrayToSort, sorted, i);
     },
 
+    /* ---- Insertion Sort ---- */
+    insertionSort = function() {
+      var sorted = true;
+      var i = 1;
+      var j = i;
+      (function(arrayToSort, i, j) {
+        sortingAlgorithmLoop = setInterval(function() {
+          render();
+          if (i >= arrayToSort.length - 1) {
+            if (sorted || !sortingAlgorithmCurrentlyRunning) {
+              stopSortingAlgorithm();
+            }
+          }
+        }, sortingStepDelay);
+      })(arrayToSort, i, j);
+  },
+
     setUp = function() {
       setDataGenerationAlgorithm(generateRandomData);
       generateData();
@@ -229,7 +246,8 @@ window.sortingVisualiser.algorithm = (function() {
     "generateWorstCase": generateWorstCase,
     "setNumberOfElements": setNumberOfElements,
     "setTimeStep": setTimeStep,
-    "bubbleSort": bubbleSort
+    "bubbleSort": bubbleSort,
+    "insertionSort": insertionSort
   };
 
 }());
@@ -351,6 +369,17 @@ window.sortingVisualiser.ui = (function() {
       technique: 'Exchanging',
       algorithm: 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n',
       description: 'This algorithm works by looping over every time and checking if two ' + 'neighboring elements need to swap, if they do they are swapped. If a swap has ' + 'been made then the algorithm will iterate over all elements again until ' + 'no swaps occour'
+    }, {
+      name: 'Insertion',
+      callBack: window.sortingVisualiser.algorithm.insertionSort,
+      bestCase: "",
+      averageCase: "",
+      worstCase: "",
+      memory: "",
+      stable: true,
+      technique: '',
+      algorithm: "",
+      description: ""
     }],
 
     graphDimensions = {
