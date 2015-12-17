@@ -199,9 +199,12 @@ window.sortingVisualiser.algorithm = (function() {
           i++;
           //Return to start of array when done
           render();
+          if (!sortingAlgorithmCurrentlyRunning) {
+            stopSortingAlgorithm();
+          }
           if (i >= arrayToSort.length - 1) {
             i = 0;
-            if (sorted || !sortingAlgorithmCurrentlyRunning) {
+            if (sorted) {
               window.sortingVisualiser.util.log('Bubble sort ended');
               stopSortingAlgorithm();
             }
@@ -213,20 +216,33 @@ window.sortingVisualiser.algorithm = (function() {
 
     /* ---- Insertion Sort ---- */
     insertionSort = function() {
-      var sorted = true;
-      var i = 1;
-      var j = i;
-      (function(arrayToSort, i, j) {
+      (function(arrayToSort, i, rightBound) {
         sortingAlgorithmLoop = setInterval(function() {
+
+          var left = arrayToSort[i - 1];
+          var right = arrayToSort[i];
+
+          sortingStats.numberOfComparisons++;
+          if (i > 0 && left > right) {
+            sortingStats.numberOfSwaps++;
+            arrayToSort[i - 1] = right;
+            arrayToSort[i] = left;
+            i--;
+          } else {
+            rightBound++;
+            i = rightBound;
+          }
+
           render();
-          if (i >= arrayToSort.length - 1) {
-            if (sorted || !sortingAlgorithmCurrentlyRunning) {
-              stopSortingAlgorithm();
-            }
+          if (!sortingAlgorithmCurrentlyRunning) {
+            stopSortingAlgorithm();
+          }
+          if (rightBound >= arrayToSort.length) {
+            stopSortingAlgorithm();
           }
         }, sortingStepDelay);
-      })(arrayToSort, i, j);
-  },
+      })(arrayToSort, 0, 0);
+    },
 
     setUp = function() {
       setDataGenerationAlgorithm(generateRandomData);
