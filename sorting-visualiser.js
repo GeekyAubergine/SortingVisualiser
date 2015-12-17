@@ -111,7 +111,7 @@ window.sortingVisualiser.algorithm = (function() {
       sortingStats.numberOfSwaps = 0;
       window.sortingVisualiser.ui.updateAlgorithmInformation(algorithm);
       algorithm.callBack();
-      window.sortingVisualiser.audio.startSound();
+      document.dispatchEvent(new CustomEvent("startSound"));
     },
 
     /**
@@ -141,13 +141,15 @@ window.sortingVisualiser.algorithm = (function() {
           sortingLeftBound = -1;
           sortingRightBound = -1;
           render();
-          window.sortingVisualiser.audio.stopSound();
+          document.dispatchEvent(new CustomEvent("stopSound"));
         }, sortingStepDelay * 2);
       }, sortingStepDelay);
     },
 
     playSoundForValue = function(value) {
-      window.sortingVisualiser.audio.playSoundForValue(value);
+      document.dispatchEvent(new CustomEvent("playSoundForValue", {
+        detail: value
+      }));
     },
 
     render = function() {
@@ -595,9 +597,9 @@ window.sortingVisualiser.ui = (function() {
 
     updateSoundState = function() {
       if (this.value == LABEL_SETTINGS_SOUND_OFF) {
-        window.sortingVisualiser.audio.turnSoundOff();
+        document.dispatchEvent(new CustomEvent("turnSoundOff"));
       } else {
-        window.sortingVisualiser.audio.turnSoundOn();
+        document.dispatchEvent(new CustomEvent("turnSoundOn"));
       }
     },
 
@@ -1064,7 +1066,7 @@ window.sortingVisualiser.audio = (function() {
       }
     },
 
-    startSound = function() {
+    startSound = function(e) {
       if (!soundOn || !audioSupported()) {
         return;
       }
@@ -1076,7 +1078,7 @@ window.sortingVisualiser.audio = (function() {
       }
     },
 
-    stopSound = function() {
+    stopSound = function(e) {
       if (!soundOn || !audioSupported()) {
         return;
       }
@@ -1094,20 +1096,25 @@ window.sortingVisualiser.audio = (function() {
       }
     },
 
-    playSoundForValue = function(value) {
-      var frequency = 110 + Math.pow(1000, value / window.sortingVisualiser.algorithm.getInfo().maxValue);
+    playSoundForValue = function(e) {
+      console.log(e);
+      if (!e.detail) {
+        window.sortingVisualiser.util.log("Play sound for value was not given a value: " + e);
+        return;
+      }
+      var frequency = 110 + Math.pow(1000, e.detail / window.sortingVisualiser.algorithm.getInfo().maxValue);
       frequency = Math.min(10000, Math.max(0, frequency));
       playFrequency(frequency);
     },
 
-    turnSoundOn = function() {
+    turnSoundOn = function(e) {
       window.sortingVisualiser.util.log('Turning sound on');
       soundOn = true;
       startSound();
       playFrequency(0);
     },
 
-    turnSoundOff = function() {
+    turnSoundOff = function(e) {
       window.sortingVisualiser.util.log('Turning sound off');
       playFrequency(0);
       soundOn = false;
@@ -1116,15 +1123,15 @@ window.sortingVisualiser.audio = (function() {
 
     setUp = function() {
       initAudio();
+      document.addEventListener("startSound", startSound);
+      document.addEventListener("stopSound", stopSound);
+      document.addEventListener("turnSoundOn", turnSoundOn);
+      document.addEventListener("turnSoundOff", turnSoundOff);
+      document.addEventListener("playSoundForValue", playSoundForValue);
     };
 
   return {
-    "setUp": setUp,
-    "turnSoundOn": turnSoundOn,
-    "turnSoundOff": turnSoundOff,
-    "playSoundForValue": playSoundForValue,
-    "startSound": startSound,
-    "stopSound": stopSound
+    "setUp": setUp
   }
 }());
 
