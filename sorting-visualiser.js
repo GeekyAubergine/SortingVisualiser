@@ -42,7 +42,7 @@ window.sortingVisualiser.algorithm = (function() {
     },
     sortingAlgorithmCurrentlyRunning = false,
     sortingAlgorithmLoop,
-    arrayGenerationAlgorithm = generateRandomData,
+    arrayGenerationAlgorithm = generateRandomCase,
 
     /* ------------------------------------------------------------------------- */
     /* Generation of data
@@ -64,7 +64,7 @@ window.sortingVisualiser.algorithm = (function() {
      * Generates a random case array to sort.
      * Best case defined as random order
      */
-    generateRandomData = function() {
+    generateRandomCase = function() {
       arrayToSort = [];
       for (var i = 0; i < numberOfElementsToSort; i++) {
         arrayToSort.push(Math.random() * (MAX_VALUE - 1)) + 1;
@@ -90,20 +90,35 @@ window.sortingVisualiser.algorithm = (function() {
       }
     },
 
-    setNumberOfElements = function(n) {
-      numberOfElementsToSort = n;
+    setGenerationType = function(e) {
+      var type = e.detail;
+      if (type == "best") {
+        arrayGenerationAlgorithm = generateBestCase;
+      } else if (type == "worst") {
+        arrayGenerationAlgorithm = generateWorstCase;
+      } else {
+        arrayGenerationAlgorithm = generateRandomCase;
+      }
+      generateData();
     },
 
-    setTimeStep = function(t) {
-      sortingStepDelay = t;
+    setNumberOfElements = function(e) {
+      numberOfElementsToSort = e.detail;
+      generateData();
+    },
+
+    setTimeStep = function(e) {
+      sortingStepDelay = e.detail;
     },
 
     /**
      * Sets information for algorithm and start algorithm
      * @param {Object} algorithm object
      */
-    startSortingAlgorithm = function(algorithm) {
-      if (algorithm == undefined || algorithm == null) {
+    startSortingAlgorithm = function(e) {
+      console.log(e);
+      var algorithm = e.detail;
+      if (algorithm == undefined || algorithm == null || sortingAlgorithmCurrentlyRunning) {
         return;
       }
       sortingAlgorithmCurrentlyRunning = true;
