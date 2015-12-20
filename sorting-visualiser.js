@@ -174,6 +174,8 @@ window.sortingVisualiser.algorithm = (function() {
         numberOfComparisons: sortingStats.numberOfComparisons,
         sortingCurrentIndex: sortingCurrentIndex,
         sortingComparisonIndex: sortingComparisonIndex,
+        sortingLeftBound: sortingLeftBound,
+        sortingRightBound: sortingRightBound,
         numberOfElements: numberOfElementsToSort,
         timeStep: sortingStepDelay,
         maxValue: MAX_VALUE
@@ -190,15 +192,7 @@ window.sortingVisualiser.algorithm = (function() {
 
     tick = function() {
       document.dispatchEvent(new CustomEvent("sv-tick", {
-        detail: {
-          array: arrayToSort,
-          numberOfSwaps: sortingStats.numberOfSwaps,
-          numberOfComparisons: sortingStats.numberOfComparisons,
-          sortingCurrentIndex: sortingCurrentIndex,
-          sortingComparisonIndex: sortingComparisonIndex,
-          numberOfElements: numberOfElementsToSort,
-          timeStep: sortingStepDelay
-        }
+        detail: getInfo()
       }));
     },
 
@@ -248,6 +242,12 @@ window.sortingVisualiser.algorithm = (function() {
 
           var left = arrayToSort[i - 1];
           var right = arrayToSort[i];
+
+          sortingCurrentIndex = i - 1;
+          sortingComparisonIndex = i;
+          playSoundForValue(arrayToSort[i]);
+
+          sortingRightBound = rightBound;
 
           sortingStats.numberOfComparisons++;
           if (i > 0 && left > right) {
@@ -337,7 +337,7 @@ window.sortingVisualiser.ui = (function() {
     CLASS_BAR_NORMAL = 'sv-bar-normal',
     CLASS_BAR_ACTIVE = 'sv-bar-active', //Current bar indexed
     CLASS_BAR_COMPARISON = 'sv-bar-comparison',
-    CLASS_BAR_BOUND = 'sv-bar-bound',
+    CLASS_BAR_BOUND = "sv-bar-bound",
     CLASS_STOP_BUTTON = 'sv-control sv-button sv-control-button',
     CLASS_BUTTON = 'sv-button',
     CLASS_BUTTON_SELECTED = 'sv-selected',
