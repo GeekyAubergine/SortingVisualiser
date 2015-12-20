@@ -86,7 +86,7 @@ window.sortingVisualiser.algorithm = (function() {
     generateData = function() {
       if (!sortingAlgorithmCurrentlyRunning) {
         arrayGenerationAlgorithm();
-        render();
+        tick();
       }
     },
 
@@ -116,7 +116,6 @@ window.sortingVisualiser.algorithm = (function() {
      * @param {Object} algorithm object
      */
     startSortingAlgorithm = function(e) {
-      console.log(e);
       var algorithm = e.detail;
       if (algorithm == undefined || algorithm == null || sortingAlgorithmCurrentlyRunning) {
         return;
@@ -154,7 +153,7 @@ window.sortingVisualiser.algorithm = (function() {
         sortingComparisonIndex = -1;
         sortingLeftBound = -1;
         sortingRightBound = -1;
-        render();
+        tick();
         document.dispatchEvent(new CustomEvent("stopSound"));
       }, sortingStepDelay * 2);
     },
@@ -163,10 +162,6 @@ window.sortingVisualiser.algorithm = (function() {
       document.dispatchEvent(new CustomEvent("playSoundForValue", {
         detail: value
       }));
-    },
-
-    render = function() {
-      window.sortingVisualiser.ui.update(getInfo());
     },
 
     getInfo = function() {
@@ -188,6 +183,20 @@ window.sortingVisualiser.algorithm = (function() {
 
     setDataGenerationAlgorithm = function(algorithm) {
       arrayGenerationAlgorithm = algorithm;
+    },
+
+    tick = function() {
+      document.dispatchEvent(new CustomEvent("sv-tick", {
+        detail: {
+          array: arrayToSort,
+          numberOfSwaps: sortingStats.numberOfSwaps,
+          numberOfComparisons: sortingStats.numberOfComparisons,
+          sortingCurrentIndex: sortingCurrentIndex,
+          sortingComparisonIndex: sortingComparisonIndex,
+          numberOfElements: numberOfElementsToSort,
+          timeStep: sortingStepDelay
+        }
+      }));
     },
 
     /* ---- Bubble Sort ---- */
@@ -213,7 +222,7 @@ window.sortingVisualiser.algorithm = (function() {
           }
           i++;
           //Return to start of array when done
-          render();
+          tick();
           if (!sortingAlgorithmCurrentlyRunning) {
             stopSortingAlgorithm();
           }
@@ -248,7 +257,7 @@ window.sortingVisualiser.algorithm = (function() {
             i = rightBound;
           }
 
-          render();
+          tick();
           if (!sortingAlgorithmCurrentlyRunning) {
             stopSortingAlgorithm();
           }
@@ -689,7 +698,6 @@ window.sortingVisualiser.ui = (function() {
       button.on('click', function() {
         if (!window.sortingVisualiser.algorithm.sortingAlgorithmCurrentlyRunning) {
           button.classed(CLASS_BUTTON_SELECTED, true);
-          console.log(buttonData);
           document.dispatchEvent(new CustomEvent("startSortingAlgorithm", {
             detail: buttonData
           }));
@@ -1031,6 +1039,10 @@ window.sortingVisualiser.ui = (function() {
     },
 
     update = function(data) {
+      if (!data) {
+        return;
+      }
+      data = data.detail;
       render(data);
       updateStats(data);
     },
@@ -1043,6 +1055,7 @@ window.sortingVisualiser.ui = (function() {
 
     setUp = function() {
       window.addEventListener("resize", resize);
+      document.addEventListener("sv-tick", update);
       createUI();
       resize();
     };
@@ -1108,7 +1121,6 @@ window.sortingVisualiser.audio = (function() {
     },
 
     playSoundForValue = function(e) {
-      console.log(e);
       if (!e.detail) {
         window.sortingVisualiser.util.log("Play sound for value was not given a value: " + e);
         return;
