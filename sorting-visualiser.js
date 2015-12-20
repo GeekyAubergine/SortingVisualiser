@@ -701,8 +701,8 @@ window.sortingVisualiser.ui = (function() {
     createControls = function(parentContainer) {
       var container = parentContainer.append('div').attr('id', ID_ALGORITHMS_CONTROLS_CONTAINER).attr('class', CLASS_LIST);
       container.append('h2').text(LABEL_CONTROLS_HEADING);
-      createButton(container, LABEL_CONTROLS_STOP, window.sortingVisualiser.algorithm.stop);
-      createButton(container, LABEL_CONTROLS_NEW_ARRAY, window.sortingVisualiser.algorithm.generateData);
+      createButton(container, LABEL_CONTROLS_STOP, "stopSortingAlgorithm");
+      createButton(container, LABEL_CONTROLS_NEW_ARRAY, "generateNewArray");
     },
 
     /* ------------------------------------------------------------------------- */
