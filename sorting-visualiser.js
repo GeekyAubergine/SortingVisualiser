@@ -123,7 +123,10 @@ window.sortingVisualiser.algorithm = (function() {
       sortingAlgorithmCurrentlyRunning = true;
       sortingStats.numberOfComparisons = 0;
       sortingStats.numberOfSwaps = 0;
-      window.sortingVisualiser.ui.updateAlgorithmInformation(algorithm);
+      //window.sortingVisualiser.ui.updateAlgorithmInformation(algorithm);
+      document.dispatchEvent(new CustomEvent("sv-algorithmChanged", {
+        detail: algorithm
+      }));
       algorithm.callBack();
       document.dispatchEvent(new CustomEvent("startSound"));
     },
@@ -792,7 +795,8 @@ window.sortingVisualiser.ui = (function() {
       list.append('li').attr('id', ID_INFORMATION_TECHNIQUE).text(LABEL_PROPERTIES_TECHNIQUE + ': ');
     },
 
-    updateAlgorithmInformation = function(algorithm) {
+    updateAlgorithmInformation = function(e) {
+      var algorithm = e.detail;
       if (algorithm != undefined) {
         if (algorithm.name != undefined) {
           d3.select('#' + ID_INFORMATION_NAME).text(LABEL_PROPERTIES_NAME + ': ' + algorithm.name);
@@ -1056,6 +1060,7 @@ window.sortingVisualiser.ui = (function() {
     setUp = function() {
       window.addEventListener("resize", resize);
       document.addEventListener("sv-tick", update);
+      document.addEventListener("sv-algorithmChanged", updateAlgorithmInformation);
       createUI();
       resize();
     };
