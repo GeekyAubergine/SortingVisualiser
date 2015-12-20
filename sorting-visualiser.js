@@ -132,33 +132,31 @@ window.sortingVisualiser.algorithm = (function() {
     /**
      * Stops the current sorting algorithm
      */
-    stopSortingAlgorithm = function() {
-      setTimeout(function() {
-        window.sortingVisualiser.util.log('Sorting algorithm stopped');
-        sortingAlgorithmCurrentlyRunning = false;
+    stopSortingAlgorithm = function(e) {
+      window.sortingVisualiser.util.log('Sorting algorithm stopped');
+      sortingAlgorithmCurrentlyRunning = false;
 
-        //Loops as it sometimes fails
-        for (var i = 0; i < 10; i++) {
-          setTimeout(function() {
-            clearTimeout(sortingAlgorithmLoop);
-          }, 0);
-          setTimeout(function() {
-            clearInterval(sortingAlgorithmLoop);
-          }, 0);
-        }
-
-        window.sortingVisualiser.ui.deselectAllButtons();
-
+      //Loops as it sometimes fails
+      for (var i = 0; i < 10; i++) {
         setTimeout(function() {
-          //Resets the sorting algorithm index markers to -1
-          sortingCurrentIndex = -1;
-          sortingComparisonIndex = -1;
-          sortingLeftBound = -1;
-          sortingRightBound = -1;
-          render();
-          document.dispatchEvent(new CustomEvent("stopSound"));
-        }, sortingStepDelay * 2);
-      }, sortingStepDelay);
+          clearTimeout(sortingAlgorithmLoop);
+        }, 0);
+        setTimeout(function() {
+          clearInterval(sortingAlgorithmLoop);
+        }, 0);
+      }
+
+      window.sortingVisualiser.ui.deselectAllButtons();
+
+      setTimeout(function() {
+        //Resets the sorting algorithm index markers to -1
+        sortingCurrentIndex = -1;
+        sortingComparisonIndex = -1;
+        sortingLeftBound = -1;
+        sortingRightBound = -1;
+        render();
+        document.dispatchEvent(new CustomEvent("stopSound"));
+      }, sortingStepDelay * 2);
     },
 
     playSoundForValue = function(value) {
@@ -262,23 +260,20 @@ window.sortingVisualiser.algorithm = (function() {
     },
 
     setUp = function() {
-      setDataGenerationAlgorithm(generateRandomData);
+      setDataGenerationAlgorithm(generateRandomCase);
       generateData();
+      document.addEventListener("startSortingAlgorithm", startSortingAlgorithm);
+      document.addEventListener("stopSortingAlgorithm", stopSortingAlgorithm);
+      document.addEventListener("generateNewArray", generateData);
+      document.addEventListener("generationTypeChange", setGenerationType);
+      document.addEventListener("arraySizeUpdated", setNumberOfElements);
+      document.addEventListener("timeStepUpdated", setTimeStep);
     };
 
   return {
-    "start": startSortingAlgorithm,
-    "stop": stopSortingAlgorithm,
     "setUp": setUp,
     "getInfo": getInfo,
     "getSortingAlgorithmCurrentlyRunning": getSortingAlgorithmCurrentlyRunning,
-    "generateData": generateData,
-    "setDataGenerationAlgorithm": setDataGenerationAlgorithm,
-    "generateBestCase": generateBestCase,
-    "generateRandomData": generateRandomData,
-    "generateWorstCase": generateWorstCase,
-    "setNumberOfElements": setNumberOfElements,
-    "setTimeStep": setTimeStep,
     "bubbleSort": bubbleSort,
     "insertionSort": insertionSort
   };
@@ -580,34 +575,32 @@ window.sortingVisualiser.ui = (function() {
     updateArraySize = function() {
       if (!window.sortingVisualiser.algorithm.getSortingAlgorithmCurrentlyRunning()) {
         window.sortingVisualiser.util.log('Array size updated to ' + this.value);
-        window.sortingVisualiser.algorithm.setNumberOfElements(this.value);
-        window.sortingVisualiser.algorithm.generateData();
+        document.dispatchEvent(new CustomEvent("arraySizeUpdated", {
+          detail: this.value
+        }));
       } else {
         this.value = window.sortingVisualiser.algorithm.getInfo().array.length;
       }
     },
 
     updateTimeStep = function() {
-      window.sortingVisualiser.util.log('Sorting time set set to' + this.value * 1000);
-      window.sortingVisualiser.algorithm.setTimeStep(Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN));
+      window.sortingVisualiser.util.log("Sorting time set set to " + this.value * 1000)
+      document.dispatchEvent(new CustomEvent("timeStepUpdated", {
+        detail: Math.max(this.value * 1000, CONTROL_LOOP_TIME_MIN)
+      }));
     },
 
     updateArrayType = function() {
       window.sortingVisualiser.util.log('Array type selected: ' + this.value);
+      var type = "random";
       if (this.value == LABEL_SETTINGS_ARRAY_TYPE_BEST) {
-        window.sortingVisualiser.algorithm.setDataGenerationAlgorithm(
-          window.sortingVisualiser.algorithm.generateBestCase
-        );
+        type = "best";
       } else if (this.value == LABEL_SETTINGS_ARRAY_TYPE_WORST) {
-        window.sortingVisualiser.algorithm.setDataGenerationAlgorithm(
-          window.sortingVisualiser.algorithm.generateWorstCase
-        );
-      } else {
-        window.sortingVisualiser.algorithm.setDataGenerationAlgorithm(
-          window.sortingVisualiser.algorithm.generateRandomData
-        );
+        type = "worst";
       }
-      window.sortingVisualiser.algorithm.generateData();
+      document.dispatchEvent(new CustomEvent("generationTypeChange", {
+        detail: type
+      }));
     },
 
     updateSoundState = function() {
@@ -682,11 +675,11 @@ window.sortingVisualiser.ui = (function() {
       d3.selectAll('.' + CLASS_BUTTON).classed(CLASS_BUTTON_SELECTED, false);
     },
 
-    createButton = function(parent, text, callBack) {
+    createButton = function(parent, text, eventName) {
       var button = parent.append('li').attr('class', CLASS_BUTTON);
       button.text(text);
       button.on('click', function() {
-        callBack()
+        document.dispatchEvent(new CustomEvent(eventName));
       });
     },
 
@@ -696,7 +689,10 @@ window.sortingVisualiser.ui = (function() {
       button.on('click', function() {
         if (!window.sortingVisualiser.algorithm.sortingAlgorithmCurrentlyRunning) {
           button.classed(CLASS_BUTTON_SELECTED, true);
-          window.sortingVisualiser.algorithm.start(buttonData);
+          console.log(buttonData);
+          document.dispatchEvent(new CustomEvent("startSortingAlgorithm", {
+            detail: buttonData
+          }));
         }
       });
     },
