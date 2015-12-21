@@ -190,6 +190,23 @@ window.sortingVisualiser.algorithm = (function() {
       arrayGenerationAlgorithm = algorithm;
     },
 
+    compareAndSwap = function(array, indexA, indexB, swapped) {
+      sortingCurrentIndex = indexA;
+      sortingComparisonIndex = indexB;
+
+      playSoundForValue(array[indexB]);
+
+      sortingStats.numberOfComparisons++;
+      if (array[indexA] > array[indexB]) {
+        sortingStats.numberOfSwaps++;
+        var temp = array[indexA];
+        array[indexA] = array[indexB];
+        array[indexB] = temp;
+        return true;
+      }
+      return swapped;
+    },
+
     tick = function() {
       document.dispatchEvent(new CustomEvent("sv-tick", {
         detail: getInfo()
@@ -198,46 +215,32 @@ window.sortingVisualiser.algorithm = (function() {
 
     /* ---- Bubble Sort ---- */
     bubbleSort = function() {
-      var sorted = true;
-      var i = 0;
       window.sortingVisualiser.util.log('Bubble sort started');
       //Pass variables to inner function
-      (function(arrayToSort, sorted, i) {
+      (function(arrayToSort, swapped, i) {
         sortingAlgorithmLoop = setInterval(function() {
-          sortingCurrentIndex = i;
-          sortingComparisonIndex = i + 1;
-          playSoundForValue(arrayToSort[i + 1]);
-          //Comparison
-          sortingStats.numberOfComparisons++;
-          if (arrayToSort[i] > arrayToSort[i + 1]) {
-            //Swap
-            sortingStats.numberOfSwaps++;
-            var temp = arrayToSort[i];
-            arrayToSort[i] = arrayToSort[i + 1];
-            arrayToSort[i + 1] = temp;
-            sorted = false;
-          }
+          swapped = compareAndSwap(arrayToSort, i, i + 1, swapped);
           i++;
-          //Return to start of array when done
           tick();
           if (!sortingAlgorithmCurrentlyRunning) {
             stopSortingAlgorithm();
           }
           if (i >= arrayToSort.length - 1) {
             i = 0;
-            if (sorted) {
+            if (!swapped) {
               window.sortingVisualiser.util.log('Bubble sort ended');
               stopSortingAlgorithm();
             }
-            sorted = true;
+            swapped = false;
           }
         }, sortingStepDelay);
-      })(arrayToSort, sorted, i);
+      })(arrayToSort, false, 0);
     },
 
     /* ---- Insertion Sort ---- */
     insertionSort = function() {
-      (function(arrayToSort, i, rightBound) {
+      sortingRightBound = 0;
+      (function(arrayToSort, i) {
         sortingAlgorithmLoop = setInterval(function() {
 
           var left = arrayToSort[i - 1];
@@ -247,8 +250,6 @@ window.sortingVisualiser.algorithm = (function() {
           sortingComparisonIndex = i;
           playSoundForValue(arrayToSort[i]);
 
-          sortingRightBound = rightBound;
-
           sortingStats.numberOfComparisons++;
           if (i > 0 && left > right) {
             sortingStats.numberOfSwaps++;
@@ -256,19 +257,68 @@ window.sortingVisualiser.algorithm = (function() {
             arrayToSort[i] = left;
             i--;
           } else {
-            rightBound++;
-            i = rightBound;
+            sortingRightBound++;
+            i = sortingRightBound;
           }
 
           tick();
           if (!sortingAlgorithmCurrentlyRunning) {
             stopSortingAlgorithm();
           }
-          if (rightBound >= arrayToSort.length) {
+          if (sortingRightBound >= arrayToSort.length) {
             stopSortingAlgorithm();
           }
         }, sortingStepDelay);
       })(arrayToSort, 0, 0);
+    },
+
+    cocktailSort = function() {
+      sortingLeftBound = 0;
+      sortingRightBound = arrayToSort.length - 1;
+      window.sortingVisualiser.util.log('Cocktail sort started');
+      //Pass variables to inner function
+      (function(arrayToSort, swapped, i, movingRight) {
+        sortingAlgorithmLoop = setInterval(function() {
+
+          if (movingRight) {
+            if (i < sortingRightBound) {
+              swapped = compareAndSwap(arrayToSort, i, i + 1, swapped);
+              i++;
+            }
+          } else {
+            if (i >= 0) {
+              swapped = compareAndSwap(arrayToSort, i, i + 1, swapped);
+              i--;
+            }
+          }
+
+          //Return to start of array when done
+          tick();
+          if (!sortingAlgorithmCurrentlyRunning) {
+            stopSortingAlgorithm();
+          }
+
+          if (i >= sortingRightBound) {
+            i--;
+            if (!swapped) {
+              window.sortingVisualiser.util.log('Cocktail sort ended');
+              stopSortingAlgorithm();
+            }
+            swapped = false;
+            movingRight = false;
+            sortingRightBound--;
+          } else if (i < sortingLeftBound) {
+            i++;
+            if (!swapped) {
+              window.sortingVisualiser.util.log('Cocktail sort ended');
+              stopSortingAlgorithm();
+            }
+            swapped = false;
+            movingRight = true;
+            sortingLeftBound++;
+          }
+        }, sortingStepDelay);
+      })(arrayToSort, false, 0, true);
     },
 
     setUp = function() {
@@ -287,7 +337,8 @@ window.sortingVisualiser.algorithm = (function() {
     "getInfo": getInfo,
     "getSortingAlgorithmCurrentlyRunning": getSortingAlgorithmCurrentlyRunning,
     "bubbleSort": bubbleSort,
-    "insertionSort": insertionSort
+    "insertionSort": insertionSort,
+    "cocktailSort": cocktailSort
   };
 
 }());
@@ -409,6 +460,17 @@ window.sortingVisualiser.ui = (function() {
       technique: 'Exchanging',
       algorithm: 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n',
       description: 'This algorithm works by looping over every time and checking if two ' + 'neighboring elements need to swap, if they do they are swapped. If a swap has ' + 'been made then the algorithm will iterate over all elements again until ' + 'no swaps occour'
+    }, {
+      name: 'Cocktail',
+      callBack: window.sortingVisualiser.algorithm.cocktailSort,
+      bestCase: "",
+      averageCase: "",
+      worstCase: "",
+      memory: "",
+      stable: true,
+      technique: '',
+      algorithm: "",
+      description: ""
     }, {
       name: 'Insertion',
       callBack: window.sortingVisualiser.algorithm.insertionSort,
