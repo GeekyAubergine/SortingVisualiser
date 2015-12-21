@@ -190,6 +190,23 @@ window.sortingVisualiser.algorithm = (function() {
       arrayGenerationAlgorithm = algorithm;
     },
 
+    compareAndSwap = function(array, indexA, indexB, swapped) {
+      sortingCurrentIndex = indexA;
+      sortingComparisonIndex = indexB;
+
+      playSoundForValue(array[indexB]);
+
+      sortingStats.numberOfComparisons++;
+      if (array[indexA] > array[indexB]) {
+        sortingStats.numberOfSwaps++;
+        var temp = array[indexA];
+        array[indexA] = array[indexB];
+        array[indexB] = temp;
+        return true;
+      }
+      return swapped;
+    },
+
     tick = function() {
       document.dispatchEvent(new CustomEvent("sv-tick", {
         detail: getInfo()
