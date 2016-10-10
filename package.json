@@ -1,0 +1,66 @@
+{
+  "name": "sortingvisualiser",
+  "version": "1.0.0",
+  "description": "A tool to help with the teaching of sorting algorithms",
+  "main": "index.js",
+  "devDependencies": {
+    "babel-core": "6.14.0",
+    "babel-loader": "6.2.5",
+    "babel-plugin-syntax-async-functions": "6.8.0",
+    "babel-plugin-transform-async-to-generator": "6.8.0",
+    "babel-plugin-transform-class-properties": "6.10.2",
+    "babel-plugin-transform-regenerator": "6.14.0",
+    "babel-plugin-transform-runtime": "6.15.0",
+    "babel-preset-es2015": "6.14.0",
+    "babel-preset-react": "6.11.1",
+    "babel-preset-stage-0": "6.5.0",
+    "babel-runtime": "6.11.6",
+    "babel-eslint": "6.1.2",
+    "browser-sync": "2.16.0",
+    "es6-promise": "4.0.2",
+    "eslint": "3.6.1",
+    "eslint-config-airbnb": "12.0.0",
+    "eslint-plugin-import": "1.16.0",
+    "eslint-plugin-jsx-a11y": "2.2.2",
+    "eslint-plugin-react": "6.3.0",
+    "fs": "0.0.1-security",
+    "gulp": "3.9.1",
+    "gulp-autoprefixer": "3.1.1",
+    "gulp-babel": "6.1.2",
+    "gulp-clean": "0.3.2",
+    "gulp-clean-css": "2.0.13",
+    "gulp-eslint": "3.0.1",
+    "gulp-htmlhint": "0.3.1",
+    "gulp-polyfiller": "0.0.1",
+    "gulp-rename": "1.2.2",
+    "gulp-sass": "2.3.2",
+    "gulp-scss-lint": "0.4.0",
+    "gulp-uglify": "2.0.0",
+    "gulp-util": "3.0.7",
+    "lodash": "4.13.1",
+    "moment": "2.14.1",
+    "react": "15.3.2",
+    "react-dom": "15.3.2",
+    "run-sequence": "1.2.2",
+    "vinyl-named": "1.1.0",
+    "webpack-stream": "3.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeekyAubergine/SortingVisualiser.git"
+  },
+  "keywords": [
+    "sorting",
+    "visualiser",
+    "algorithm"
+  ],
+  "author": "Chris Aubert | GeekyAubergine",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GeekyAubergine/SortingVisualiser/issues"
+  },
+  "homepage": "https://github.com/GeekyAubergine/SortingVisualiser#readme"
+}

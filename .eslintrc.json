@@ -1,0 +1,33 @@
+{
+    "parser": "babel-eslint",
+    "rules": {
+        "strict": 0,
+        "quotes": [1, "single"],
+        "linebreak-style": [2, "unix"],
+        "semi": [1, "always"],
+        "brace-style": [2, "stroustrup", {"allowSingleLine": true}], //New line for else
+        "no-extra-semi": 1,
+        "comma-dangle": [2, "always-multiline"],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
+        "no-console": 1
+    },
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "plugins": [
+        "react"
+    ],
+    "parserOptions": {
+        "sourceType": "module",
+        "allowImportExportEverywhere": false,
+        "ecmaFeatures": {
+            "jsx": true,
+            "experimentalObjectRestSpread": true,
+            "modules": true
+        }
+    }
+}

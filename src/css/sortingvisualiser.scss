@@ -1,0 +1,318 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-style: normal;
+  src: url('//fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXZ2MAKAc2x4R1uOSeegc5U.eot');
+  src: url('//fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXZ2MAKAc2x4R1uOSeegc5U.eot?#iefix') format('embedded-opentype'),
+  local('Open Sans Light'),
+  local('Open-Sans-300'),
+  url('//fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTRampu5_7CjHW5spxoeN3Vs.woff2') format('woff2'),
+  url('//fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTaRDOzjiPcYnFooOUGCOsRk.woff') format('woff'),
+  url('//fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTYnF5uFdDttMLvmWuJdhhgs.ttf') format('truetype'),
+  url('//fonts.gstatic.com/l/font?kit=DXI1ORHCpsQm3Vp6mXoaTVlIn5tFQcqMuf-jhyJP0ps&skey=b33cc031a589c168&v=v13#OpenSans') format('svg');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-style: italic;
+  src: url('//fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxrXcjzEax2LfQAlK8DdMzhA.eot');
+  src: url('//fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxrXcjzEax2LfQAlK8DdMzhA.eot?#iefix') format('embedded-opentype'),
+  local('Open Sans Light Italic'),
+  local('Open-Sans-300italic'),
+  url('//fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxtTIkQYohD4BpHvJ3NvbHoA.woff2') format('woff2'),
+  url('//fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxvR_54zmj3SbGZQh3vCOwvY.woff') format('woff'),
+  url('//fonts.gstatic.com/s/opensans/v13/PRmiXeptR36kaC0GEAetxrfB31yxOzP-czbf6AAKCVo.ttf') format('truetype'),
+  url('//fonts.gstatic.com/l/font?kit=PRmiXeptR36kaC0GEAetxj4dnM32POWavC8T_whbZeI&skey=78fa527f8e87b8b8&v=v13#OpenSans') format('svg');
+}
+
+$max-width: 48rem;
+$max-width-for-padding: 49rem;
+$nav-height: 2em;
+
+$real-white: #fff;
+$real-black: #000;
+$invisible: hsla(0, 0, 0, 0);
+$white: darken($real-white, 2%);
+$primary-colour: hsla(138, 58%, 32%, 1);
+$primary-colour-text: darken($white, 2%);
+$secondary-colour-text: #727272;
+$divider-colour:        #b6b6b6;
+$accent-colour:         #ff5252;
+
+$background-colour: darken($real-white, 8%);
+$black: lighten($real-black, 5%);
+$header-colour: $primary-colour; //hsla(295, 60%, 20%, 1);
+$nav-colour: darken($header-colour, 0%);
+$border: darken($real-white, 20%);
+$lift-off-grey: #888;
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+//
+//html,
+//body {
+//  display: flex;
+//  flex: 100%;
+//  flex-flow: row wrap;
+//  justify-content: center;
+//  width: 100%;
+//  background-color: $background-colour;
+//}
+//
+//h1,
+//h2,
+//h3,
+//h4,
+//h5,
+//h6 {
+//  flex: 100%;
+//  margin-top: 1em;
+//}
+//
+//h1,
+//h2 {
+//  text-align: center;
+//}
+//
+//h1 {
+//  font-size: 450%;
+//}
+//
+//h2 {
+//  font-size: 250%;
+//}
+//
+//h3 {
+//  font-size: 180%;
+//}
+//
+//h4 {
+//  font-size: 125%;
+//}
+//
+//// ---- General Stylings ---- //
+//.hidden {
+//  display: none;
+//}
+//
+//div {
+//  display: flex;
+//  flex: 100%;
+//  flex-flow: row wrap;
+//}
+//
+//p {
+//  flex: 100%;
+//  padding: 1em .5em;
+//  font-size: 110%;
+//  line-height: 150%;
+//
+//  a {
+//    height: 1.5em;
+//    transition: border 125ms;
+//    border-bottom: .1em solid $invisible;
+//
+//    &:hover {
+//      border-color: $primary-colour;
+//    }
+//  }
+//}
+//
+//a {
+//  display: inline-block;
+//  position: relative;
+//  color: $primary-colour;
+//  font-size: inherit;
+//  font-weight: inherit;
+//}
+//
+//.button-container {
+//  justify-content: center;
+//  margin-top: 1em;
+//}
+//
+//.link-button {
+//  padding: .75em 1.5em;
+//  transition: 250ms;
+//  border: 1px solid $divider-colour;
+//  border-radius: .5em;
+//  background-color: $primary-colour;
+//  color: $white;
+//  text-decoration: none;
+//
+//  &:hover {
+//    box-shadow: 0 0 1em 0 $lift-off-grey;
+//  }
+//}
+//
+//nav {
+//  display: flex;
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  justify-content: center;
+//  width: 100%;
+//  min-height: $nav-height;
+//  padding: .5em 0;
+//  background-color: $nav-colour;
+//  z-index: 4;
+//
+//  .width-controlled {
+//    display: flex;
+//    flex: 100%;
+//    justify-content: space-between;
+//    max-width: $max-width;
+//  }
+//
+//  .half {
+//    flex: 1;
+//
+//    &:first-of-type {
+//      flex-grow: 0;
+//    }
+//
+//    &:last-of-type {
+//      justify-content: flex-end;
+//    }
+//  }
+//
+//  a {
+//    margin: 0 .25em;
+//    padding: .25em .125em .15em;
+//    border-bottom: .15em solid $invisible;
+//    color: $primary-colour-text;
+//    text-decoration: none;
+//
+//    &:first-of-type {
+//      margin-left: 0;
+//      padding-left: 0;
+//    }
+//
+//    &:last-of-type {
+//      margin-right: 0;
+//      padding-right: 0;
+//    }
+//
+//    &:hover {
+//      border-bottom: .15em solid $white;
+//      color: $primary-colour-text;
+//    }
+//  }
+//
+//}
+//
+//main {
+//  display: flex;
+//  flex: 100%;
+//  flex-wrap: wrap;
+//  justify-content: center;
+//  max-width: $max-width;
+//  margin-top: $nav-height;
+//  background-color: $background-colour;
+//
+//  section {
+//    display: flex;
+//    flex: 100%;
+//    flex-flow: row wrap;
+//    align-content: flex-start;
+//    justify-content: center;
+//    max-width: $max-width;
+//    margin-bottom: 2em;
+//
+//    h2 {
+//      margin-bottom: .5em;
+//    }
+//
+//    article {
+//      display: flex;
+//      flex: 100%;
+//      flex-flow: row wrap;
+//    }
+//  }
+//
+//  div {
+//    align-content: flex-start;
+//  }
+//
+//  ul,
+//  ol {
+//    display: flex;
+//    flex: 100%;
+//    flex-flow: row wrap;
+//    max-width: $max-width;
+//    padding-left: 4em;
+//  }
+//
+//  ol {
+//    list-style-type: decimal;
+//  }
+//
+//  li {
+//    flex: 100%;
+//  }
+//}
+//
+//footer {
+//  display: flex;
+//  flex: 100%;
+//  justify-content: center;
+//  margin-top: 2em;
+//  padding: 2em 0;
+//  border-top: .1em solid $divider-colour;
+//
+//  div {
+//    align-content: flex-start;
+//  }
+//
+//  ul {
+//    display: flex;
+//    flex: 100%;
+//    max-width: $max-width;
+//  }
+//
+//  li {
+//    display: flex;
+//    flex: 1;
+//    justify-content: center;
+//  }
+//
+//  a {
+//    text-align: center;
+//    text-decoration: none;
+//  }
+//}
+//
+//@media (max-width: 360px) {
+//  nav {
+//    .width-controlled {
+//      a {
+//        margin: 0;
+//      }
+//    }
+//
+//    .name {
+//      width: 2.4em;
+//      height: 1.6em;
+//      overflow: hidden;
+//    }
+//  }
+//}
+//
+//@media (max-width: $max-width-for-padding) {
+//  main {
+//    padding: 0 .5rem;
+//  }
+//
+//  nav {
+//    .width-controlled {
+//      padding: 0 .5rem;
+//    }
+//  }
+//}
