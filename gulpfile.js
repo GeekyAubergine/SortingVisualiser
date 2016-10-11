@@ -106,7 +106,7 @@ gulp.task('browser-sync', () => {
     browserSync({
         proxy: 'sorter.dev:8001',
         port: 9001,
-        open: true,
+        open: false,
     });
 });
 
