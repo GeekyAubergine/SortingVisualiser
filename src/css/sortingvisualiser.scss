@@ -1,5 +1,5 @@
 $sv-border: #ccc;
-
+$sidebar-width: 14em;
 
 .sorting-visualiser {
   display: flex;
@@ -19,13 +19,14 @@ $sv-border: #ccc;
   h5,
   h6 {
     flex: 100%;
-    padding: .25em 0;
+    padding: .25em .5em;
     height: 2em;
   }
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
     text-align: center;
   }
 
@@ -42,14 +43,18 @@ $sv-border: #ccc;
   }
 
   h4 {
-    font-size: 125%;
+    font-size: 112.5%;
   }
 
   div {
     display: flex;
-    flex: 1;
+    flex: 100%;
     flex-flow: row wrap;
     align-items: flex-start;
+  }
+
+  p {
+    flex: 100%;
   }
 
   ul {
@@ -61,8 +66,14 @@ $sv-border: #ccc;
 
   li {
     display: flex;
-    width: 100%;
+    flex: 100%;
     padding: .25em .5em;
+    line-height: 2em;
+    border-bottom: .05em solid $sv-border;
+
+    &:hover {
+      background-color: #f4f4f4;
+    }
   }
 
   .bar-normal {
@@ -90,6 +101,7 @@ $sv-border: #ccc;
     flex: 1;
     margin: .5em .5em 0;
     border: .1em solid $sv-border;
+    border-bottom: 0;
 
     h3 {
       background-color: #eee;
@@ -99,17 +111,17 @@ $sv-border: #ccc;
 
   .graph {
     flex: 100%;
-    height: 16em;
+    height: 21em;
     margin: .5em .5em 0;
   }
 
-  .legend {
-    flex: 100%;
+  .graph-side-bar {
+    flex-wrap: wrap;
+  }
 
+  .legend {
     li {
-      flex: 1;
-      justify-content: center;
-      border-left: .05em solid $sv-border;
+      justify-content: flex-start;
 
       &:first-of-type {
         border-left: 0;
@@ -122,27 +134,132 @@ $sv-border: #ccc;
         height: 2em;
         margin-right: .5em;
       }
+    }
+  }
 
-      p {
-        line-height: 2em;
+  .controls {
+    li {
+      justify-content: space-between;
+
+      input {
+        flex: 1;
+        text-align: right;
+        margin-left: .5em;
       }
+    }
+
+    .disabled * {
+      color: #aaa
+    }
+  }
+
+  .properties {
+    padding-bottom: .5em;
+    border: .1em solid $sv-border;
+
+    p {
+      padding: .25em .5em;
+    }
+
+    .code-heading {
+      margin-top: 1em;
+    }
+  }
+
+  .code-preview {
+    flex: 100%;
+    padding: 0 .5em;
+
+    & > * {
+      flex: 100%;
+      border: .1em solid $sv-border;
     }
   }
 
 }
 
-@media (min-width: 50em) {
+@media (min-width: 40em) {
   .sorting-visualiser {
     .graph {
       flex: 1;
       margin: .5em;
     }
 
+    .graph-side-bar,
+    .controls-and-algorithms {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+
+      .pane {
+        margin-left: 0;
+      }
+    }
+
+    .algorithm-info {
+      flex: 1;
+    }
+
+    .controls-and-algorithms {
+      order: 2;
+
+      input {
+        max-width: 6em;
+      }
+    }
+
     .legend {
       flex: 1;
-      margin-left: 0;
-      min-width: 10em;
-      max-width: 10em;
+
+      li {
+        justify-content: flex-start;
+
+        div {
+          flex: 1;
+          min-width: 2em;
+          height: 2em;
+          margin-right: .5em;
+        }
+
+        p {
+          flex: 100%;
+          line-height: 2em;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 56em) {
+  .sorting-visualiser {
+    .graph {
+      flex: 1;
+      margin: .5em;
+    }
+
+    .graph-side-bar,
+    .controls-and-algorithms {
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+
+      .pane {
+        margin-left: 0;
+      }
+    }
+
+    .algorithm-info {
+      flex: 1;
+    }
+
+    .controls-and-algorithms {
+      order: 2;
+
+      input {
+        max-width: 6em;
+      }
+    }
+
+    .legend {
+      flex: 1;
 
       li {
         justify-content: flex-start;
