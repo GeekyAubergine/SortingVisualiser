@@ -10,7 +10,7 @@ import Graph from './Graph';
 export default class SortingVisualiser extends Component {
 
 	liveState = {
-		itemsToGenerate: 50,
+		itemsToGenerate: 25,
 		items: [],
 		stepTime: 10,
 		runTime: 0,
@@ -23,7 +23,7 @@ export default class SortingVisualiser extends Component {
 	};
 
 	state = {
-		itemsToGenerate: 50,
+		itemsToGenerate: 25,
 		items: [],
 		stepTime: 10,
 		runTime: 0,

@@ -29,7 +29,18 @@ export default class InsertionSort extends Algorithm {
 	}
 
 	static getAlgorithm() {
-		return 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n';
+		return 'for (i = 0; i < array.length; i++) {' +
+			'\n\tfor (j = i; j > 0; j--) {' +
+			'\n\t\tif (array[j - 1] > array[j]) {' +
+			'\n\t\t\ttemp = array[j - 1]' +
+			'\n\t\t\tarray[j - 1] = array[j]' +
+			'\n\t\t\tarray[j] = temp' +
+			'\n\t\t}' +
+			'\n\t\telse {' +
+			'\n\t\t\tbreak' +
+			'\n\t\t}' +
+			'\n\t}' +
+			'\n}';
 	}
 
 	static getBestCase() {

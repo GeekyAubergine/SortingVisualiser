@@ -11,7 +11,7 @@ const PropertiesPane = (props) => (
 			<div className="code-preview">
 				{props.algorithm &&
 				<SyntaxHighlighter
-					language='java'
+					language='python'
 					style={docco}
 					showLineNumbers
 				>

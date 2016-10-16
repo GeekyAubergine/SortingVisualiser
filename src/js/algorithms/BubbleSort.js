@@ -31,7 +31,18 @@ export default class BubbleSort extends Algorithm {
 	}
 
 	static getAlgorithm() {
-		return 'swapped = true\n' + 'while (swapped) {\n' + '\tswapped = false;\n' + '\tfor (int i = 0; i < n - 1; i++) {\n' + '\t\tif (array[i] > array[i + 1]) {\n' + '\t\t\ttemp = array[i];\n' + '\t\t\tarray[i] = array[i + 1];\n' + '\t\t\tarray[i + 1] = temp;\n' + '\t\t\tswapped = true;\n' + '\t\t}\n' + '\t}\n' + '}\n';
+		return 'sorted = false' +
+			'\nwhile (!sorted) {' +
+			'\n\tsorted = true' +
+			'\n\tfor (i = 0; i < array.length; i++) {' +
+			'\n\t\tif (array[i] > array[i + 1] {' +
+			'\n\t\t\ttemp = array[i]' +
+			'\n\t\t\tarray[i] = array[i + 1]' +
+			'\n\t\t\tarray[i + 1] = temp' +
+			'\n\t\t\tsorted = false' +
+			'\n\t\t}' +
+			'\n\t}' +
+			'\n}';
 	}
 
 	static getBestCase() {
