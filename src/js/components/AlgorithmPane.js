@@ -4,9 +4,12 @@ import Pane from './core/Pane';
 const AlgorithmPane = (props) => (
 	<Pane header="Algorithms" className="algorithms">
 		<ul>
-			<li>Bubble</li>
-			<li>Merge</li>
-			<li>Quick</li>
+			{props.algorithms.map((a, i) => (
+				<li
+					key={i}
+					onClick={() => props.start(a)}
+				>{a.getName()}</li>
+			))}
 		</ul>
 	</Pane>
 );

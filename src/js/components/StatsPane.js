@@ -16,7 +16,7 @@ const time = (time) => {
 }
 
 const StatsPane = (props) => (
-	<Pane header="Stats" className="legend">
+	<Pane header="Stats" className="stats">
 		<ul>
 			<li>Comparisons: {props.comparisons}</li>
 			<li>Swaps: {props.swaps}</li>

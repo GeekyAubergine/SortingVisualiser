@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ALGORITHMS } from './../algorithms/Algorithms';
 import { sleep } from './../util/Util';
 import LegendPane from './LegendPane';
 import ControlsPane from './ControlsPane';
@@ -18,6 +19,8 @@ export default class SortingVisualiser extends Component {
 		swaps: 0,
 		previousTime: 0,
 		running: false,
+
+		algorithm: ALGORITHMS[0],
 	};
 
 	state = {
@@ -29,34 +32,42 @@ export default class SortingVisualiser extends Component {
 		swaps: 0,
 		previousTime: 0,
 		running: false,
+
+		algorithm: ALGORITHMS[0],
 	};
 
 	render() {
 		return (
 			<div className="sorting-visualiser">
 				<h2>Sorting Visualiser</h2>
-				<div>
+				<section className="graph-section">
 					<Graph {...this.state} />
-					<div className="graph-side-bar">
-						<LegendPane />
-						<StatsPane {...this.state} />
-					</div>
-				</div>
-				<div className="controls-and-algorithms">
+				</section>
+				<section className="controls-section">
 					<ControlsPane
 						{...this.state}
 						updateTimeStep={this.updateStepTime}
+						start={this.start}
+						selectAlgorithm={this.selectAlgorithm}
 						stop={this.stop}
 						newArray={this.generateRandom}
 						updateArraySize={this.updateArraySize}
+						algorithms={ALGORITHMS}
 					/>
-					<AlgorithmPane />
-				</div>
-				<div className="algorithm-info">
-					<PropertiesPane
-						desc={['P1', 'kljew ewj werjdsl;ksdf f dsf sjdm fwekl ']}
-					/>
-				</div>
+				</section>
+				<section className="stats-and-algorithms">
+					<div className="graph-side-bar">
+						<StatsPane {...this.state} />
+						<LegendPane />
+					</div>
+				</section>
+				<section className="props-section">
+					<div className="algorithm-info">
+						<PropertiesPane
+							algorithm={this.state.algorithm}
+						/>
+					</div>
+				</section>
 			</div>
 		);
 	}
@@ -64,6 +75,7 @@ export default class SortingVisualiser extends Component {
 	componentDidMount() {
 		this.runRenderLoop();
 		this.generateRandom();
+		setInterval(this.updateTimer, 25);
 	}
 
 	runRenderLoop = () => {
@@ -71,8 +83,18 @@ export default class SortingVisualiser extends Component {
 		if (liveString !== JSON.stringify(this.state)) {
 			const copy = JSON.parse(liveString);
 			this.setState(copy);
+			this.setState({ algorithm: this.liveState.algorithm });
 		}
 		window.requestAnimationFrame(this.runRenderLoop);
+	}
+	
+	updateTimer = () => {
+		if (!this.state.running) return;
+
+		const now = (new Date()).getTime();
+		const delta = now - this.liveState.previousTime;
+		this.liveState.previousTime = now;
+		this.liveState.runTime += delta;
 	}
 
 	generateRandom = () => {
@@ -106,7 +128,89 @@ export default class SortingVisualiser extends Component {
 		};
 	}
 
-	async sort() {
+	selectAlgorithm = (algorithm) => {
+		this.liveState.algorithm = algorithm;
+	}
+
+	start = () => {
+		this.liveState.running = true;
+		this.liveState.previousTime = (new Date()).getTime();
+		this.liveState.runTime = 0;
+
+		this.state.algorithm.run(
+			this.items,
+			this.sleep,
+			this.getSleepTime,
+			this.running,
+			this.comparison,
+			this.swapItems,
+			this.setCurrentIndex,
+			this.setComparisonIndex,
+			this.setBoundLeftIndex,
+			this.setBoundRightIndex,
+			this.stop,
+		);
+	}
+
+	items = () => {
+		return this.liveState.items;
+	}
+
+	comparison = () => {
+		this.liveState.comparisons++;
+	}
+
+	swapItems = (i, j) => {
+		const temp = this.liveState.items[i];
+		this.liveState.items[i] = this.liveState.items[j];
+		this.liveState.items[j] = temp;
+		this.liveState.swaps++;
+	}
+
+	running = () => {
+		return this.liveState.running;
+	}
+
+	setCurrentIndex = (i) => {
+		this.liveState.currentIndex = i;
+	}
+
+	setComparisonIndex = (i) => {
+		this.liveState.comparisonIndex = i;
+	}
+
+	setBoundLeftIndex = (i) => {
+		this.liveState.boundLeft = i;
+	}
+
+	setBoundRightIndex = (i) => {
+		this.liveState.boundRight = i;
+	}
+
+	async sleep(time) {
+		await sleep(time);
+	}
+
+	updateStepTime = (step) => {
+		this.liveState.stepTime = step;
+	}
+
+	stop = () => {
+		this.liveState.running = false;
+	}
+
+	updateArraySize = (step) => {
+		if (this.running()) return;
+
+		this.liveState.itemsToGenerate = step;
+		this.generateRandom();
+	}
+
+	getSleepTime = () => {
+		return this.liveState.stepTime;
+	}
+
+	async bubbleSort() {
 		this.start();
 		let changed = true;
 		while (changed && this.running()) {
@@ -123,68 +227,6 @@ export default class SortingVisualiser extends Component {
 				}
 			}
 		}
-	}
-
-	start() {
-		this.liveState.running = true;
-		this.liveState.previousTime = (new Date()).getTime();
-	}
-
-	step() {
-		const now = (new Date()).getTime();
-		const delta = now - this.liveState.previousTime;
-		this.liveState.previousTime = now;
-		this.liveState.runTime += delta;
-	}
-
-	comparison() {
-		this.liveState.comparisons++;
-	}
-
-	swapItems(i, j) {
-		const temp = this.liveState.items[i];
-		this.liveState.items[i] = this.liveState.items[j];
-		this.liveState.items[j] = temp;
-		this.liveState.swaps++;
-	}
-
-	running() {
-		return this.liveState.running;
-	}
-
-	setCurrentIndex(i) {
-		this.liveState.currentIndex = i;
-	}
-
-	setComparisonIndex(i) {
-		this.liveState.comparisonIndex = i;
-	}
-
-	setBoundLeftIndex(i) {
-		this.liveState.boundLeft = i;
-	}
-
-	setBoundRightIndex(i) {
-		this.liveState.boundRight = i;
-	}
-
-	async sleep() {
-		await sleep(this.liveState.stepTime);
-	}
-
-	updateStepTime = (step) => {
-		this.liveState.stepTime = step;
-	};
-
-	stop = () => {
-		this.liveState.running = false;
-	};
-
-	updateArraySize = (step) => {
-		if (this.running()) return;
-
-		this.liveState.itemsToGenerate = step;
-		this.generateRandom();
 	}
 
 };
