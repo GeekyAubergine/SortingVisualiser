@@ -12,7 +12,7 @@ export default class ControlsPane extends Component {
 						<p>Algorithm</p>
 						<select
 							disabled={this.props.running}
-							value={this.props.algorithm.getName()}
+							value={this.props.algorithms.indexOf(this.props.algorithm)}
 							onChange={e => this.selectAlgorithm(e.target.value)}
 						>
 							{this.props.algorithms.map((algorithm, i) => (

@@ -4,7 +4,6 @@ import { sleep } from './../util/Util';
 import LegendPane from './LegendPane';
 import ControlsPane from './ControlsPane';
 import StatsPane from './StatsPane';
-import AlgorithmPane from './AlgorithmPane';
 import PropertiesPane from './PropertiesPane';
 import Graph from './Graph';
 
@@ -75,12 +74,12 @@ export default class SortingVisualiser extends Component {
 	componentDidMount() {
 		this.runRenderLoop();
 		this.generateRandom();
-		setInterval(this.updateTimer, 25);
 	}
 
 	runRenderLoop = () => {
+		this.updateTimer();
 		const liveString = JSON.stringify(this.liveState);
-		if (liveString !== JSON.stringify(this.state)) {
+		if (liveString !== JSON.stringify(this.state) || this.liveState.algorithm !== this.state.algorithm) {
 			const copy = JSON.parse(liveString);
 			this.setState(copy);
 			this.setState({ algorithm: this.liveState.algorithm });
@@ -208,25 +207,6 @@ export default class SortingVisualiser extends Component {
 
 	getSleepTime = () => {
 		return this.liveState.stepTime;
-	}
-
-	async bubbleSort() {
-		this.start();
-		let changed = true;
-		while (changed && this.running()) {
-			changed = false;
-			for (let j = 0; j < this.liveState.items.length - 1 && this.running(); j++) {
-				this.setCurrentIndex(j);
-				this.setComparisonIndex(j + 1)
-				await this.sleep();
-				this.step();
-				this.comparison();
-				if (this.liveState.items[j].value > this.liveState.items[j + 1].value) {
-					this.swapItems(j, j + 1);
-					changed = true;
-				}
-			}
-		}
 	}
 
 };
